@@ -1,0 +1,39 @@
+module <%= name %>
+	
+	module Controllers
+	
+		class Default
+			
+			include Waves::Controllers::Mixin
+			
+			def all
+				model.all
+			end
+
+			def find( name )
+				model[ name ]
+			end
+		
+			def create( attrs = {} )
+				model.new( attrs )
+			end
+		
+			def update
+				attrs = params[model_name.singular]
+				if instance = find( attrs[:name] )
+					instance.set( attrs )
+					instance.save
+				else
+					model.create( attrs )
+				end
+			end
+		
+			def delete
+				model[ name ].destroy
+			end
+			
+		end
+
+	end
+
+end

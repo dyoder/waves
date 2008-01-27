@@ -1,0 +1,8 @@
+require 'waves'
+
+if ARGV.length > 1 
+	puts STDERR, "Usage: console [mode]"; exit 1
+end
+
+Waves::Console.load( ARGV[0] ? ARGV[0].intern : :development )
+require 'irb'; IRB.start

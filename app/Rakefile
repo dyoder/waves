@@ -1,0 +1,4 @@
+require 'waves'
+Waves::Console.load
+%w( schema ).each { |task| require "lib/tasks/#{task}.rb" }
+

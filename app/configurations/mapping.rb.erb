@@ -1,0 +1,49 @@
+module <%= name %>
+  
+  module Configurations
+    
+    module Mapping
+      
+      extend Waves::Mapping
+
+      name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
+      
+			path %r{^/$} { redirect('/entries') }
+			
+      # get all resources for the given model
+			path %r{^/#{model}/?$} do | model |
+				use( model ) | controller { all } | view { |data| list( model.plural => data ) }
+			end
+
+      # get all resources identifiers for the given model in json format
+			path %r{^/#{model}/?$}, :accept => /json/ do | model |
+				use( model ) | controller { all } | view { |data| list( model.plural => data ) }
+			end
+
+      # get the given resource for the given model
+			path %r{^/#{model}/#{name}/?$} do | model, name |
+				use(model) | controller { find( name ) } | 
+				  view { |data| show( model => data ) }
+			end
+      
+			# display an editor for the given resource / model
+			path %r{^/#{model}/#{name}/editor/?$} do | model, name |
+				use(model) | controller { find( name ) } | 
+				  view { |data| editor( model => data ) }				
+			end
+      
+      # add / update the given resource for the given model
+			path %r{^/#{model}/#{name}/?$}, :method => :post do | model, name |
+				use(model) | controller { update( name ) }; redirect( url )
+			end
+      
+      # delete the given resource for the given model
+			path %r{^/#{model}/#{name}/?$}, :method => :delete do | model, name |
+				use(model) | controller { delete( name ) }; redirect( "/#{model}/" )
+			end
+
+    end
+  
+  end
+
+end
