@@ -14,7 +14,7 @@ require 'metaid'
 require 'forwardable'
 require 'date'
 require 'benchmark'
-require 'memcache'
+# require 'memcache'
 require 'base64'
 
 # selected project-specific extensions
@@ -39,7 +39,10 @@ require 'runtime/response_mixin'
 require 'runtime/response_proxy'
 require 'runtime/session'
 require 'runtime/configuration'
-require 'runtime/mapping'
+
+# waves URI mapping
+require 'mapping/mapping'
+require 'mapping/pretty_urls'
 
 # waves mvc support
 require 'controllers/mixin'
@@ -47,4 +50,8 @@ require 'views/mixin'
 require 'renderers/mixin'
 require 'renderers/markaby'
 require 'renderers/erubis'
-# require 'helpers/form.rb'
+require 'helpers/common.rb'
+require 'helpers/form.rb'
+require 'helpers/formatting.rb'
+require 'helpers/model.rb'
+require 'helpers/view.rb'

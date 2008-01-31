@@ -1,13 +1,18 @@
+# Waves extends String with a variety of methods for changing from singular to plural and back, and switching to different types of case and word separators. These methods are similar to those found in Rails and other frameworks, but some (all?) of the names are different. The names here were chosen for increased clarity and are hopefully easy to adjust to ...
+#
+# Notably, the inflector code here is not as comprehensive as the Rails code. This will be fixed in a future version of Waves.
+
 class String
 	
+	# Does a File.join on the two arguments joined by the /. Very handy
+	# for doing platform-safe paths without having to use File.join.
+	#
 	# I unfortunately don't recall where i first saw this ... see
 	# Symbol extension as well, allowing for :files / 'afilename.txt'
 	
 	def / ( string )
 		File.join(self,string.to_s)
 	end
-
-	# inspired by the inflector code in rails ...
 	
 	def singular
 		gsub(/ies$/,'y').gsub(/es$/,'').gsub(/s$/,'')

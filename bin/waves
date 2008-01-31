@@ -18,7 +18,7 @@ Dir["#{app_name}/**/EMPTY"].each { |path| system "rm #{path}" }
 
 # next, process all template files ...
 Dir["#{app_name}/**/*.erb"].each do |path|
-  unless path =~ %r{^#{app_name}/(schema/migration/templates|templates)}
+  unless path =~ %r{^#{app_name}/(schema/migrations/templates|templates)}
     name = app_name.camel_case
     File.write( path.gsub(/\.erb$/,''), 
       Erubis::Eruby.new( File.read( path ) ).result( binding ) )

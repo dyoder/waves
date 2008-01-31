@@ -1,56 +1,81 @@
 module Waves
-	
+	# You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster.start</tt> task use the +mode+ environment parameter to determine which configuration to use. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
+	#
+	# *Example*
+	#
+	# Assume that +ports+ is set in the development configuration like this:
+	#
+	#   ports [ 2020, 2021, 2022 ]
+	#
+	# Then you could start up instances on all three ports using:
+	#
+	#   rake cluster:start mode=development
+	#
+	# This is the equivalent of running:
+	#
+	#   waves-server -c development -p 2020 -d
+	#   waves-server -c development -p 2021 -d
+	#   waves-server -c development -p 2022 -d
+	#  
 	class Server < Application
-				
+		
+		# Access the server thread.		
 		attr_reader :thread
 		
+		# Access the host we're binding to (set via the configuration).
+		def host ; options[:host] || config.host ; end
+		# Access the port we're listening on (set via the configuration).
+		def port ; options[:port] || config.port ; end
+		# Run the server as a daemon. Corresponds to the -d switch on +waves-server+.
+		def daemonize
+		  pwd = Dir.pwd
+		  Daemonize.daemonize( Waves::Logger.output )
+		  Dir.chdir(pwd)
+		  File.write( :log / $$+'.pid', '' )
+		end
+		# Start and / or access the Waves::Logger instance.
+		def log ; @log ||= Waves::Logger.start ; end
+		# Start the server.
 		def start
 			load( :lib / 'startup.rb' )
-			Waves::Logger.start
+		  daemonize if options[:daemon]
 			log.info "** Waves Server Starting ..."
-			
-			t = Benchmark.realtime do
-				app = config.application.to_app				
-				@server = ::Mongrel::HttpServer.new( config.host, config.port )
-				@server.register('/', Rack::Handler::Mongrel.new( app ) )
-				trap('INT') { puts; stop }
-				@thread = @server.run
-			end
-			log.info "** Waves Server Running on #{config.host}:#{config.port}"
-			log.info "Server started in #{(t*1000).round} milliseconds."
+			t = real_start
+			log.info "** Waves Server Running on #{host}:#{port}"
+			log.info "Server started in #{(t*1000).round} ms."
 			@thread.join
 		end
-		
+		# Stop the server.
 		def stop
 			log.info "** Waves Server Stopping ..."
+			pid_file = :log / $$ + '.pid'
+			FileUtils.rm( pid_file ) if options[:daemon] and File.exist?( pid_file )
 			@server.stop 
 			log.info "** Waves Server Stopped"
 		end
-		
-		def synchronize( &block )
-			( @mutex ||= Mutex.new ).synchronize( &block )
-		end
-		
-		def cache
-			#@cache ||= MemCache::new '127.0.0.1'
-		end
-		
-		# make this a singleton ... we don't use Ruby's std lib
-		# singleton module because it doesn't do quite what we
-		# want - need a run method and implicit instance method
+		# Provides access to the server mutex for thread-safe operation.
+		def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
+
 		class << self
-			
 			private :new, :dup, :clone
-			
-			def run( mode = :development )
-				@server.stop if @server; @server = new( mode ); @server.start
+			# Start or restart the server.
+			def run( options={} )
+				@server.stop if @server; @server = new( options ); @server.start
 			end
-			
-			# allow Waves::Server to act as The Server Instance
+			# Allows us to access the Waves::Server instance.
 			def method_missing(*args); @server.send(*args); end
-			
+			# Probably wouldn't need this if I added a block parameter to method_missing.
 			def synchronize(&block) ; @server.synchronize(&block) ; end
-			
+		end
+		
+		private
+		
+		def real_start
+		  Benchmark.realtime do
+				@server = ::Mongrel::HttpServer.new( host, port )
+				@server.register('/', Rack::Handler::Mongrel.new( config.application.to_app	 ) )
+				trap('INT') { puts; stop }; @thread = @server.run
+			end
 		end
 
 	end

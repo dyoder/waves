@@ -1,8 +1,25 @@
 require 'waves'
+require 'choice'
 
-if ARGV.length > 1 
-	puts STDERR, "Usage: console [mode]"; exit 1
+Choice.options do
+  header 'Run a waves application server.'
+  header ''
+  option :mode do
+    short '-c'
+    long '--config=CONFIG'
+    desc 'Configuration to use.'
+    desc 'Defaults to development.'
+    cast Symbol
+  end
+  separator ''
+  option :directory do
+    short '-D'
+    long '--dir=DIR'
+    desc 'Directory containing the application.'
+    desc 'Defaults to the current directory.'
+  end
+  separator ''  
 end
-
-Waves::Console.load( ARGV[0] ? ARGV[0].intern : :development )
+    
+Waves::Console.load( Choice.choices )
 require 'irb'; IRB.start

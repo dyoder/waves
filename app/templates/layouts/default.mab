@@ -1,6 +1,6 @@
 doctype :html4_strict
 
-html
+html do
 
   head do
     title @title

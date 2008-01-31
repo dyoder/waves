@@ -6,8 +6,8 @@ module Waves
 
 			attr_reader :console
 
-			def load(mode=:development)
-				@console ||= Waves::Console.new(mode)
+			def load( options={} )
+				@console ||= Waves::Console.new( options )
 				Kernel.load( :lib / 'startup.rb' )
 			end
 			

@@ -2,6 +2,8 @@ require 'erubis'
 
 module Erubis
   
+  # This is added to the Erubis Content class to allow the same helper methods
+  # to be used with both Markaby and Erubis.
   class Context
     def <<(s) ; s ; end
   end
@@ -11,7 +13,7 @@ end
 module Waves
 
 	module Renderers
-	
+	  
 		class Erubis
 			
 			include Renderers::Mixin

@@ -5,8 +5,20 @@ module Waves
 		extend Autoload
 		autoload :renderers
 	
+	  # The renderers mixin provides a number of methods to simplify writing new renderers.
+	  # Just include this in your Renderer class and write your render method.
 		module Mixin
 		
+		  # Adds the following methods to the target class:
+		  #
+		  # - extension: allows you to set or get the extension used by this renderer.
+		  # 
+		  #     Renderers::Markaby.extension 'foo' # tell Waves to use .foo as Markaby extension
+		  #
+		  # - filename: generate a filename for the template based on a logical path.
+		  # - template: read the template from the file corresponding to the given logical path.
+		  # - helper: return a helper module that corresponds to the given logical path.
+		  #
 			def self.included(target)
 				class << target
 					

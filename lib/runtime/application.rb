@@ -1,43 +1,53 @@
+# See the README for an overview.
 module Waves
 
 	class << self
 		
+		# Access the principal Waves application.
 		attr_reader :application
 		
-		# give us the root namespace for the application
+		# Register a module as a Waves application.		
+		# Also, initialize the database connection if necessary.
 		def << ( app )
-			@application = app if Module === app
+		  @application = app if Module === app
+		  app.database if app.respond_to? 'database'
 		end
 		
 	end
 	
+	# An application in Waves is anything that provides access to the Waves
+	# runtime and the registered Waves applications. This includes both
+	# Waves::Server and Waves::Console. Waves::Application is *not* the actual
+	# application module(s) registered as Waves applications. To access the
+	# main Waves application, you can use +Waves+.+application+.
 	class Application
+
+	  # Accessor for options passed to the application. Valid options include
+		attr_reader :options
+
+		# Create a new Waves application instance.
+		def initialize( options={} )
+		  @options = options
+		  Dir.chdir options[:directory] if options[:directory]
+		end
+
+		# The 'mode' of the application determines which configuration it will run under.
+		def mode ; @mode ||= @options[:mode]||:development ; end
+
+		# Debug is true if debug is set to true in the current configuration.
+		def debug? ; config.debug ; end
 		
-		def initialize( mode = :development )
-			@mode = mode
-		end
+		# Access the current configuration. *Example:* +Waves::Server.config+
+		def config ; Waves.application.configurations[ mode ] ; end
 		
-		def debug? ; @mode == :development ; end
-
-		# now we can get the configuration, based on the mode
-		# we must specify global scope to avoid picking up Waves::Configurations::*
-		# and / or Waves::Application::* ... because the configuration may be
-		# loaded via autoload ....
-		def config
-			Waves.application.configurations[ @mode ]
-		end
-
-		# and, similarly, the url mapping ...
-		def mapping
-			Waves.application.configurations[ :mapping ]
-		end
-
-		# the config then tells us whether to unload any namespaces
-		# after each request ...
-		def reset
-			config.reloadable.each { |mod| mod.reload }
-		end
-
+		# Access the mappings for the application.
+		def mapping ; Waves.application.configurations[ :mapping ] ; end
+		
+		# Reload the modules specified in the current configuration.
+		def reload ; config.reloadable.each { |mod| mod.reload } ; end
+		
+		# Returns the cache set for the current configuration
+    def cache ; config.cache ; end
 	end
 
 end

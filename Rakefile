@@ -5,13 +5,13 @@ require 'rake/gempackagetask'
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
 	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = "0.6.7"
-	gem.homepage = 'http://dev.zeraweb.com/'
+	gem.version = '0.6.9'
+	gem.homepage = 'http://dev.zeraweb.com/waves'
 	gem.author = 'Dan Yoder'
 	gem.email = 'dan@zeraweb.com'
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
-	[ 'mongrel','rack','markaby','erubis','autocode','sequel' ].each do |dep|
+	%w( mongrel rack markaby erubis autocode sequel extensions live_console ).each do |dep|
 	  gem.add_dependency dep
 	end
 	gem.files = Dir['lib/**/*.rb','app/**/*']
@@ -30,7 +30,7 @@ end
 
 task( :sync ) do
   options = '-a --delete'
-  exclude = [ '*.old', '*.gem', '.svn' ].map { |pat| "--exclude=#{pat}" }.join(' ')
+  exclude = [ '*.old', '*.gem', '.svn', 'pkg' ].map { |pat| "--exclude=#{pat}" }.join(' ')
   path = "~/Repositories/#{gem.name}/"
    `rsync #{options} #{exclude} ./ #{path}`
 end
@@ -41,7 +41,6 @@ task( :rdoc_publish => :rdoc ) do
 end
 
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'doc/rdoc'
-  rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add([ 'lib/**/*.rb', 'README', 'HISTORY' ])
+  rdoc.rdoc_dir = 'doc/rdoc'; rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/README', 'doc/HISTORY' ]
 end

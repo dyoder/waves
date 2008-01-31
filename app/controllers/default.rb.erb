@@ -6,31 +6,21 @@ module <%= name %>
 			
 			include Waves::Controllers::Mixin
 			
-			def all
-				model.all
-			end
+			def attributes; params[model_name.singular.intern]; end
+			
+			def all; model.all; end
 
-			def find( name )
-				model[ name ]
+			def find( name ); model[ :name => name ] or not_found; end
+		
+			def create; model.create( attributes ); end
+		
+			def update( name )
+			  instance = find( name )
+			  instance.set( attributes )
+			  instance.save_changes
 			end
 		
-			def create( attrs = {} )
-				model.new( attrs )
-			end
-		
-			def update
-				attrs = params[model_name.singular]
-				if instance = find( attrs[:name] )
-					instance.set( attrs )
-					instance.save
-				else
-					model.create( attrs )
-				end
-			end
-		
-			def delete
-				model[ name ].destroy
-			end
+			def delete( name ); find( name ).destroy; end
 			
 		end
 
