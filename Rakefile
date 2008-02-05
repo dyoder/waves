@@ -5,13 +5,14 @@ require 'rake/gempackagetask'
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
 	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = '0.6.9'
+	gem.version = '0.7.1'
 	gem.homepage = 'http://dev.zeraweb.com/waves'
 	gem.author = 'Dan Yoder'
 	gem.email = 'dan@zeraweb.com'
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
-	%w( mongrel rack markaby erubis autocode sequel extensions live_console ).each do |dep|
+	%w( mongrel rack markaby erubis redcloth autocode sequel 
+	    extensions live_console choice daemons ).each do |dep|
 	  gem.add_dependency dep
 	end
 	gem.files = Dir['lib/**/*.rb','app/**/*']
