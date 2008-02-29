@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+if File.exist?(waves_src = File.join(File.dirname(__FILE__), '..', 'waves'))
+  $:.unshift(File.join(waves_src, 'lib'))
+end
+
+load File.join(waves_src, 'bin', 'waves-console')

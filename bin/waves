@@ -6,19 +6,22 @@ unless ARGV.length == 1
 end
 
 require 'rubygems'
-require 'waves'
+require 'erubis'
+require 'extensions/all'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
 
 puts "** Creating new Waves application ..."
-app_name = ARGV[0]
+app_path = ARGV[0]
+app_name = File.basename(app_path)
 template = File.join( File.dirname(__FILE__),'..','app')
-system "cp -R #{template} #{app_name}"
+system "cp -R #{template} #{app_path}"
 
 # get rid of placeholder files left over from gem install
-Dir["#{app_name}/**/EMPTY"].each { |path| system "rm #{path}" }
+Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
 
 # next, process all template files ...
-Dir["#{app_name}/**/*.erb"].each do |path|
-  unless path =~ %r{^#{app_name}/(schema/migrations/templates|templates)}
+Dir["#{app_path}/**/*.erb"].each do |path|
+  unless path =~ %r{^#{app_path}/(schema/migrations/templates|templates)}
     name = app_name.camel_case
     File.write( path.gsub(/\.erb$/,''), 
       Erubis::Eruby.new( File.read( path ) ).result( binding ) )
@@ -26,7 +29,10 @@ Dir["#{app_name}/**/*.erb"].each do |path|
   end
 end
 
+# make the scripts executable
+system "chmod ug+x #{app_path}/bin/waves-*"
+
 # finally, change the lib/application.rb file
-system "mv #{app_name}/lib/application.rb #{app_name}/lib/#{app_name}.rb"
+system "mv #{app_path}/lib/application.rb #{app_path}/lib/#{app_name}.rb"
 
 puts "** Application created!"
