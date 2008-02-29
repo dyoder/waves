@@ -45,3 +45,24 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'doc/rdoc'; rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/README', 'doc/HISTORY' ]
 end
+
+desc "Set up dependencies so you can work from source"
+task( :setup ) do
+  gems = Gem::SourceIndex.from_installed_gems
+  # Runtime dependencies from the Gem's spec.
+  dependencies = gem.dependencies
+  # Add build-time dependencies, like this:
+  dependencies.each do |dep|
+    if gems.search(dep.name, dep.version_requirements).empty?
+      puts "Installing dependency: #{dep}"
+      begin
+        require 'rubygems/dependency_installer'
+        Gem::DependencyInstaller.new(dep.name, dep.version_requirements).install
+      rescue LoadError # < rubygems 1.0.1
+        require 'rubygems/remote_installer'
+        Gem::RemoteInstaller.new.install(dep.name, dep.version_requirements)
+      end
+    end
+  end
+  system(cmd = "chmod +x bin/waves*")
+end
