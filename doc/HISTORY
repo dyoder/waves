@@ -1,3 +1,13 @@
+0.7.3:
+- Added explicit require for daemons gem
+- Added support for running off source
+- Added support for using SQLLite
+0.7.2:
+- Minor bug fixes, improved documentation
+0.7.1:
+- Minor bug fixes, improved documentation
+0.7.0:
+- Minor bug fixes, improved documentation
 0.6.9:
 - Minor bug fixes, improved documentation
 0.6.8:

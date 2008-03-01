@@ -4,6 +4,7 @@ require 'rubygems'
 # the underlying web server
 require 'mongrel'
 require 'rack'
+require 'daemons'
 require 'live_console'
 require 'autocode'
 
