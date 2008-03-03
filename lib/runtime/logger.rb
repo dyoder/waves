@@ -41,7 +41,7 @@ module Waves
   		end
   		# Forwards logging methods to the logger.
   		def method_missing(name,*args,&block)
-  		  @log.send name,*args, &block
+  		  @log.send name,*args, &block if @log
   		end
 
   	end

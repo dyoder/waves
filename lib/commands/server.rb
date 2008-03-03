@@ -39,6 +39,12 @@ Choice.options do
     long '--daemon'
     desc 'Run as a daemon.'
   end
+  separator ''  
+  option :debugger do
+    short '-u'
+    long '--debugger'
+    desc 'Enable ruby-debug.'
+  end
   separator ''
 end
     
