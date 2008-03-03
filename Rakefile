@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
 	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = '0.7.2'
+	gem.version = '0.7.3'
 	gem.homepage = 'http://dev.zeraweb.com/waves'
 	gem.author = 'Dan Yoder'
 	gem.email = 'dan@zeraweb.com'
