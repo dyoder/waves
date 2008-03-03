@@ -13,6 +13,12 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
 puts "** Creating new Waves application ..."
 app_path = ARGV[0]
 app_name = File.basename(app_path)
+if app_name =~ /[^\w\d_]/
+  raise ArgumentError, <<-TEXT
+  Unusable name: \"#{app_name}\"
+  Application names may contain only letters, numbers, and underscores." 
+TEXT
+end
 template = File.join( File.dirname(__FILE__),'..','app')
 system "cp -R #{template} #{app_path}"
 
