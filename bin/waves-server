@@ -1,3 +1,9 @@
+#!/usr/bin/env ruby
+
+if File.exist?(waves_src = File.join(File.dirname(__FILE__), '..'))
+  $:.unshift(File.join(waves_src, 'lib'))
+end
+
 require 'waves'
 require 'choice'
 
@@ -38,6 +44,12 @@ Choice.options do
     short '-d'
     long '--daemon'
     desc 'Run as a daemon.'
+  end
+  separator ''  
+  option :debugger do
+    short '-u'
+    long '--debugger'
+    desc 'Enable ruby-debug.'
   end
   separator ''
 end
