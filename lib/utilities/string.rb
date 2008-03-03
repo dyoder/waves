@@ -13,14 +13,18 @@ class String
 	def / ( string )
 		File.join(self,string.to_s)
 	end
-	
-	def singular
-		gsub(/ies$/,'y').gsub(/es$/,'').gsub(/s$/,'')
-	end
 
-	def plural
-		gsub(/(s|sh|ch)$/,'\1es').gsub(/(i|y)$/,'ies').gsub(/([^s])$/,'\1s')
-	end
+	def singular
+    Inflect::English.singular(self)
+  end
+
+  alias_method(:singularize, :singular)
+
+  def plural
+    Inflect::English.plural(self)
+  end
+
+  alias_method(:pluralize, :plural)
 
 	def camel_case
 		gsub(/(_)(\w)/) { $2.upcase }.gsub(/^([a-z])/) { $1.upcase }
