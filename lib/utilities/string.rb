@@ -1,6 +1,4 @@
 # Waves extends String with a variety of methods for changing from singular to plural and back, and switching to different types of case and word separators. These methods are similar to those found in Rails and other frameworks, but some (all?) of the names are different. The names here were chosen for increased clarity and are hopefully easy to adjust to ...
-#
-# Notably, the inflector code here is not as comprehensive as the Rails code. This will be fixed in a future version of Waves.
 
 class String
 	
