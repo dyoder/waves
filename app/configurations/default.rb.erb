@@ -1,7 +1,7 @@
 module <%= name %>
   module Configurations
     class Default < Waves::Configurations::Default
-      database :host => host, :adapter => 'mysql', :database => '<%= name.downcase %>',
+      database :host => 'localhost', :adapter => 'mysql', :database => '<%= name.downcase %>',
         :user => 'root', :password => ''
     end
   end
