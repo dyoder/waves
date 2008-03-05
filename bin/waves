@@ -8,7 +8,11 @@ end
 require 'rubygems'
 require 'erubis'
 require 'extensions/all'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
+begin
+  require 'utilities/string'
+rescue
+  require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
+end
 
 require 'fileutils'
 include FileUtils
@@ -23,11 +27,13 @@ if app_name =~ /[^\w\d_]/
   Application names may contain only letters, numbers, and underscores." 
 TEXT
 end
-template = File.join( File.dirname(__FILE__),'..','app')
-Dir["#{template}/*"].each do |path|
-	cp_r path, app_path
+template = begin
+  File.join File.dirname(File.readlink(__FILE__)), '..', 'app'
+rescue Exception
+  File.join( File.dirname(__FILE__),'..','app')
 end
-# system "cp -R #{template} #{app_path}"
+mkdir(app_path)
+cp_r Dir["#{template}/*"], app_path
 
 # get rid of placeholder files left over from gem install
 Dir["#{app_name}/**/EMPTY"].each { |path| rm path }
