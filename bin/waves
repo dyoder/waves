@@ -19,7 +19,7 @@ include FileUtils
 
 
 puts "** Creating new Waves application ..."
-app_path = File.expand_path(ARGV[0])
+app_path = ARGV[0]
 app_name = File.basename(app_path)
 if app_name =~ /[^\w\d_]/
   raise ArgumentError, <<-TEXT
