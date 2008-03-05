@@ -8,4 +8,4 @@ else # go with the gem
   require 'waves'
 end
 
-require 'commands/console'
+require 'commands/waves-console'
