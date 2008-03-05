@@ -8,7 +8,15 @@ end
 require 'rubygems'
 require 'erubis'
 require 'extensions/all'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
+begin
+  require 'utilities/string'
+rescue
+  require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
+end
+
+require 'fileutils'
+include FileUtils
+
 
 puts "** Creating new Waves application ..."
 app_path = ARGV[0]
@@ -19,11 +27,17 @@ if app_name =~ /[^\w\d_]/
   Application names may contain only letters, numbers, and underscores." 
 TEXT
 end
-template = File.join( File.dirname(__FILE__),'..','app')
-system "cp -R #{template} #{app_path}"
+template = begin
+  File.join File.dirname(File.readlink(__FILE__)), '..', 'app'
+rescue Exception
+  File.join( File.dirname(__FILE__),'..','app')
+end
+mkdir(app_path)
+cp_r Dir["#{template}/*"], app_path
 
 # get rid of placeholder files left over from gem install
-Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
+Dir["#{app_name}/**/EMPTY"].each { |path| rm path }
+# Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
 
 # next, process all template files ...
 Dir["#{app_path}/**/*.erb"].each do |path|
@@ -35,10 +49,12 @@ Dir["#{app_path}/**/*.erb"].each do |path|
   end
 end
 
-# make the scripts executable
-system "chmod ug+x #{app_path}/bin/waves-*"
+unless RUBY_PLATFORM =~ /mswin32/
+  # make the scripts executable
+  system "chmod ug+x #{app_path}/bin/waves-*"
+end
 
 # finally, change the lib/application.rb file
-system "mv #{app_path}/lib/application.rb #{app_path}/lib/#{app_name}.rb"
+mv "#{app_name}/lib/application.rb", "#{app_name}/lib/#{app_name}.rb"
 
 puts "** Application created!"
