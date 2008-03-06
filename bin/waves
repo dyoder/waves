@@ -55,6 +55,6 @@ unless RUBY_PLATFORM =~ /mswin32/
 end
 
 # finally, change the lib/application.rb file
-mv "#{app_name}/lib/application.rb", "#{app_name}/lib/#{app_name}.rb"
+mv "#{app_path}/lib/application.rb", "#{app_path}/lib/#{app_name}.rb"
 
 puts "** Application created!"
