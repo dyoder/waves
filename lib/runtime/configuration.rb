@@ -80,7 +80,7 @@ module Waves
   #
   # *Example*
   #
-  #   database :host => host, :adapter => 'mysql', :database => 'blog',
+  #   database :host => 'localhost', :adapter => 'mysql', :database => 'blog',
   #     :user => 'root', :password => 'guess'
   #
   # 
