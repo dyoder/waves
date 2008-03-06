@@ -10,7 +10,7 @@ require 'erubis'
 require 'extensions/all'
 begin
   require 'utilities/string'
-rescue
+rescue LoadError
   require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
 end
 
