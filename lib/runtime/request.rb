@@ -32,6 +32,11 @@ module Waves
 		  @request.host
 		end
 		
+		# The request content type.
+		def content_type
+		  @request.env['CONTENT_TYPE']
+		end
+		
 		# Supported request methods
 		METHODS = %w{get post put delete head options trace}
 		
