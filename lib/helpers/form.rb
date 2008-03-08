@@ -3,7 +3,7 @@ module Waves
 	module Helpers
 		
 		# Form helpers are used in generating forms. Since Markaby already provides Ruby
-		# methods for basic form generation, the focus of this helper is on provide templates
+		# methods for basic form generation, the focus of this helper is on providing templates
 		# to handle things that go beyond the basics. You must define a form template 
 		# directory with templates for each type of form element you wish to use. The names
 		# of the template should match the +type+ option provided in the property method.

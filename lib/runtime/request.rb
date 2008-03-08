@@ -26,20 +26,40 @@ module Waves
 		def path
 			@request.path_info
 		end
-
+		
 		# The request domain. Ex: +www.fubar.com+
-    def domain
-      @request.host
-    end
-    
-    # The request method: GET, PUT, POST, or DELETE.
+		def domain
+		  @request.host
+		end
+		
+		# Supported request methods
+		METHODS = %w{get post put delete head options trace}
+		
+		# Override the Rack methods for querying the request method.
+		METHODS.each do |method|
+		  class_eval "def #{method}?; method == :#{method} end"
+		end
+		
+		# The request method. Because browsers can't send PUT or DELETE
+		# requests this can be simulated by sending a POST with a hidden
+		# field named '_method' and a value with 'PUT' or 'DELETE'. Also
+		# accepted is when a query parameter named '_method' is provided.
 		def method
-			@request.request_method.downcase.intern
-		end	
+			@method ||= begin
+			  request_method = @request.request_method.downcase
+			  if request_method == 'post'
+			    _method = @request['_method']
+			    _method.downcase! if _method
+			    METHODS.include?(_method) ? _method.intern : :post
+			  else
+			    request_method.intern
+			  end
+		  end
+		end
 		
 		# Raise a not found exception.
 		def not_found
-  		raise Waves::Dispatchers::NotFoundError.new( @request.url + ' not found.')
+  		raise Waves::Dispatchers::NotFoundError.new( @request.url + ' not found.' )
   	end
 
     # Issue a redirect for the given path.

@@ -51,8 +51,8 @@ module Waves
       #
       # RestRules defines the following URL conventions:
       #
-      #   POST /resources            # => add a new resource using the POST variables
-      #   POST /resource/name        # => update the given resource using the POST variables
+      #   POST /resources            # => add a new resource
+      #   PUT  /resource/name        # => update the given resource
       #   DELETE /resource/name      # => delete the given resource
       #
       module RestRules
@@ -72,8 +72,8 @@ module Waves
               redirect( "/#{model.singular}/#{instance.name}/editor" )
             end
 
-            # add / update the given resource for the given model
-            path %r{^/#{model}/#{name}/?$}, :method => :post do | model, name |
+            # update the given resource for the given model
+            path %r{^/#{model}/#{name}/?$}, :method => :put do | model, name |
               use(model) | controller { update( name ) }; redirect( url )
             end
   
