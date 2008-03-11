@@ -10,5 +10,8 @@ class Integer
 	def megabytes ; self * 1024.kilobytes ; end
 	def gigabytes ; self * 1024.megabytes ; end
 	def terabytes ; self * 1024.gigabytes ; end
-	def petabytes ; self * 1024.gigabytes ; end
+	def petabytes ; self * 1024.terabytes ; end
+	def exabytes ; self * 1024.petabytes ; end
+	def zettabytes ; self * 1024.exabytes ; end
+	def yottabytes ; self * 1024.zettabytes ; end
 end
