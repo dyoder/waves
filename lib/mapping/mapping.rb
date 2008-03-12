@@ -143,6 +143,7 @@ module Waves
 				matches = pattern.match(request.path)
 				rx[:action] = [ function, matches[1..-1] ] if matches && 
 					( ! options || satisfy( request, options ) )
+				break if rx[:action]
 			end
 			
 			( filters[:after] + filters[:wrap] ).each do | pattern, options, function |
