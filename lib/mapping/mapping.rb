@@ -165,10 +165,10 @@ module Waves
 		  return nil if !options || !satisfy( request, options )
 		  if options[:path]
 		    matches = options[:path].match( request.path )
-	    else
+	    elsif options[:url]
 	      matches = options[:url].match( request.url )
       end
-      return [ function, matches[1..-1] ]
+      return [ function, matches ? matches[1..-1] : nil ]
 	  end
 	  
 		def satisfy( request, options )
