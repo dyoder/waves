@@ -91,26 +91,25 @@ module Waves
 		# block before running any +path+ or +url+ actions. You can have as many +before+ matches
 		# as you want - they will all run, unless one of them calls redirect, generates an 
 		# unhandled exception, etc.
-		def before( pattern, options=nil, &block )
-			filters[:before] << [ pattern, options, block ]
+		def before( options, &block )
+			filters[:before] << [ options, block ]
 		end
 		
 		# Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
-		def after( pattern, options=nil, &block )
-			filters[:after] << [ pattern, options, block ]
+		def after( options, &block )
+			filters[:after] << [ options, block ]
 		end
 		
 		# Run the action before and after the matching +url+ or +path+ action.
-		def wrap( pattern, options=nil, &block )
-			filters[:before] << [ pattern, options, block ]
-			filters[:after] << [ pattern, options, block ]
+		def wrap( options, &block )
+			filters[:before] << [ options, block ]
+			filters[:after] << [ options, block ]
 		end		
 
     # Maps a request to a block. Don't use this method directly unless you know what 
     # you're doing. Use +path+ or +url+ instead.
 		def map( options, &block )
-			pattern = options[:path] || options[:url]
-			mapping << [ pattern, options, block ]
+			mapping << [ options, block ]
 		end
 		
 		# Match pattern against the +request.path+, along with satisfying any constraints 
@@ -130,32 +129,26 @@ module Waves
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
 		def []( request )
-
 			rx = { :before => [], :after => [], :action => nil }
 			
-			( filters[:before] + filters[:wrap] ).each do | pattern, options, function |
-				matches = pattern.match(request.path)
-				rx[:before] << [ function, matches[1..-1] ] if matches &&
-					( ! options || satisfy( request, options ))
+			( filters[:before] + filters[:wrap] ).each do | options, function |
+			  matches = match( request, options, function )
+			  rx[:before] << matches if matches
 			end
 			
-			mapping.find do |pattern, options, function|
-				matches = pattern.match(request.path)
-				rx[:action] = [ function, matches[1..-1] ] if matches && 
-					( ! options || satisfy( request, options ) )
+			mapping.find do | options, function |
+			  rx[:action] = match( request, options, function )
 				break if rx[:action]
 			end
 			
-			( filters[:after] + filters[:wrap] ).each do | pattern, options, function |
-				matches = pattern.match(request.path)
-				rx[:after] << [ function, matches[1..-1] ] if matches &&
-					( ! options || satisfy( request, options ))
+			( filters[:after] + filters[:wrap] ).each do | options, function |
+			  matches = match( request, options, function )
+			  rx[:after] << matches if matches
 			end
 			
 			not_found(request) unless rx[:action]
 			
 			return rx
-				
 		end		
 				
 		private
@@ -168,9 +161,18 @@ module Waves
 			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
 		end
 		
+		def match ( request, options, function )
+		  return nil if !options || !satisfy( request, options )
+		  if options[:path]
+		    matches = options[:path].match( request.path )
+	    else
+	      matches = options[:url].match( request.url )
+      end
+      return [ function, matches[1..-1] ]
+	  end
+	  
 		def satisfy( request, options )
 			options.each do |method, param|
-			  next if method == :path || method == :url
 			  begin
 			    value = request.send( method )
 			  rescue NoMethodError
