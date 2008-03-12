@@ -124,7 +124,7 @@ module Waves
 		# specified by the options hash. If the pattern matches and the constraints are satisfied,
 		# run the block. Only one +path+ or +url+ match will be run (the first one).
 		def url( pat, options = {}, &block )
-			options[:url] = pat; map( options, block )
+			options[:url] = pat; map( options, &block )
 		end
 		
 		# Match the given request against the defined rules. This is typically only called
