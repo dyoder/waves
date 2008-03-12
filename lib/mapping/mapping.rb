@@ -170,17 +170,27 @@ module Waves
 		
 		def satisfy( request, options )
 			options.each do |method, param|
-				return false unless self.send( method, param, request )
+			  next if method == :path || method == :url
+			  begin
+			    value = request.send( method )
+			  rescue NoMethodError
+			    if method =~ %r{^rack\.}
+      		  value = request.env[method.to_s.downcase]
+      		else
+      		  value = request.env[method.to_s.upcase]
+    		  end
+    	  end
+			  if param.nil?
+			    return false unless value.nil?
+			  elsif value.nil?
+			    return false
+			  elsif param.is_a? Regexp
+			    return false unless value.to_s =~ param
+			  else
+				  return false unless value.to_s == param
+				end
 			end
 			return true
-		end
-		
-		def method( method, request )
-			request.method == method
-		end
-		
-    # TODO: Add constraint for request accept header
-		def accept( format, request )
 		end
 		
 	end
