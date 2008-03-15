@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
 
-if File.exist?(waves_src = File.join(File.dirname(__FILE__), '..'))
-  $:.unshift(File.join(waves_src, 'lib'))
-end
-
 require 'waves'
 require 'choice'
 

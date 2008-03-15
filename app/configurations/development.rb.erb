@@ -1,22 +1,23 @@
 module <%= name %>
   module Configurations
     class Development < Default
-    
+      
+      database :host => host, :adapter => 'mysql', :database => '<%= name.downcase %>',
+        :user => 'root', :password => ''
+      
       host '127.0.0.1'
-
+      
       port 3000
-
-			reloadable [ <%= name %> ]
-
-			log :level => :debug	
-
+      
+      reloadable [ <%= name %> ]
+      
+      log :level => :debug	
+      
       application do
-				use Rack::ShowExceptions
-				run Waves::Dispatchers::Default.new
-			end				
-			
+        use Rack::ShowExceptions
+        run Waves::Dispatchers::Default.new
+      end
+      
     end
   end
 end
-
-

@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
 	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = '0.7.2'
+	gem.version = '0.7.3'
 	gem.homepage = 'http://dev.zeraweb.com/waves'
 	gem.author = 'Dan Yoder'
 	gem.email = 'dan@zeraweb.com'
@@ -21,9 +21,16 @@ gem = Gem::Specification.new do |gem|
 	gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
 end
 
+desc "Create the waves gem"
 task( :package => :clean ) { Gem::Builder.new( gem ).build } 
+
+desc "Clean build artifacts"
 task( :clean ) { `rm -rf *.gem` }
+
+desc "Install Waves a local gem"
 task( :install => [ :package, :rdoc ] ) { `sudo gem install *.gem` }
+
+desc "Publish to RubyForge"
 task( :publish => [ :package, :rdoc_publish ] ) do
   `rubyforge login`
   `rubyforge add_release #{gem.name} #{gem.name} #{gem.version} #{gem.name}-#{gem.version}.gem`

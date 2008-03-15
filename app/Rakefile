@@ -5,8 +5,8 @@ end
 
 begin
   require 'waves'
-  Waves::Console.load
-  %w( schema cluster generate ).each { |task| require "lib/tasks/#{task}.rb" }
+  Waves::Console.load(:mode => ENV['mode'])
+  %w( schema cluster generate gem ).each { |task| require "lib/tasks/#{task}.rb" }
 rescue LoadError
   puts "Can't find waves gem or ./waves/lib directory.  try rake symlink waves=/path/to/waves/"
 end

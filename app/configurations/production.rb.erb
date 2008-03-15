@@ -3,23 +3,24 @@ module <%= name %>
   module Configurations
       
     class Production < Default
-  
+      
+      database :host => host, :adapter => 'mysql', :database => '<%= name.downcase %>',
+        :user => 'root', :password => ''
+      
       host '0.0.0.0'
-
+      
       port 80
-
-  		reloadable []
-
-  		log :level => :error, 
-  		  :output => ( :log / "waves.#{$$}" ),
-  		  :rotation => :weekly
-
+      
+      reloadable []
+      
+      log :level => :error, 
+        :output => ( :log / "waves.#{$$}" ),
+        :rotation => :weekly
+      
       application do
-  			run Waves::Dispatchers::Default.new
-  		end				
-		
-    end
+        run Waves::Dispatchers::Default.new
+      end
 
+    end
   end
-  
 end
