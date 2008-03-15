@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
+require 'fileutils'
 
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
@@ -25,10 +26,18 @@ desc "Create the waves gem"
 task( :package => :clean ) { Gem::Builder.new( gem ).build } 
 
 desc "Clean build artifacts"
-task( :clean ) { `rm -rf *.gem` }
+task( :clean ) { FileUtils.rm_rf Dir['*.gem'] }
+
+desc "Rebuild and Install Waves as a gem"
+task( :install => [ :package, :rdoc, :install_gem ] )
 
 desc "Install Waves a local gem"
-task( :install => [ :package, :rdoc ] ) { `sudo gem install *.gem` }
+task( :install_gem ) do
+    require 'rubygems/installer'
+    Dir['*.gem'].each do |gem|
+	Gem::Installer.new(gem).install
+    end
+end
 
 desc "Publish to RubyForge"
 task( :publish => [ :package, :rdoc_publish ] ) do

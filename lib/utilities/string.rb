@@ -1,6 +1,4 @@
 # Waves extends String with a variety of methods for changing from singular to plural and back, and switching to different types of case and word separators. These methods are similar to those found in Rails and other frameworks, but some (all?) of the names are different. The names here were chosen for increased clarity and are hopefully easy to adjust to ...
-#
-# Notably, the inflector code here is not as comprehensive as the Rails code. This will be fixed in a future version of Waves.
 
 class String
 	
@@ -13,14 +11,18 @@ class String
 	def / ( string )
 		File.join(self,string.to_s)
 	end
-	
-	def singular
-		gsub(/ies$/,'y').gsub(/es$/,'').gsub(/s$/,'')
-	end
 
-	def plural
-		gsub(/(s|sh|ch)$/,'\1es').gsub(/(i|y)$/,'ies').gsub(/([^s])$/,'\1s')
-	end
+	def singular
+    Inflect::English.singular(self)
+  end
+
+  alias_method(:singularize, :singular)
+
+  def plural
+    Inflect::English.plural(self)
+  end
+
+  alias_method(:pluralize, :plural)
 
 	def camel_case
 		gsub(/(_)(\w)/) { $2.upcase }.gsub(/^([a-z])/) { $1.upcase }

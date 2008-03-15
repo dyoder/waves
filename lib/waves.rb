@@ -25,7 +25,7 @@ require 'utilities/symbol'
 require 'utilities/kernel'
 require 'utilities/object'
 require 'utilities/integer'
-
+require 'utilities/inflect'
 # waves Runtime
 require 'dispatchers/base'
 require 'dispatchers/default'

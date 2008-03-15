@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
+require 'rubygems'
+
+# If app/waves dir exists, add app/waves/lib to the load path
 if File.exist?(waves_src = File.join(File.dirname(__FILE__), '..', 'waves'))
   $:.unshift(File.join(waves_src, 'lib'))
+else # go with the gem
+  require 'waves'
 end
 
-load File.join(waves_src, 'bin', 'waves-console')
+require 'commands/waves-console'

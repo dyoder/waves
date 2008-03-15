@@ -40,6 +40,7 @@ module Waves
 		  start_debugger # if options[:debugger]
 			load( :lib / 'startup.rb' )
 		  daemonize if options[:daemon]
+		  start_debugger if options[:debugger]
 			log.info "** Waves Server Starting ..."
 			t = real_start
 			log.info "** Waves Server Running on #{host}:#{port}"
@@ -84,7 +85,7 @@ module Waves
         require 'ruby-debug'
         Debugger.start
         Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-        # log.info "Debugger enabled"
+        log.info "Debugger enabled"
       rescue Exception
         log.info "You need to install ruby-debug to run the server in debugging mode. With gems, use 'gem install ruby-debug'"
         exit

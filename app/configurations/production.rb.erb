@@ -4,7 +4,7 @@ module <%= name %>
       
     class Production < Default
       
-      database :host => host, :adapter => 'mysql', :database => '<%= name.downcase %>',
+      database :host => 'localhost', :adapter => 'mysql', :database => '<%= name.downcase %>',
         :user => 'root', :password => ''
       
       host '0.0.0.0'
