@@ -39,7 +39,7 @@ mkdir(app_path)
 cp_r Dir["#{template}/*"], app_path
 
 # get rid of placeholder files left over from gem install
-Dir["#{app_name}/**/EMPTY"].each { |path| rm path }
+Dir["#{app_path}/**/EMPTY"].each { |path| rm path }
 # Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
 
 # next, process all template files ...
