@@ -9,6 +9,9 @@ module Waves
   #
   # == Examples
   #
+  #   resource = '([\w\-]+)'
+  #   name = '([\w\-\_\.\+\@]+)'
+  #
   #   path %r{^/#{resource}/#{name}/?$} do |resource, name|
   #     "Hello from a #{resource} named #{name.capitalize}."
   #   end
