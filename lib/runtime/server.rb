@@ -31,7 +31,7 @@ module Waves
 		  pwd = Dir.pwd
 		  Daemonize.daemonize( Waves::Logger.output )
 		  Dir.chdir(pwd)
-		  File.write( :log / $$+'.pid', '' )
+		  File.write( :log / "#{port}.pid", $$ )
 		end
 		# Start and / or access the Waves::Logger instance.
 		def log ; @log ||= Waves::Logger.start ; end
