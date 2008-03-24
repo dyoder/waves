@@ -1,9 +1,20 @@
 #!/usr/bin/env ruby
 
-unless ARGV.length == 1
-	$stderr.puts "Usage: waves {name}"
+if ARGV.length != 1 || ARGV[0] == '--help'
+	$stderr.puts "Usage: waves {app_name}"
+	$stderr.puts "app_name may contain only letters, numbers, and underscores."
 	exit 1
 end
+
+app_path = ARGV[0]
+app_name = File.basename(app_path)
+if app_name =~ /[^\w\d_]/
+  raise ArgumentError, <<-TEXT
+  Unusable name: \"#{app_name}\"
+  Application names may contain only letters, numbers, and underscores." 
+TEXT
+end
+
 
 require 'rubygems'
 require 'erubis'
@@ -19,14 +30,6 @@ include FileUtils
 
 
 puts "** Creating new Waves application ..."
-app_path = ARGV[0]
-app_name = File.basename(app_path)
-if app_name =~ /[^\w\d_]/
-  raise ArgumentError, <<-TEXT
-  Unusable name: \"#{app_name}\"
-  Application names may contain only letters, numbers, and underscores." 
-TEXT
-end
 template = begin
   File.join File.dirname(File.readlink(__FILE__)), '..', 'app'
 rescue Exception
@@ -36,7 +39,7 @@ mkdir(app_path)
 cp_r Dir["#{template}/*"], app_path
 
 # get rid of placeholder files left over from gem install
-Dir["#{app_name}/**/EMPTY"].each { |path| rm path }
+Dir["#{app_path}/**/EMPTY"].each { |path| rm path }
 # Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
 
 # next, process all template files ...

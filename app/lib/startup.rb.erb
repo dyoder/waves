@@ -1,3 +1,6 @@
-require 'lib/<%= name.downcase %>'
+Gem.clear_paths
+Gem.path.unshift(Waves::Configurations::Default.root / "gems")
+
+require 'lib/<%= name.snake_case %>'
 Waves << <%= name %>
 Application = <%= name %>

@@ -80,7 +80,7 @@ module Waves
   #
   # *Example*
   #
-  #   database :host => host, :adapter => 'mysql', :database => 'blog',
+  #   database :host => 'localhost', :adapter => 'mysql', :database => 'blog',
   #     :user => 'root', :password => 'guess'
   #
   # 
@@ -140,7 +140,7 @@ module Waves
 	  # defining a number of attributes that are required by Waves.
 		class Default < Base
 		  
-			%w( host port ports log reloadable database session debug ).
+			%w( host port ports log reloadable database session debug root ).
 			each { |name| attribute(name) }
 			
 			# Provide access to the Waves::MimeTypes class via the configuration. You
@@ -161,7 +161,8 @@ module Waves
       debug true
 			session :duration => 30.minutes, :path => '/tmp/sessions'
     	log :level => :info, :output => $stderr	
-  	
+      root Dir.pwd
+      
 		end
 	end
 end

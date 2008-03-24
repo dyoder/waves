@@ -5,7 +5,7 @@ namespace :schema do
   task :migration do |task|
 	
 		version = ( ENV['version'].nil? ? 
-			Sequel::Migrator.get_current_migration_version( Application.database ) :
+  		Sequel::Migrator.latest_migration_version( :schema / :migrations ).to_i :
 			ENV['version'].to_i  ) + 1
 
 		name = ENV['name'] || 'migration'

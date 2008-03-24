@@ -1,7 +1,9 @@
 0.7.3:
 - Added explicit require for daemons gem
 - Added support for running off source
-- Added support for using SQLLite
+- Added support for using SQLite
+- Improved inflection
+- Windows support for waves, waves-server, and waves-console
 0.7.2:
 - Minor bug fixes, improved documentation
 0.7.1:

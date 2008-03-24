@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 if File.exist?(waves_src = File.join(File.dirname(__FILE__), 'waves'))
   $:.unshift(File.join(waves_src, 'lib'))
+  USE_WAVES_SRC = true
 end
 
 begin
   require 'waves'
-  Waves::Console.load
-  %w( schema cluster generate ).each { |task| require "lib/tasks/#{task}.rb" }
+  Waves::Console.load(:mode => ENV['mode'])
+  %w( schema cluster generate gem ).each { |task| require "lib/tasks/#{task}.rb" }
 rescue LoadError
   puts "Can't find waves gem or ./waves/lib directory.  try rake symlink waves=/path/to/waves/"
 end

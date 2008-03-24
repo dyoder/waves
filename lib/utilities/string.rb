@@ -24,9 +24,13 @@ class String
 
   alias_method(:pluralize, :plural)
 
-	def camel_case
-		gsub(/(_)(\w)/) { $2.upcase }.gsub(/^([a-z])/) { $1.upcase }
+	def lower_camel_case
+		gsub(/(_)(\w)/) { $2.upcase }
 	end		
+	
+	def camel_case
+	  lower_camel_case.gsub(/^([a-z])/) { $1.upcase }
+	end
 	
 	def snake_case
     gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2}"}.tr("-", "_").downcase
