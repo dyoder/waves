@@ -14,7 +14,7 @@ module Waves
 	#
 	# *Example*
 	#
-	#   # Find the story named 'home' and pass it into the view template as @story
+	#   # Find the story named 'home' and pass it as @story into the "story/show" template
 	#   use( :story ) | controller { find( 'home' ) } | view { |x| show( :story => x ) }
 	#
 	# = Helpers
@@ -37,7 +37,7 @@ module Waves
 	#
 	# The layout method takes a name and an assigns hash that will be available within the layout template as instance variables. In this example, <tt>@title</tt> will be defined as <tt>@story.title</tt> within the layout template named 'default.' 
 	#
-	# Any number of layouts may be included within a single view, and layouts may even be nested within layouts. This makes it possible to create large numbers of highly structured views that can be easily changed with minimal effort. For example, you might a specific layout associated with form elements. By incorporating this into your views as a +layout+ template, you can make changes across all your forms by changing this single template.
+	# Any number of layouts may be included within a single view, and layouts may even be nested within layouts. This makes it possible to create large numbers of highly structured views that can be easily changed with minimal effort. For example, you might specify a layout associated with form elements. By incorporating this into your views as a +layout+ template, you can make changes across all your forms by changing this single template.
 	#
   # = Nested Views
   #
