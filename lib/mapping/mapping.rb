@@ -126,6 +126,12 @@ module Waves
 			options[:url] = pat; map( options, &block )
 		end
 		
+		# Maps the root of the application to a block. If an options hash is specified it must
+		# satisfy those constraints in order to run the block.
+		def root( options = {}, &block )
+      path( %r{^/?$}, options, &block )
+	  end
+		
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
 		def []( request )
