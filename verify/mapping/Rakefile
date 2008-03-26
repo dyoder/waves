@@ -21,7 +21,7 @@ task :symlink do
   system(cmd = "ln -s #{bindir} waves/") && puts(cmd)
 end
 
-task :verify => :'cluster:start' do
+task :verify => :'cluster:restart' do
   specs = Dir[ :verify / :spec / '*.rb' ]
   `specrb -r../helpers #{specs.join(' ')} --rdox > doc/SPEC`
 end

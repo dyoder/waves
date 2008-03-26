@@ -1,4 +1,4 @@
-require 'sequel'
+# require 'sequel'
 module Test
 
 	extend Autocreate; extend Autoload; extend Reloadable
@@ -41,7 +41,7 @@ module Test
 	# accessor methods for modules and other key application objects ...
 	class << self
 		def config ; Waves::Server.config rescue nil || Waves::Console.config ; end
-		def database ; @database ||= Sequel.open( config.database ) ; end
+		# def database ; @database ||= Sequel.open( config.database ) ; end
 		def configurations ; Test::Configurations ; end
 		def controllers ; Test::Controllers ; end
 		def models ; Test::Models ; end
