@@ -34,7 +34,7 @@ module Waves
   #
   # = Invoking Controllers and Views
   #
-  # You may invoking a controller or view method for the primary application by using the 
+  # You may invoke a controller or view method for the primary application by using the 
   # corresponding methods, preceded by the +use+ directive.
   #
   # == Examples
