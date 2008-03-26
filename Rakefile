@@ -74,6 +74,7 @@ task( :setup ) do
   system(cmd = "chmod +x bin/waves*")
 end
 
+desc "Run tests / specs to verify source"
 task :verify do
   
   %w( mapping ).each do |features|
