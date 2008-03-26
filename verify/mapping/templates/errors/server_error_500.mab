@@ -1,0 +1,2 @@
+h1 '500'
+p %q( Internal server error. Sorry, but your request could not be processed. )

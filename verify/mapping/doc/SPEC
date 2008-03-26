@@ -1,0 +1,17 @@
+
+== A developer can map requests to filters.
+* Map a path to a 'before' filter.
+* Map a path to an 'after' filter.
+
+== A developer can extract parameters from a request path or URL.
+* Extract a parameter via a regexp match of the path.
+* Extract a parameter via a regexp match of the URL. (disabled)
+
+== A developer can map requests using the request path.
+* Map the path of a GET request to a lambda.
+
+== A developer can map requests using the request method.
+* Map the path of a POST request to a lambda.
+* Map the path of a DELETE request to a lambda. (disabled)
+
+7 specifications, 2 disabled (6 requirements), 0 failures
