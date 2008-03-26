@@ -1,7 +1,5 @@
-require 'rubygems'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
-require 'fileutils'
+$: << 'lib'; %w( rubygems rake/rdoctask rake/gempackagetask extensions/all
+  utilities/string utilities/symbol ).each { |dep| require dep }
 
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
@@ -74,4 +72,18 @@ task( :setup ) do
     end
   end
   system(cmd = "chmod +x bin/waves*")
+end
+
+task :verify do
+  
+  %w( mapping ).each do |features|
+
+    FileUtils.cd( :verify / features )
+    `rake verify`
+    FileUtils.cd( '..' / '..' )
+
+  end
+  rdocs = Dir[ :verify / '**' / :doc / 'SPEC' ]
+  `rdoc -o #{:doc / :rdoc } #{rdocs.join(' ')}`
+
 end
