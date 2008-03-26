@@ -8,7 +8,7 @@ module Test
 
 			reloadable [ Test ]
 
-			log :level => :debug	
+			log :level => :debug, :output => ( :log / "waves.log" )	
 
       application do
 				use Rack::ShowExceptions
