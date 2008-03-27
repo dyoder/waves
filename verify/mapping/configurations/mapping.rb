@@ -19,9 +19,9 @@ module Test
       # end
       
 
-      before( '/filters' ) { request.response.write('Before') }
+      before( :path => '/filters' ) { request.response.write('Before') }
       path( '/filters' ) { '- During -' }
-      after( '/filters' ) { request.response.write('After') }
+      after( :path => '/filters' ) { request.response.write('After') }
       
     end
 
