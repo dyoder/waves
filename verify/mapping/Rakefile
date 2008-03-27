@@ -4,7 +4,10 @@ require File.join(File.expand_path('../..'), 'lib', 'waves')
 Waves::Console.load
 %w( schema cluster generate ).each { |task| require "lib/tasks/#{task}.rb" }
 
-task :verify => :'cluster:start' do
+task :specrb do
   specs = Dir[ :verify / :spec / '*.rb' ]
   `specrb -r../helpers #{specs.join(' ')} --rdox > doc/SPEC`
+end
+
+task :verify => [:'cluster:restart', :specrb, :'cluster:stop'] do
 end
