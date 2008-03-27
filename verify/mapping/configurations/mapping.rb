@@ -18,10 +18,21 @@ module Test
       #  port
       # end
       
+      before( :path => '/filters', :method => :post ) { request.response.write('Before post:') }
+      before( :path => '/filters' ) { request.response.write('Before:') }
+      wrap( :path => '/filters', :method => :post ) { request.response.write(':Wrap post:') }
+      wrap( :path => '/filters' ) { request.response.write(':Wrap:') }
+      path( '/filters' ) { 'During' }
+      after( :path => '/filters', :method => :post ) { request.response.write('After post:') }
+      after( :path => '/filters' ) { request.response.write(':After') }
+                       
+      regexp = %r{^/filters/(\w+)$}
+      before( :path => regexp ) { |filtername| request.response.write("Before #{filtername}:") }
+      wrap( :path => regexp ) { |filtername| request.response.write(":Wrap #{filtername}:") }
+      path( regexp ) { 'During' }
+      after( :path => regexp ) { |filtername| request.response.write(":After #{filtername}") }
 
-      before( :path => '/filters' ) { request.response.write('Before') }
-      path( '/filters' ) { '- During -' }
-      after( :path => '/filters' ) { request.response.write('After') }
+      before( :path => 'filters_with_no_map' ) { request.response.write("Filters with no map") }
       
     end
 
