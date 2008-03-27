@@ -79,9 +79,9 @@ task :verify do
   
   %w( mapping ).each do |features|
 
-    FileUtils.cd( :verify / features )
-    `rake verify`
-    FileUtils.cd( '..' / '..' )
+    Dir.chdir(:verify / features) do
+      `rake verify`
+    end
 
   end
   rdocs = Dir[ :verify / '**' / :doc / 'SPEC' ]
