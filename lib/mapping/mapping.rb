@@ -195,7 +195,7 @@ module Waves
 			  elsif param.is_a? Regexp
 			    return false unless value.to_s =~ param
 			  else
-				  return false unless value.to_s == param
+				  return false unless value.to_s == param.to_s
 				end
 			end
 			return true
