@@ -10,5 +10,5 @@ task :specrb do
   `specrb -r../helpers #{specs.join(' ')} --rdox > doc/SPEC`
 end
 
-task :verify => [:'cluster:restart', :specrb, :'cluster:stop'] do
+task :verify => [:'cluster:start', :specrb, :'cluster:stop'] do
 end
