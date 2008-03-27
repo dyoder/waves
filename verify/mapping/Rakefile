@@ -1,25 +1,8 @@
 #!/usr/bin/env ruby
-if File.exist?(waves_src = File.join(File.dirname(__FILE__), 'waves'))
-  $:.unshift(File.join(waves_src, 'lib'))
-end
-
-begin
-  require 'waves'
-  Waves::Console.load
-  %w( schema cluster generate ).each { |task| require "lib/tasks/#{task}.rb" }
-rescue LoadError
-  puts "Can't find waves gem or ./waves/lib directory.  try rake symlink waves=/path/to/waves/"
-end
-
-desc "Create lib and bin symlinks using waves=<path>"
-task :symlink do
-  waves = ENV['waves']
-  system "mkdir waves"
-  libdir = File.join(waves, 'lib')
-  bindir = File.join(waves, 'bin')
-  system(cmd = "ln -s #{libdir} waves/") && puts(cmd)
-  system(cmd = "ln -s #{bindir} waves/") && puts(cmd)
-end
+$: << File.expand_path('../../lib')
+require File.join(File.expand_path('../..'), 'lib', 'waves')
+Waves::Console.load
+%w( schema cluster generate ).each { |task| require "lib/tasks/#{task}.rb" }
 
 task :verify => :'cluster:start' do
   specs = Dir[ :verify / :spec / '*.rb' ]
