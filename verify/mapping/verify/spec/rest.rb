@@ -4,7 +4,7 @@ context "A developer can map requests using the request method." do
     post( '/' ).body.should == 'This is a simple post rule.'
   end
 
-  xspecify 'Map the path of a DELETE request to a lambda.' do
+  specify 'Map the path of a DELETE request to a lambda.' do
     delete( '/' ).body.should == 'This is a simple delete rule.'
   end
 
