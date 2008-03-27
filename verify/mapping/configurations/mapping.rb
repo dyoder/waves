@@ -9,7 +9,7 @@ module Test
       path('/', :method => :post ) { 'This is a simple post rule.' }
       path('/', :method => :put ) { 'This is a simple put rule.' }
       path('/', :method => :delete ) { 'This is a simple delete rule.' }
-      path('/') { 'This is a simple get rule.' }
+      path('/', :method => :get) { 'This is a simple get rule.' }
       path('/foo') { "The server says, 'bar!'" }
       
       path %r{/param/(\w+)} do |value|
