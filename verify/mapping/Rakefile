@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+USE_WAVES_SRC = true
 $: << File.expand_path('../../lib')
 require File.join(File.expand_path('../..'), 'lib', 'waves')
 Waves::Console.load(:mode => ENV['mode'])
