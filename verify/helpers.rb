@@ -12,8 +12,12 @@ module Test
           Net::HTTP.start( 'localhost', 3000 ) { |h| h.post(path,params) }
         end
 
+        def put(path,params={})
+          Net::HTTP.start( 'localhost', 3000 ) { |h| h.put(path,params) }
+        end
+
         def delete(path,params={})
-          raise 'Not Implemented'
+          Net::HTTP.start( 'localhost', 3000 ) { |h| h.delete(path,params) }
         end
       end
     end

@@ -14,9 +14,9 @@ module Test
         "You asked for: #{value}."
       end
       
-      # url %r{localhost:(\d+)/port} do |port|
-      #  port
-      # end
+      url %r{http://localhost:(\d+)/port} do |port|
+        port
+      end
       
       before( :path => '/filters', :method => :post ) { request.response.write('Before post:') }
       before( :path => '/filters' ) { request.response.write('Before:') }
@@ -32,7 +32,9 @@ module Test
       path( regexp ) { 'During' }
       after( :path => regexp ) { |filtername| request.response.write(":After #{filtername}") }
 
-      before( :path => 'filters_with_no_map' ) { request.response.write("Filters with no map") }
+      before( :path => 'filters_with_no_map' ) { request.response.write("Before") }
+      wrap( :path => 'filters_with_no_map' ) { request.response.write("Wrap") }
+      after( :path => 'filters_with_no_map' ) { request.response.write("After") }
       
     end
 
