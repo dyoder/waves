@@ -135,6 +135,7 @@ module Waves
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
 		def []( request )
+		  
 			rx = { :before => [], :after => [], :action => nil }
 			
 			( filters[:before] + filters[:wrap] ).each do | options, function |
@@ -168,7 +169,7 @@ module Waves
 		end
 		
 		def match ( request, options, function )
-		  return nil if !options || !satisfy( request, options )
+		  return nil unless satisfy( request, options )
 		  if options[:path]
 		    matches = options[:path].match( request.path )
 	    elsif options[:url]
@@ -178,29 +179,13 @@ module Waves
 	  end
 	  
 		def satisfy( request, options )
-			options.each do |method, param|
-			  begin
-			    value = request.send( method )
-			  rescue NoMethodError
-			    if method =~ %r{^rack\.}
-      		  value = request.env[method.to_s.downcase]
-      		else
-      		  value = request.env[method.to_s.upcase]
-    		  end
-    	  end
-			  if param.nil?
-			    return false unless value.nil?
-			  elsif value.nil?
-			    return false
-			  elsif param.is_a? Regexp
-			    return false unless value.to_s =~ param
-			  else
-				  return false unless value.to_s == param
-				end
-			end
-			return true
-		end
-		
+      options.nil? or options.all? do |name,wanted|
+        got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ? 
+          name.to_s.downcase : name.to_s.upcase ]
+        ( ( wanted.is_a?(Regexp) && wanted.match( got.to_s ) ) or 
+          got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
+      end
+    end
 	end
 
 end

@@ -2,6 +2,8 @@
 if File.exist?(waves_src = File.join(File.dirname(__FILE__), 'waves'))
   $:.unshift(File.join(waves_src, 'lib'))
   USE_WAVES_SRC = true
+else
+  USE_WAVES_SRC = false
 end
 
 begin
