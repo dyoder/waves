@@ -26,18 +26,18 @@ module Waves
       		  name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
   
             # get all resources for the given model
-            path %r{^/#{model}/?$} do | model |
+            path %r{^/#{model}/?$}, :method => :get do | model |
               use( model.singular ) | controller { all } | view { |data| list( model => data ) }
             end
 
             # get the given resource for the given model
-            path %r{^/#{model}/#{name}/?$} do | model, name |
+            path %r{^/#{model}/#{name}/?$}, :method => :get do | model, name |
               use(model) | controller { find( name ) } | 
                 view { |data| show( model => data ) }
             end
   
             # display an editor for the given resource / model
-            path %r{^/#{model}/#{name}/editor/?$} do | model, name |
+            path %r{^/#{model}/#{name}/editor/?$}, :method => :get do | model, name |
               use(model) | controller { find( name ) } | 
                 view { |data| editor( model => data ) }       
             end
