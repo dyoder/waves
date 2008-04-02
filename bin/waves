@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+# rudimentary argument checks
 if ARGV.length != 1 || ARGV[0] == '--help'
 	$stderr.puts "Usage: waves {app_name}"
 	$stderr.puts "app_name may contain only letters, numbers, and underscores."
@@ -27,6 +28,11 @@ end
 
 require 'fileutils'
 include FileUtils
+
+# are we calling this script from within the waves framework source?
+script_path = File.expand_path(__FILE__)
+WAVES_SRC = File.dirname(File.dirname(script_path))
+IN_WAVES_SRC = Dir.pwd.match(WAVES_SRC) ? true : false
 
 
 puts "** Creating new Waves application ..."
