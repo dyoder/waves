@@ -6,11 +6,12 @@ begin
   Waves::Console.load(:mode => ENV['mode'])
   %w( schema cluster generate gem ).each { |task| require "lib/tasks/#{task}.rb" }
 rescue LoadError
-  puts "Can't find waves gem or ./waves/lib directory.  try rake symlink waves=/path/to/waves/"
+  puts "Can't find waves.  Install the gem or define WAVES_SRC in lib/framework.rb"
 end
 
-desc "Create lib and bin symlinks using waves=<path>"
+desc "Deprecated. Create lib and bin symlinks using waves=<path>"
 task :symlink do
+  puts "You need to define WAVES_SRC in lib/framework.rb for this to work"
   waves = ENV['waves']
   system "mkdir waves"
   libdir = File.join(waves, 'lib')
