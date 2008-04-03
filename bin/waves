@@ -54,7 +54,7 @@ Dir["#{app_path}/**/*.erb"].each do |path|
     name = app_name.camel_case
     File.write( path.gsub(/\.erb$/,''), 
       Erubis::Eruby.new( File.read( path ) ).result( binding ) )
-    system "rm #{path}"
+    rm path
   end
 end
 
