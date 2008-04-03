@@ -6,12 +6,7 @@
 
 require File.join('lib', 'framework')
 
-begin
-  require 'waves'
-  Waves::Console.load(:mode => ENV['mode'])
-rescue LoadError
-  puts "Can't find waves.  Install the gem or define WAVES_SRC in lib/framework.rb"
-end
+Waves::Console.load(:mode => ENV['mode'])
 
 # load tasks from waves framework
 %w( schema cluster generate gem ).each { |task| require "tasks/#{task}.rb" }
