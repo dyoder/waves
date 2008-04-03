@@ -15,10 +15,10 @@
 
 if USE_WAVES_SRC = defined?(WAVES_SRC)
   $:.unshift(File.join(WAVES_SRC, 'lib'))
-else # go with the gem
-  begin
-    require 'waves'
-  rescue LoadError => e
-    raise e, "Can't find waves. Install the gem or define WAVES_SRC in lib/framework.rb"
-  end
+end
+
+begin
+  require 'waves'
+rescue LoadError => e
+  raise e, "Can't find waves. Install the gem or define WAVES_SRC in lib/framework.rb"
 end
