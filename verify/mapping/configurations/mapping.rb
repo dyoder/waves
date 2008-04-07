@@ -38,6 +38,26 @@ module Test
       wrap( :path => 'filters_with_no_map' ) { request.response.write("Wrap") }
       after( :path => 'filters_with_no_map' ) { request.response.write("After") }
       
+      before('/pathstring') { request.response.write("Before pathstring") }
+      wrap('/pathstring') { request.response.write("Wrap pathstring") }
+      map('/pathstring') { "During pathstring" }
+      after('/pathstring') { request.response.write("After pathstring") }
+      
+      before(%r{^/pathregexp$}) { request.response.write("Before pathregexp") }
+      wrap(%r{^/pathregexp$}) { request.response.write("Wrap pathregexp") }
+      map(%r{^/pathregexp$}) { "During pathregexp" }
+      after(%r{^/pathregexp$}) { request.response.write("After pathregexp") }
+      
+      before('/pathstring/name', :method => :post) { request.response.write("Before pathstring post") }
+      wrap('/pathstring/name', :method => :post) { request.response.write("Wrap pathstring post") }
+      map('/pathstring/name', :method => :post) { "During pathstring post" }
+      after('/pathstring/name', :method => :post) { request.response.write("After pathstring post") }
+      
+      before(%r{^/pathregexp/name$}, :method => :post) { request.response.write("Before pathregexp post") }
+      wrap(%r{^/pathregexp/name$}, :method => :post) { request.response.write("Wrap pathregexp post") }
+      map(%r{^/pathregexp/name$}, :method => :post) { "During pathregexp post" }
+      after(%r{^/pathregexp/name$}, :method => :post) { request.response.write("After pathregexp post") }
+      
     end
 
   end
