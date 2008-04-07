@@ -91,24 +91,44 @@ module Waves
 		# block before running any +path+ or +url+ actions. You can have as many +before+ matches
 		# as you want - they will all run, unless one of them calls redirect, generates an 
 		# unhandled exception, etc.
-		def before( options, &block )
+		def before( path, options = {}, &block )
+		  if path.is_a? Hash
+		    options = path
+	    else
+	      options[:path] = path
+      end
 			filters[:before] << [ options, block ]
 		end
 		
 		# Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
-		def after( options, &block )
+		def after( path, options = {}, &block )
+		  if path.is_a? Hash
+		    options = path
+	    else
+	      options[:path] = path
+      end
 			filters[:after] << [ options, block ]
 		end
 		
 		# Run the action before and after the matching +url+ or +path+ action.
-		def wrap( options, &block )
+		def wrap( path, options = {}, &block )
+		  if path.is_a? Hash
+		    options = path
+	    else
+	      options[:path] = path
+      end
 			filters[:before] << [ options, block ]
 			filters[:after] << [ options, block ]
 		end		
 
     # Maps a request to a block. Don't use this method directly unless you know what 
     # you're doing. Use +path+ or +url+ instead.
-		def map( options, &block )
+		def map( path, options = {}, &block )
+		  if path.is_a? Hash
+		    options = path
+	    else
+	      options[:path] = path
+      end
 			mapping << [ options, block ]
 		end
 		
