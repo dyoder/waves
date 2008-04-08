@@ -14,13 +14,3 @@ Waves::Console.load(:mode => ENV['mode'])
 # load tasks from this app's lib/tasks
 Dir["lib/tasks/*.{rb,rake}"].each { |task| require task }
 
-desc "Deprecated: Create lib and bin symlinks using waves=<path>"
-task :symlink do
-  puts "You need to define WAVES_SRC in lib/framework.rb for this to work"
-  waves = ENV['waves']
-  system "mkdir waves"
-  libdir = File.join(waves, 'lib')
-  bindir = File.join(waves, 'bin')
-  system(cmd = "ln -s #{libdir} waves/") && puts(cmd)
-  system(cmd = "ln -s #{bindir} waves/") && puts(cmd)
-end
