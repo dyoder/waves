@@ -18,7 +18,7 @@ module Waves
           def active_record
             unless @active_record
               ::ActiveRecord::Base.establish_connection(config.database)
-              @active_record = ::ActiveRecord::Base
+              @active_record = ::ActiveRecord::Base.connection
             end
             @active_record
           end
