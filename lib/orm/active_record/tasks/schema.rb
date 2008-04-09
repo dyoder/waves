@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) / ".." / ".." / :migration_helper
+require File.dirname(__FILE__) / ".." / ".." / :migration
 include Waves::Orm
 namespace :schema do
 
