@@ -17,15 +17,13 @@ namespace :schema do
 	
 	desc 'Performs migration from version, to version.'
 	task :migrate => :connect do |task|
-	  raise "Unimplemented.  See #{File.expand_path(__FILE__)}"
-	  version = ENV['version'] ? ENV['version'].to_i : nil
+	  version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
 	  ActiveRecord::Migrator.migrate(Migration.directory, version)
-		# version = ENV['version']; version = version.to_i unless version.nil? 
-		#     Sequel::Migrator.apply( Waves.application.database, Migration.directory , version )
 	end
 	
 	task :connect do
     Application.database
+    ActiveRecord::Base.logger = Logger.new($stdout)
 	end
 	
 end
