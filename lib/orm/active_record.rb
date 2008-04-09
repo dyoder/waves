@@ -4,6 +4,9 @@ class Symbol
 end
 require 'active_record'
 
+if defined?(Rake)
+  require File.dirname(__FILE__) / :active_record / :tasks / :schema
+end
 
 module Waves
   module Orm

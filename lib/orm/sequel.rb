@@ -1,5 +1,9 @@
 require 'sequel'
 
+if defined?(Rake)
+  require File.dirname(__FILE__) / :sequel / :tasks / :schema
+end
+
 module Waves
   module Orm
     
