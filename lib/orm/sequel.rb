@@ -11,8 +11,8 @@ module Waves
         
         mod.instance_eval do
           def sequel ; @sequel ||= ::Sequel.open( config.database ) ; end
-          def orm ; @orm ||= sequel ; end
-          def model_config(context, name); context.set_dataset(orm[ name ]); end
+          def database ; @database ||= sequel ; end
+          def model_config(context, name); context.set_dataset(database[ name ]); end
         end
         
       end

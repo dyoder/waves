@@ -23,8 +23,8 @@ module Waves
             @active_record
           end
           
-          def orm
-            @orm ||= active_record
+          def database
+            @database ||= active_record
           end
           
           def model_config(context, name)
