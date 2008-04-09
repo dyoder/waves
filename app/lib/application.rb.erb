@@ -1,5 +1,8 @@
-require 'sequel'
 module <%= name %>
+  require 'orm/sequel'
+  include Waves::Orm::Sequel
+  # require 'orm/active_record'
+  # include Waves::Orm::ActiveRecord
 
 	extend Autocreate; extend Autoload; extend Reloadable
 	autoload true; directories :lib
@@ -27,7 +30,7 @@ module <%= name %>
 		  # set the dataset for Models
 		  when :Models
 			  autocreate true, eval("<%= name %>::Models::Default") do
-			    set_dataset <%= name %>.database[ basename.snake_case.plural.intern ]
+			    <%= name %>.model_config(self, basename.snake_case.plural.intern)
 			  end
 			# everything else just use the exemplar
 			else
@@ -41,7 +44,6 @@ module <%= name %>
 	# accessor methods for modules and other key application objects ...
 	class << self
 		def config ; Waves::Server.config rescue nil || Waves::Console.config ; end
-		def database ; @database ||= Sequel.open( config.database ) ; end
 		def configurations ; <%= name %>::Configurations ; end
 		def controllers ; <%= name %>::Controllers ; end
 		def models ; <%= name %>::Models ; end
