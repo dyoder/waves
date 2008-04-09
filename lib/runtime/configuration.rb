@@ -161,7 +161,7 @@ module Waves
       debug true
 			session :duration => 30.minutes, :path => '/tmp/sessions'
     	log :level => :info, :output => $stderr	
-      root Dir.pwd
+      root ::APP_ROOT
       
 		end
 	end
