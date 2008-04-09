@@ -19,6 +19,8 @@ elsif USE_WAVES_SRC = defined?(WAVES_SRC)
   $:.unshift(File.join(WAVES_SRC, "lib"))
 end
 
+APP_ROOT = File.join(File.dirname(__FILE__), ".." )
+
 begin
   require 'waves'
 rescue LoadError => e
