@@ -1,4 +1,6 @@
 class Symbol
+  # Protect ActiveRecord from itself by undefining the to_proc method.
+  # Don't worry, AR will redefine it.
   alias :extensions_to_proc :to_proc
   remove_method :to_proc
 end
@@ -15,28 +17,25 @@ module Waves
     
     module ActiveRecord
       
-      def self.included(mod)
-        
-        mod.instance_eval do
-          def active_record
-            unless @active_record
-              ::ActiveRecord::Base.establish_connection(config.database)
-              @active_record = ::ActiveRecord::Base.connection
-            end
-            @active_record
-          end
-          
-          def database
-            @database ||= active_record
-          end
-          
-          def model_config(context, name)
-            active_record
-            context.set_table_name(name)
-          end
+      def active_record
+        unless @active_record
+          ::ActiveRecord::Base.establish_connection(config.database)
+          @active_record = ::ActiveRecord::Base.connection
         end
-        
+        @active_record
       end
+      
+      def database
+        @database ||= active_record
+      end
+      
+      def model_config(context, name)
+        active_record
+        context.set_table_name(name)
+      end
+
     end
   end
 end
+
+::Application.extend(Waves::Orm::ActiveRecord)

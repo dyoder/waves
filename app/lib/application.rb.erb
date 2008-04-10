@@ -1,8 +1,6 @@
 module <%= name %>
   require 'orm/sequel'
-  include Waves::Orm::Sequel
   # require 'orm/active_record'
-  # include Waves::Orm::ActiveRecord
 
 	extend Autocreate; extend Autoload; extend Reloadable
 	autoload true; directories :lib
