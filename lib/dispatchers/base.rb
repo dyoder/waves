@@ -22,7 +22,7 @@ module Waves
 			# Like any Rack application, Waves' dispatchers must provide a call method
 			# taking an +env+ parameter. 
 			def call( env )
-			  Waves::Server.synchronize do
+			  Waves::Application.instance.synchronize do
   				request = Waves::Request.new( env )
   				response = request.response
   			  t = Benchmark.realtime do 

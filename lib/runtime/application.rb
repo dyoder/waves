@@ -22,6 +22,8 @@ module Waves
 	# main Waves application, you can use +Waves+.+application+.
 	class Application
 
+  class << self; attr_accessor :instance; end
+
 	  # Accessor for options passed to the application. Valid options include
 		attr_reader :options
 
@@ -29,7 +31,10 @@ module Waves
 		def initialize( options={} )
 		  @options = options
 		  Dir.chdir options[:directory] if options[:directory]
+		  Application.instance = self
 		end
+		
+		def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
 		# The 'mode' of the application determines which configuration it will run under.
 		def mode ; @mode ||= @options[:mode]||:development ; end

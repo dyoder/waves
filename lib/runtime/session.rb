@@ -43,7 +43,7 @@ module Waves
 		end
 		
 		def session_path
-		  Waves::Server.config.session[:path] / session_id
+		  Waves::Application.instance.config.session[:path] / session_id
 		end
 		
 		def load_session
