@@ -4,10 +4,11 @@ module Waves
 
 	  class NotFoundError < Exception ; end
 		
-		class Redirect < Exception 
-			attr_reader :path
-			def initialize( path )
+		class Redirect < Exception
+			attr_reader :path, :status
+			def initialize( path, status = '302' )
 				@path = path
+				@status = status
 			end
 		end
 		
@@ -29,7 +30,7 @@ module Waves
     				begin
     					safe( request )
     				rescue Dispatchers::Redirect => redirect
-    					response.status = '302'
+    					response.status = redirect.status
     					response.location = redirect.path
     				rescue Dispatchers::NotFoundError => e
     					html = Waves.application.views[:errors].process( request ) do

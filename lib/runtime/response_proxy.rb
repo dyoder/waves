@@ -22,7 +22,7 @@ module Waves
 		
 		def to_s; @value ; end
 		
-		def redirect(path); @request.redirect(path); end
+		def redirect(path, status = '302'); @request.redirect(path, status); end
 		
 	end
 	

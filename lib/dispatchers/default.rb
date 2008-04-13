@@ -31,7 +31,7 @@ module Waves
 		
 				Waves::Server.reload if Waves::Server.debug?
 				response.content_type = Waves::Server.config.mime_types[ request.path ] || 'text/html'
-
+p Waves::Server.mapping.class
 				mapping = Waves::Server.mapping[ request ]
 
 				mapping[:before].each do | block, args |

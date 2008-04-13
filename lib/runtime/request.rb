@@ -68,8 +68,8 @@ module Waves
   	end
 
     # Issue a redirect for the given path.
-		def redirect( path )
-			raise Waves::Dispatchers::Redirect.new( path )
+		def redirect( path, status = '302' )
+			raise Waves::Dispatchers::Redirect.new( path, status )
 		end
 		
 	end

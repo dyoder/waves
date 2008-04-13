@@ -19,7 +19,7 @@ module Waves
 		# Access the request domain.
 		def domain; request.domain; end
 		# Issue a redirect for the given location.
-		def redirect(location); request.redirect(location); end
+		def redirect(location, status = '302'); request.redirect(location, status); end
 		# Access the primary application's models
 		def models; Waves.application.models; end
 		# Access the primary application's views
