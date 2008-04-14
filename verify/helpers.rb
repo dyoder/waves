@@ -1,7 +1,5 @@
 $:.unshift( 'lib' )
 require 'lib/waves.rb'
-module Test ; include Waves::Foundations::Simple ; end
-Waves << Test
 
 module Helpers
 
