@@ -29,10 +29,10 @@ module Waves
 			  
 				response = request.response
 		
-				Waves::Server.reload if Waves::Server.debug?
-				response.content_type = Waves::Server.config.mime_types[ request.path ] || 'text/html'
+				Waves::Application.instance.reload if Waves::Application.instance.debug?
+				response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
 
-				mapping = Waves::Server.mapping[ request ]
+				mapping = Waves::Application.instance.mapping[ request ]
 
 				mapping[:before].each do | block, args |
 				  ResponseProxy.new(request).instance_exec(*args,&block)
