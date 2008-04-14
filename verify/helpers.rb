@@ -5,8 +5,8 @@ Waves << Test
 
 module Helpers
 
-  def path(*args)
-    ::Test::Configurations::Mapping.path(*args)
+  def path(*args,&block)
+    ::Test::Configurations::Mapping.path(*args,&block)
   end
   
   def mock_request
