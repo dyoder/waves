@@ -2,16 +2,14 @@ module Waves
   module Foundations
     module Simple
       
-      def self.included?( app )
+      def self.included( app )
         
-        app.instance_eval do
-          module Configurations
-            class Test < Waves::Configurations::Default ; end
-            module Mapping
-              extend Waves::Mapping
-            end
+        app.module_eval do
+
+          Configurations.module_eval do
+            const_set( :Development, Class.new( Waves::Configurations::Default ) )
+            const_set( :Mapping, Module.new { |mod| Waves::Mapping } )
           end
-          
           extend Autocreate
           [ :Configurations, :Models, :Views, :Controllers, :Helpers ].each do | name |
         		autocreate( name, Module.new ) do

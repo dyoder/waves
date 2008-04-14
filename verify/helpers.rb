@@ -26,7 +26,7 @@ module Kernel
   def specification(name, &block)  Bacon::Context.new(name, &block) end
 end
 
-Bacon::Context.instance_eval { 
+Bacon::Context.instance_eval do
   include Helpers 
   alias_method :specify, :it
-}
+end
