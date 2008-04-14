@@ -3,6 +3,7 @@ require 'verify/helpers.rb'
 specification "A developer can map requests using the request path." do
   
   before do
+    Waves::Console.load( :mode => :development )
     path('/', :method => :post ) { 'This is a simple post rule.' }
     path('/', :method => :put ) { 'This is a simple put rule.' }
     path('/', :method => :delete ) { 'This is a simple delete rule.' }

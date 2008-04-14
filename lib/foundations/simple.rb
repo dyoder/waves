@@ -6,10 +6,6 @@ module Waves
         
         app.module_eval do
 
-          Configurations.module_eval do
-            const_set( :Development, Class.new( Waves::Configurations::Default ) )
-            const_set( :Mapping, Module.new { |mod| Waves::Mapping } )
-          end
           extend Autocreate
           [ :Configurations, :Models, :Views, :Controllers, :Helpers ].each do | name |
         		autocreate( name, Module.new ) do
@@ -19,6 +15,11 @@ module Waves
         			end
         		end
         	end
+
+          self::Configurations.module_eval do
+            const_set( :Development, Class.new( Waves::Configurations::Default ) )
+            const_set( :Mapping, Module.new { |mod| extend Waves::Mapping } )
+          end
           
           # accessor methods for modules and other key application objects ...
         	class << self

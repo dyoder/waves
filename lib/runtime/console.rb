@@ -8,7 +8,6 @@ module Waves
 
 			def load( options={} )
 				@console ||= Waves::Console.new( options )
-				Kernel.load( :lib / 'startup.rb' )
 			end
 			
 			# allow Waves::Console to act as The Console Instance

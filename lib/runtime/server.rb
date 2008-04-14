@@ -37,7 +37,6 @@ module Waves
 		def log ; @log ||= Waves::Logger.start ; end
 		# Start the server.
 		def start
-			load( :lib / 'startup.rb' )
 		  daemonize if options[:daemon]
 		  start_debugger if options[:debugger]
 			log.info "** Waves Server Starting ..."
