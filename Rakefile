@@ -76,10 +76,10 @@ end
 
 require 'rake/testtask'
 
-Rake::TestTask.new("testit") do |t|
+Rake::TestTask.new("test") do |t|
   Dir.chdir(File.join(File.dirname(__FILE__), "verify", "test_app"))
   t.libs << "helper"
-  t.test_files = FileList["**/test_*.rb"]
+  t.test_files = FileList["../**/test_*.rb"]
   t.verbose = true
 end
 
