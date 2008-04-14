@@ -1,13 +1,20 @@
 $:.unshift( 'lib' )
 require 'lib/waves.rb'
 
+# define basic app for use in testing
+# before methods may add to it using helper methods
+module Test ; include Waves::Foundations::Simple ; end
+Waves << Test
+Waves::Console.load( :mode => :development )
+
+
 module Helpers
 
   def path(*args,&block)
     ::Test::Configurations::Mapping.path(*args,&block)
   end
   
-  def mock_request
+  def use_mock_request
     @mock = Rack::MockRequest.new( Waves::Dispatchers::Default.new )
   end
   
