@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-$:.unshift(File.expand_path('../../lib'))
-require File.join(File.expand_path('../..'), 'lib', 'waves')
-require 'commands/waves-console'
