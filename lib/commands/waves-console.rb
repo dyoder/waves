@@ -2,7 +2,7 @@ require 'waves'
 require 'choice'
 
 Choice.options do
-  header 'Run a waves application server.'
+  header 'Run waves in console mode.'
   header ''
   option :mode do
     short '-c'
@@ -22,4 +22,7 @@ Choice.options do
 end
     
 Waves::Console.load( Choice.choices )
-require 'irb'; IRB.start
+require 'irb'
+require 'irb/completion'
+ARGV.clear # make sure arguments to waves-console don't propagate to irb
+IRB.start
