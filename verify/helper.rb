@@ -4,11 +4,8 @@
 $:.reject! { |e| e.include? 'TextMate' }
 require 'redgreen' if ENV['TM_FILENAME'].nil?
 
+# cd to the root of the app directory
+Dir.chdir(File.join(File.dirname(__FILE__), "test_app"))
+
 # Pull in the framework
-require File.join(File.dirname(__FILE__), "test_app", "lib", "framework")
-
-# Make sure we're in the app root directory
-Dir.chdir(File.dirname(__FILE__) / "test_app")
-
-# Boom.
-Waves::Console.load(:mode => 'development')
+require File.join("lib", "framework")
