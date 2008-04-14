@@ -1,4 +1,4 @@
-$: << 'lib'; %w( rubygems rake/rdoctask rake/gempackagetask extensions/all
+$: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
   utilities/string utilities/symbol ).each { |dep| require dep }
 
 gem = Gem::Specification.new do |gem|
@@ -74,28 +74,9 @@ task( :setup ) do
   system(cmd = "chmod +x bin/waves*")
 end
 
-require 'rake/testtask'
-
 Rake::TestTask.new("test") do |t|
   Dir.chdir(File.join(File.dirname(__FILE__), "verify", "test_app"))
   t.libs << "helper"
   t.test_files = FileList["../**/test_*.rb"]
   t.verbose = true
-end
-
-desc "Run tests / specs to verify source"
-task :verify do
-  
-  
-  
-  %w( mapping ).each do |features|
-
-    Dir.chdir(:verify / features) do
-      `rake verify`
-    end
-
-  end
-  rdocs = Dir[ :verify / '**' / :doc / 'SPEC' ]
-  `rdoc -o #{:doc / :rdoc } #{rdocs.join(' ')}`
-
 end
