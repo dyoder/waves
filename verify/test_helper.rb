@@ -1,9 +1,12 @@
 %w( rubygems bacon ).each { |f| require f }
-require 'redgreen' if ENV['TM_FILENAME'].nil?
 
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
+# protect TextMate from itself.
+require 'redgreen' if ENV['TM_FILENAME'].nil?
+
+# Prepend the framework lib to the loadpath
 $:.unshift( File.join(File.dirname(__FILE__), "..", "lib") )
 require 'waves'
 

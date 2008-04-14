@@ -1,4 +1,4 @@
-require 'verify/helpers.rb'
+require File.join(File.dirname(__FILE__), "..", "test_helper")
 
 specification "A developer can map requests using the request path." do
       
