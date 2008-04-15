@@ -74,9 +74,9 @@ task( :setup ) do
   system(cmd = "chmod +x bin/waves*")
 end
 
-Rake::TestTask.new("test") do |t|
-  Dir.chdir(File.join(File.dirname(__FILE__), "verify", "test_app"))
-  t.libs << "helper"
-  t.test_files = FileList["../**/test_*.rb"]
-  t.verbose = true
+desc "Run test suite"
+task :verify do
+  Dir['verify/**/*.rb'].each do |spec|
+    puts `bacon #{spec}`
+  end
 end
