@@ -23,6 +23,10 @@ module Helpers
     ::Test::Configurations::Mapping.path(*args,&block)
   end
   
+  def url(*args,&block)
+    ::Test::Configurations::Mapping.url(*args,&block)
+  end
+  
   def use_mock_request
     @mock = Rack::MockRequest.new( Waves::Dispatchers::Default.new )
   end
