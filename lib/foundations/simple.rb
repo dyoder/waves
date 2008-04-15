@@ -23,12 +23,12 @@ module Waves
           
           # accessor methods for modules and other key application objects ...
         	class << self
-        		def config ; Waves::Application.instance.config rescue nil || Waves::Application.instance.config ; end
-        		def configurations ; Test::Configurations ; end
-        		def controllers ; Test::Controllers ; end
-        		def models ; Test::Models ; end
-        		def helpers ; Test::Helpers ; end
-        		def views ; Test::Views ; end
+        		def config ; Waves.config ; end
+        		def configurations ; self::Configurations ; end
+        		def controllers ; self::Controllers ; end
+        		def models ; self::Models ; end
+        		def helpers ; self::Helpers ; end
+        		def views ; self::Views ; end
         	end
         	
         end

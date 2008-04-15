@@ -13,6 +13,12 @@ module Waves
 		  app.database if app.respond_to? 'database'
 		end
 		
+		def instance ; Waves::Application.instance ; end
+
+		def method_missing(name,*args,&block)
+		  instance.send(name,*args,&block)
+		end
+		
 	end
 	
 	# An application in Waves is anything that provides access to the Waves
@@ -30,8 +36,9 @@ module Waves
 		# Create a new Waves application instance.
 		def initialize( options={} )
 		  @options = options
-		  Dir.chdir options[:directory] if options[:directory]
+      Dir.chdir options[:directory] if options[:directory]
 		  Application.instance = self
+      Kernel.load( options[:startup] || 'lib/startup.rb' )
 		end
 		
 		def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end

@@ -18,8 +18,13 @@ Choice.options do
     desc 'Directory containing the application.'
     desc 'Defaults to the current directory.'
   end
+  separator ''
+  option :startup do
+    short '-s'
+    long '--startup'
+    desc 'Startup file to load.'
+    desc 'Defaults to "lib/startup.rb"'
+  end
   separator ''  
 end
-    
-Waves::Console.load( Choice.choices )
 require 'irb'; IRB.start

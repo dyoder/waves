@@ -46,6 +46,11 @@ Choice.options do
     desc 'Enable ruby-debug.'
   end
   separator ''
+  option :startup do
+    short '-s'
+    long '--startup'
+    desc 'Startup file to load.'
+    desc 'Defaults to "lib/startup.rb"'
+  end
 end
-    
 Waves::Server.run( Choice.choices )

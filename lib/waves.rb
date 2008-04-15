@@ -60,3 +60,4 @@ require 'helpers/view.rb'
 
 # waves foundations / layers
 require 'foundations/simple'
+require 'foundations/default'
