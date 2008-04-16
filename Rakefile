@@ -1,4 +1,4 @@
-$: << 'lib'; %w( rubygems rake/rdoctask rake/gempackagetask extensions/all
+$: << 'lib'; %w( rubygems rake/rdoctask rake/gempackagetask
   utilities/string utilities/symbol ).each { |dep| require dep }
 
 gem = Gem::Specification.new do |gem|
