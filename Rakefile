@@ -80,3 +80,9 @@ task :verify do
     puts `bacon #{spec}`
   end
 end
+
+Rake::TestTask.new(:test) do |t|
+  t.test_files = FileList["verify/*/*.rb"]
+  t.verbose = true
+end
+
