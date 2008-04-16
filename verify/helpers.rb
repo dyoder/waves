@@ -24,11 +24,11 @@ module Helpers
   end
 
   def path(*args,&block)
-    ::Test::Configurations::Mapping.path(*args,&block)
+    mapping.path(*args,&block)
   end
   
   def url(*args,&block)
-    ::Test::Configurations::Mapping.url(*args,&block)
+    mapping.url(*args,&block)
   end
   
   def use_mock_request

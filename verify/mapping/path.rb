@@ -6,6 +6,8 @@ specification "A developer can map requests using the request path." do
   before do
 
     use_mock_request
+    
+    mapping.clear
 
     path('/', :method => :post ) { 'This is a simple post rule.' }
     path('/', :method => :put ) { 'This is a simple put rule.' }

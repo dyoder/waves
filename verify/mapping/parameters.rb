@@ -7,6 +7,8 @@ specification "A developer can extract parameters from a request path or URL." d
 
     use_mock_request
     
+    mapping.clear
+    
     path %r{/param/(\w+)} do |value|
       "You asked for: #{value}."
     end

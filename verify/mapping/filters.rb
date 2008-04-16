@@ -5,7 +5,9 @@ describe "A developer can map requests to filters." do
   
   before do
     use_mock_request
-    
+
+    mapping.clear
+
     mapping.before( :path => '/filters', :method => :post ) { request.response.write('Before post:') }
     mapping.before( :path => '/filters' ) { request.response.write('Before:') }
     mapping.wrap( :path => '/filters', :method => :post ) { request.response.write(':Wrap post:') }
