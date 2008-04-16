@@ -11,7 +11,7 @@ gem = Gem::Specification.new do |gem|
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
 	%w( mongrel rack markaby erubis RedCloth autocode sequel 
-	    extensions live_console choice daemons test-spec).each do |dep|
+	    extensions live_console choice daemons bacon redgreen).each do |dep|
 	  gem.add_dependency dep
 	end
 	gem.files = Dir['lib/**/*.rb','app/**/*']
