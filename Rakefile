@@ -64,7 +64,12 @@ task( :setup ) do
       puts "Installing dependency: #{dep}"
       begin
         require 'rubygems/dependency_installer'
-        Gem::DependencyInstaller.new(dep.name, dep.version_requirements).install
+        if Gem::RubyGemsVersion =~ /^1\.0\./
+          Gem::DependencyInstaller.new(dep.name, dep.version_requirements).install
+        else
+          # as of 1.1.0
+          Gem::DependencyInstaller.new.install(dep.name, dep.version_requirements)
+        end
       rescue LoadError # < rubygems 1.0.1
         require 'rubygems/remote_installer'
         Gem::RemoteInstaller.new.install(dep.name, dep.version_requirements)
