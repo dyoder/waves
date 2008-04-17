@@ -38,7 +38,7 @@ module Waves
 		  @options = options
       Dir.chdir options[:directory] if options[:directory]
 		  Application.instance = self
-      Kernel.load( options[:startup] || 'lib/startup.rb' ) if Waves.application.nil?
+      Kernel.load( :lib / 'application.rb' ) if Waves.application.nil?
 		end
 		
 		def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end

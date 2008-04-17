@@ -63,7 +63,4 @@ unless RUBY_PLATFORM =~ /mswin32/
   system "chmod ug+x #{app_path}/bin/waves-*"
 end
 
-# finally, change the lib/application.rb file
-mv "#{app_path}/lib/application.rb", "#{app_path}/lib/#{app_name}.rb"
-
 puts "** Application created!"

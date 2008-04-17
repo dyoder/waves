@@ -82,7 +82,7 @@ task :verify do
 end
 
 Rake::TestTask.new(:test) do |t|
-  t.test_files = FileList["verify/*/*.rb"]
+  t.test_files = FileList["verify/*/*.rb"].exclude("**/helpers.rb")
   t.verbose = true
 end
 
