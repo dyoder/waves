@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-require File.join('lib', 'framework')
-
-require 'commands/waves-console'

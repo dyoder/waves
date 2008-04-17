@@ -179,7 +179,12 @@ module Waves
 			not_found(request) unless rx[:action]
 			
 			return rx
-		end		
+		end
+		
+		# Clear all mapping rules
+		def clear
+		  @mapping = @filters = nil;
+	  end		
 				
 		private
 		
