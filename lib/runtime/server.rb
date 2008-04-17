@@ -73,7 +73,7 @@ module Waves
 		def real_start
 		  Benchmark.realtime do
 				@server = ::Mongrel::HttpServer.new( host, port )
-				@server.register('/', Rack::Handler::Mongrel.new( config.application.to_app	 ) )
+				@server.register('/', config.handler.new( config.application.to_app	 ) )
 				trap('INT') { puts; stop }; @thread = @server.run
 			end
 		end

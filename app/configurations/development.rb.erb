@@ -11,7 +11,9 @@ module <%= name %>
       
       reloadable [ <%= name %> ]
       
-      log :level => :debug	
+      log :level => :debug
+
+	  handler Rack::Handler::Mongrel
       
       application do
         use Rack::ShowExceptions

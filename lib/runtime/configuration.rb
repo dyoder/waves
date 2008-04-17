@@ -140,7 +140,7 @@ module Waves
 	  # defining a number of attributes that are required by Waves.
 		class Default < Base
 		  
-			%w( host port ports log reloadable database session debug root ).
+			%w( host port ports log reloadable database session debug root handler ).
 			each { |name| attribute(name) }
 			
 			# Provide access to the Waves::MimeTypes class via the configuration. You
