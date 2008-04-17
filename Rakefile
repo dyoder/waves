@@ -10,7 +10,7 @@ gem = Gem::Specification.new do |gem|
 	gem.email = 'dan@zeraweb.com'
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
-	%w( mongrel rack markaby erubis RedCloth autocode sequel 
+	%w( mongrel rack markaby erubis RedCloth autocode sequel sqlite3-ruby
 	    extensions live_console choice daemons bacon).each do |dep|
 	  gem.add_dependency dep
 	end
