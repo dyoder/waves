@@ -1,12 +1,13 @@
 # External Dependencies
 require 'rubygems'
 
-# the underlying web server
-require 'mongrel'
 require 'rack'
 require 'daemons'
 require 'live_console'
 require 'autocode'
+
+# for mimetypes only or when using as default handler
+require 'mongrel'
 
 # a bunch of handy stuff
 require 'extensions/all'
