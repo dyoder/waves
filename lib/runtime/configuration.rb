@@ -140,9 +140,22 @@ module Waves
 	  # defining a number of attributes that are required by Waves.
 		class Default < Base
 		  
-			%w( host port ports log reloadable database session debug root handler ).
+			%w( host port ports log reloadable database session debug root ).
 			each { |name| attribute(name) }
-			
+
+      def self.handler(rack_handler, handler_options)
+        @rack_handler = rack_handler
+        @rack_handler_options = handler_options
+      end
+      
+      def self.rack_handler
+        @rack_handler
+      end
+      
+      def self.rack_handler_options
+        @rack_handler_options
+      end
+
 			# Provide access to the Waves::MimeTypes class via the configuration. You
 			# could potentially point this to your own MIME types repository class.
 			def self.mime_types

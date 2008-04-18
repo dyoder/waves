@@ -72,7 +72,7 @@ module Waves
 		
 		def real_start
 		  Benchmark.realtime do
-				@server = config.handler.run( config.application.to_app, :Host => host, :Port => port )
+				@server = config.rack_handler.run( config.application.to_app, config.rack_handler_options )
 				trap('INT') { puts; stop }; @thread = @server.run
 			end
 		end
