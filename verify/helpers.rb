@@ -31,13 +31,13 @@ module Helpers
     mapping.url(*args,&block)
   end
   
-  def use_mock_request
-    @mock = Rack::MockRequest.new( Waves::Dispatchers::Default.new )
+  def request
+    @request ||= Rack::MockRequest.new( Waves::Dispatchers::Default.new )
   end
   
   [:get,:put,:post,:delete].each do |method|
     define_method method do | path |
-      @mock.send( method, path )
+      request.send( method, path )
     end
   end
   
