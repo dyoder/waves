@@ -24,8 +24,10 @@ module Waves
 		
 		# Access the host we're binding to (set via the configuration).
 		def host ; options[:host] || config.host ; end
+
 		# Access the port we're listening on (set via the configuration).
 		def port ; options[:port] || config.port ; end
+
 		# Run the server as a daemon. Corresponds to the -d switch on +waves-server+.
 		def daemonize
 		  pwd = Dir.pwd
@@ -33,18 +35,21 @@ module Waves
 		  Dir.chdir(pwd)
 		  File.write( :log / "#{port}.pid", $$ )
 		end
+
 		# Start and / or access the Waves::Logger instance.
 		def log ; @log ||= Waves::Logger.start ; end
+
 		# Start the server.
 		def start
 		  daemonize if options[:daemon]
 		  start_debugger if options[:debugger]
-			log.info "** Waves Server Starting ..."
-			t = real_start
-			log.info "** Waves Server Running on #{host}:#{port}"
-			log.info "Server started in #{(t*1000).round} ms."
-			@thread.join
+			log.info "** Waves Server starting  on #{host}:#{port}"
+			config.rack_handler.run( config.application.to_app, config.rack_handler_options ) do |server|
+			  @server = server
+			  #trap('INT') { puts; stop }; @thread = @server.run
+		  end			
 		end
+
 		# Stop the server.
 		def stop
 			log.info "** Waves Server Stopping ..."
@@ -53,6 +58,7 @@ module Waves
 			@server.stop 
 			log.info "** Waves Server Stopped"
 		end
+
 		# Provides access to the server mutex for thread-safe operation.
 		def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
@@ -69,13 +75,6 @@ module Waves
 		end
 		
 		private
-		
-		def real_start
-		  Benchmark.realtime do
-				@server = config.rack_handler.run( config.application.to_app, config.rack_handler_options )
-				trap('INT') { puts; stop }; @thread = @server.run
-			end
-		end
 
     def start_debugger
       begin
