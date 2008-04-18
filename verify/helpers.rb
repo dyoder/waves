@@ -16,39 +16,12 @@ module Test ; include Waves::Layers::SimpleErrors ; end
 Waves << Test
 Waves::Console.load( :mode => :development )
 
-
-module Helpers
-  
-  def mapping
-    ::Test::Configurations::Mapping
-  end
-
-  def path(*args,&block)
-    mapping.path(*args,&block)
-  end
-  
-  def url(*args,&block)
-    mapping.url(*args,&block)
-  end
-  
-  def request
-    @request ||= Rack::MockRequest.new( Waves::Dispatchers::Default.new )
-  end
-  
-  [:get,:put,:post,:delete].each do |method|
-    define_method method do | path |
-      request.send( method, path )
-    end
-  end
-  
-end
-
 module Kernel
   private
   def specification(name, &block)  Bacon::Context.new(name, &block) end
 end
 
 Bacon::Context.instance_eval do
-  include Helpers 
+  include Waves::Helpers::Test 
   alias_method :specify, :it
 end

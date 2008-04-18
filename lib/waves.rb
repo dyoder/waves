@@ -58,6 +58,8 @@ require 'helpers/form.rb'
 require 'helpers/formatting.rb'
 require 'helpers/model.rb'
 require 'helpers/view.rb'
+require 'helpers/request.rb'
+require 'helpers/test.rb'
 
 # waves foundations / layers
 require 'foundations/simple'
