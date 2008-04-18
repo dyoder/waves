@@ -1,5 +1,6 @@
 layout :default, :title => 'Edit Entry' do
   form :action => "/entry/#{@entry.name}/", :method => 'POST' do
+    input :name => '_method', :type => 'hidden', :value => 'put' 
     label 'Title'; br
     input :type => :text, :value => @entry.title, :name => 'entry.title'; br
     label 'Summary'; br

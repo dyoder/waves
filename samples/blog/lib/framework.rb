@@ -2,11 +2,6 @@
 # other than the installed gem of Waves. Examples of common
 # cases helpfully provided below
 #
-<% if IN_WAVES_SRC -%>
-# The framework source used to generate this app
-<%= "# WAVES_SRC = '#{WAVES_SRC}'" %>
-#
-<% end -%>
 # Framework source lives in the same directory as this application
 # WAVES_SRC = File.join(File.dirname(__FILE__), '..', '..', 'waves')
 

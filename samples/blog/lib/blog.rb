@@ -41,7 +41,7 @@ module Blog
 	# accessor methods for modules and other key application objects ...
 	class << self
 		def config ; Waves::Server.config rescue nil || Waves::Console.config ; end
-		def database ; @database ||= Sequel.mysql( config.database ) ; end
+		def database ; @database ||= Sequel.open( config.database ) ; end
 		def configurations ; Blog::Configurations ; end
 		def controllers ; Blog::Controllers ; end
 		def models ; Blog::Models ; end
