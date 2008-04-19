@@ -4,17 +4,12 @@ require File.join(File.dirname(__FILE__), "..", "helpers")
 specification "A developer can map requests using the request path." do
       
   before do
-
-    use_mock_request
-    
     mapping.clear
-
     path('/', :method => :post ) { 'This is a simple post rule.' }
     path('/', :method => :put ) { 'This is a simple put rule.' }
     path('/', :method => :delete ) { 'This is a simple delete rule.' }
     path('/', :method => :get) { 'This is a simple get rule.' }
     path('/foo') { "The server says, 'bar!'" }
-
   end
 
   specify 'Map the path of a GET request to a lambda.' do

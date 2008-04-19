@@ -4,9 +4,6 @@ require File.join(File.dirname(__FILE__), "..", "helpers")
 specification "A developer can extract parameters from a request path or URL." do
   
   before do
-
-    use_mock_request
-    
     mapping.clear
     
     path %r{/param/(\w+)} do |value|

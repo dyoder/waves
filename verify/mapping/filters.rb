@@ -4,8 +4,6 @@ require File.join(File.dirname(__FILE__), "..", "helpers")
 describe "A developer can map requests to filters." do
   
   before do
-    use_mock_request
-
     mapping.clear
 
     mapping.before( :path => '/filters', :method => :post ) { request.response.write('Before post:') }
