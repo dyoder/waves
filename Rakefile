@@ -1,5 +1,9 @@
-$: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
-  utilities/string utilities/symbol ).each { |dep| require dep }
+begin
+  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
+    utilities/string utilities/symbol ).each { |dep| require dep }
+rescue
+  puts "Better do `rake setup` to get all the fancies you're missing"
+end
 
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
@@ -82,7 +86,7 @@ task :verify do
 end
 
 Rake::TestTask.new(:test) do |t|
-  t.test_files = FileList["verify/*/*.rb"].exclude("**/helpers.rb")
+  t.test_files = FileList["verify/*/*.rb"].exclude("**/helpers.rb", "**/app_generation/*.rb")
   t.verbose = true
 end
 
