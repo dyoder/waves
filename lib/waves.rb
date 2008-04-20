@@ -59,6 +59,10 @@ require 'helpers/formatting.rb'
 require 'helpers/model.rb'
 require 'helpers/view.rb'
 
+# waves test support
+require 'verify/mapping.rb'
+require 'verify/request.rb'
+
 # waves foundations / layers
 require 'foundations/simple'
 require 'layers/simple_errors'
