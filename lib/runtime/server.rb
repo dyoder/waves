@@ -47,16 +47,17 @@ module Waves
 			handler, options = config.handler
 			handler.run( config.application.to_app, options ) do |server|
 			  @server = server
-			  #trap('INT') { puts; stop }; @thread = @server.run
+			  trap('INT') { puts; stop } if @server.respond_to? :stop
 		  end			
 		end
 
 		# Stop the server.
 		def stop
 			log.info "** Waves Server Stopping ..."
-			pid_file = :log / $$ + '.pid'
-			FileUtils.rm( pid_file ) if options[:daemon] and File.exist?( pid_file )
-			@server.stop 
+			if options[:daemon]
+  			pid_file = :log / $$ + '.pid'; FileUtils.rm( pid_file ) if File.exist?( pid_file )
+  		end
+			@server.stop
 			log.info "** Waves Server Stopped"
 		end
 
