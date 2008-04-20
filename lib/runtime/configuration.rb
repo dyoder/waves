@@ -162,7 +162,6 @@ module Waves
 			session :duration => 30.minutes, :path => '/tmp/sessions'
     	log :level => :info, :output => $stderr	
     	reloadable []
-      # root ::APP_ROOT
       
 		end
 	end
