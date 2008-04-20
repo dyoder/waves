@@ -1,4 +1,3 @@
-require 'waves'
 require 'choice'
 
 Choice.options do
