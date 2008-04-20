@@ -143,17 +143,15 @@ module Waves
 			%w( host port ports log reloadable database session debug root ).
 			each { |name| attribute(name) }
 
-      def self.handler(rack_handler, handler_options)
-        @rack_handler = rack_handler
-        @rack_handler_options = handler_options
-      end
-      
-      def self.rack_handler
-        @rack_handler
-      end
-      
-      def self.rack_handler_options
-        @rack_handler_options
+      # Set the handler for use with Rack, along with any handler-specific options
+      # that will be passed to the handler's #run method. When accessing the value
+      # (calling with no arguments) returns an array of the handler and options.
+      def self.handler(*args)
+        if args.length > 0
+          @rack_handler, @rack_handler_options = args
+        else
+          [ @rack_handler, @rack_handler_options ]
+        end
       end
 
 			# Provide access to the Waves::MimeTypes class via the configuration. You

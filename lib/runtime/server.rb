@@ -44,7 +44,8 @@ module Waves
 		  daemonize if options[:daemon]
 		  start_debugger if options[:debugger]
 			log.info "** Waves Server starting  on #{host}:#{port}"
-			config.rack_handler.run( config.application.to_app, config.rack_handler_options ) do |server|
+			handler, options = config.handler
+			handler.run( config.application.to_app, options ) do |server|
 			  @server = server
 			  #trap('INT') { puts; stop }; @thread = @server.run
 		  end			
