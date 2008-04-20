@@ -1,7 +1,5 @@
-unless defined? WAVES
-  WAVES = File.join(File.dirname(__FILE__), 'waves')
-end
-
-$:.unshift(File.join(WAVES, "lib")) if File.exist? WAVES
-
+lambda {
+  waves = ( ENV['WAVES'] || File.join(File.dirname(__FILE__), 'waves') )
+  $:.unshift(File.join( waves, "lib" )) if File.exist? waves
+}.call
 require 'waves'
