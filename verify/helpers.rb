@@ -22,6 +22,7 @@ module Kernel
 end
 
 Bacon::Context.instance_eval do
-  include Waves::Helpers::Test 
+  include ::Waves::Verify::Helpers::Mapping
+  include ::Waves::Verify::Helpers::Request
   alias_method :specify, :it
 end
