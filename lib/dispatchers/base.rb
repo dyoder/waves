@@ -45,10 +45,6 @@ module Waves
         Waves::Application.instance.mapping.threaded?( env )
       end
 
-  		def not_found(request)
-  			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
-  		end
-
 		end
 
 	end	

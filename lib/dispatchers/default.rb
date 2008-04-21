@@ -39,7 +39,7 @@ module Waves
   				  ResponseProxy.new(request).instance_exec(*args,&block)
   				end
 
-  				not_found(request) unless mapping[:action]
+  				request.not_found unless mapping[:action]
 			
   				block, args = mapping[:action]
   				response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
