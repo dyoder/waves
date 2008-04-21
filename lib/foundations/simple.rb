@@ -5,15 +5,12 @@ module Waves
       def self.included( app )
         
         app.module_eval do
-
-          extend Autocreate
+          
           [ :Configurations, :Models, :Views, :Controllers, :Helpers ].each do | name |
-        		autocreate( name, Module.new ) do
-              # dynamically access module constants
-        			def self.[]( cname )
-        			  eval("#{name}::#{cname.to_s.camel_case}")
-        			end
-        		end
+            mod = Module.new do
+              def self.[](cname) eval("#{name}::#{cname.to_s.camel_case}") end
+            end
+            self.const_set( name, mod )
         	end
 
           self::Configurations.module_eval do

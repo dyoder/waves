@@ -83,14 +83,8 @@ task( :setup ) do
   system(cmd = "chmod +x bin/waves*")
 end
 
-desc "Run test suite"
-task :verify do
-  Dir['verify/**/*.rb'].each do |spec|
-    puts `bacon #{spec}`
-  end
-end
-
-Rake::TestTask.new(:test) do |t|
+desc "Run verification suite."
+Rake::TestTask.new(:verify) do |t|
   t.test_files = FileList["verify/*/*.rb"].exclude("**/helpers.rb", "**/app_generation/*.rb")
   t.verbose = true
 end
