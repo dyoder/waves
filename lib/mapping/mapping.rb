@@ -126,34 +126,50 @@ module Waves
 
     # Maps a request to a block. Don't use this method directly unless you know what 
     # you're doing. Use +path+ or +url+ instead.
-		def map( path, options = {}, &block )
+		def map( path, options = {}, params = {}, &block )
 		  if path.is_a? Hash
+		    params = options
 		    options = path
 	    else
 	      options[:path] = path
       end
-			mapping << [ options, block ]
+			mapping << [ options, params, block ]
 		end
 		
 		# Match pattern against the +request.path+, along with satisfying any constraints 
 		# specified by the options hash. If the pattern matches and the constraints are satisfied,
 		# run the block. Only one +path+ or +url+ match will be run (the first one).
-		def path( pat, options = {}, &block )
-			options[:path] = pat; map( options, &block )
+		def path( pat, options = {}, params = {}, &block )
+			options[:path] = pat; map( options, params, &block )
 		end
 
 		# Match pattern against the +request.url+, along with satisfying any constraints 
 		# specified by the options hash. If the pattern matches and the constraints are satisfied,
 		# run the block. Only one +path+ or +url+ match will be run (the first one).
-		def url( pat, options = {}, &block )
-			options[:url] = pat; map( options, &block )
+		def url( pat, options = {}, params = {}, &block )
+			options[:url] = pat; map( options, params, &block )
 		end
 		
 		# Maps the root of the application to a block. If an options hash is specified it must
 		# satisfy those constraints in order to run the block.
-		def root( options = {}, &block )
-      path( %r{^/?$}, options, &block )
+		def root( options = {}, params = {}, &block )
+      path( %r{^/?$}, options, params, &block )
 	  end
+	  
+	  # Determines whether the request should be handled in a separate thread. This is  used
+	  # by event driven servers like thin and ebb, and is most useful for those methods that
+	  # take a long time to complete, like for example upload processes. E.g.:
+	  #
+	  #   map("/upload", {:method => :post}, {:threaded => true})
+	  #
+	  # You typically wouldn't use this method directly.
+	  def threaded?( request )
+			mapping.find do | options, params, function |
+			  match = match( request, options, function )
+			  return params[:threaded] == true if match
+			end
+			return false
+		end
 		
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
@@ -166,7 +182,7 @@ module Waves
 			  rx[:before] << matches if matches
 			end
 			
-			mapping.find do | options, function |
+			mapping.find do | options, params, function |
 			  rx[:action] = match( request, options, function )
 				break if rx[:action]
 			end

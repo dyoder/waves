@@ -1,3 +1,11 @@
+module Rack
+  class MockRequest
+    def [](key)
+      ::Rack::MockRequest::DEFAULT_ENV[key.to_s]
+    end
+  end
+end
+
 module Waves
   module Verify
     module Helpers
