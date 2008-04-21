@@ -163,7 +163,7 @@ module Waves
 	  
 	  # Maps a request to a block that will be executed within it's 
 	  # own thread. This is especially useful when you're running
-	  # with an event driver server like thin or ebb, and this block
+	  # with an event driven server like thin or ebb, and this block
 	  # is going to take a relatively long time.
 	  def threaded( pat, options = {}, params = {}, &block)
 	    params[:threaded] = true

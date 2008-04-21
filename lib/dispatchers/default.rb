@@ -35,11 +35,11 @@ module Waves
 
   				mapping = Waves::Application.instance.mapping[ request ]
   				
-  				not_found(request) unless mapping[:action]
-
   				mapping[:before].each do | block, args |
   				  ResponseProxy.new(request).instance_exec(*args,&block)
   				end
+
+  				not_found(request) unless mapping[:action]
 			
   				block, args = mapping[:action]
   				response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
