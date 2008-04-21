@@ -27,6 +27,7 @@ require 'utilities/kernel'
 require 'utilities/object'
 require 'utilities/integer'
 require 'utilities/inflect'
+require 'utilities/proc'
 # waves Runtime
 require 'dispatchers/base'
 require 'dispatchers/default'
