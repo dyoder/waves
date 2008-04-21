@@ -27,23 +27,36 @@ module Waves
 		  # Takes a Waves::Request and returns a Waves::Reponse
 			def safe( request  )
 			  
-				response = request.response
+			  begin
+  				response = request.response
 		
-				Waves::Application.instance.reload if Waves::Application.instance.debug?
-				response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
+  				Waves::Application.instance.reload if Waves::Application.instance.debug?
+  				response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
 
-				mapping = Waves::Application.instance.mapping[ request ]
+  				mapping = Waves::Application.instance.mapping[ request ]
+  				
+  				not_found(request) unless mapping[:action]
 
-				mapping[:before].each do | block, args |
-				  ResponseProxy.new(request).instance_exec(*args,&block)
-				end
+  				mapping[:before].each do | block, args |
+  				  ResponseProxy.new(request).instance_exec(*args,&block)
+  				end
 			
-				block, args = mapping[:action]
-				response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
+  				block, args = mapping[:action]
+  				response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
 
-				mapping[:after].each do | block, args |
-				  ResponseProxy.new(request).instance_exec(*args,&block)
-				end
+  				mapping[:after].each do | block, args |
+  				  ResponseProxy.new(request).instance_exec(*args,&block)
+  				end
+				rescue Exception => e
+				  handler = mapping[:handlers].detect do | exception, block, args |
+				    e.is_a? exception
+				  end
+				  if handler
+            ResponseProxy.new(request).instance_exec(*handler[2], &handler[1])
+          else
+            raise e
+          end
+			  end
   													
 			end
 			
