@@ -27,19 +27,17 @@ module Waves
   
             # get all resources for the given model
             path %r{^/#{model}/?$}, :method => :get do | model |
-              use( model.singular ) | controller { all } | view { |data| list( model => data ) }
+              resource( model.singular ) { controller { all } | view { |data| list( model => data ) } }
             end
 
             # get the given resource for the given model
             path %r{^/#{model}/#{name}/?$}, :method => :get do | model, name |
-              use(model) | controller { find( name ) } | 
-                view { |data| show( model => data ) }
+              resource( model ) { controller { find( name ) } | view { |data| show( model => data ) } }
             end
   
             # display an editor for the given resource / model
             path %r{^/#{model}/#{name}/editor/?$}, :method => :get do | model, name |
-              use(model) | controller { find( name ) } | 
-                view { |data| editor( model => data ) }       
+              resource( model ) {  controller { find( name ) } | view { |data| editor( model => data ) } }    
             end
       
           end
@@ -67,19 +65,20 @@ module Waves
   
             # create a new resource for the given model
             path %r{^/#{model}/?$}, :method => :post do | model |
-              use( model.singular )
-              instance = controller { create }
-              redirect( "/#{model.singular}/#{instance.name}/editor" )
+              resource( model.singular ) do
+                instance = controller { create }
+                redirect( "/#{model.singular}/#{instance.name}/editor" )
+              end
             end
 
             # update the given resource for the given model
             path %r{^/#{model}/#{name}/?$}, :method => :put do | model, name |
-              use(model) | controller { update( name ) }; redirect( url )
+              resource( model ) { controller { update( name ) }; redirect( url ) }
             end
   
             # delete the given resource for the given model
             path %r{^/#{model}/#{name}/?$}, :method => :delete do | model, name |
-              use( model ) | controller { delete( name ) }
+              resource( model ) { controller { delete( name ) } }
             end
       
           end
