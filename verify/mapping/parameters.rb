@@ -5,9 +5,9 @@ specification "Requests can be made threaded for event driven servers" do
       
   before do
     mapping.clear
-    path('/', :method => :post ) { 'This is a simple post rule.' }
-    path('/upload', {:method => :post}, {:threaded => true} ) { 'This is threaded.' }
-    path('/foo') { "The server says, 'bar!'" }
+    path( '/', :method => :post ) { 'This is a simple post rule.' }
+    threaded( '/upload', {:method => :post} ) { 'This is threaded.' }
+    path( '/foo' ) { "The server says, 'bar!'" }
   end
 
   specify 'Post to upload should be threaded' do

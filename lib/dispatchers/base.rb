@@ -32,13 +32,6 @@ module Waves
     				rescue Dispatchers::Redirect => redirect
     					response.status = redirect.status
     					response.location = redirect.path
-    				rescue Dispatchers::NotFoundError => e
-    					html = Waves.application.views[:errors].process( request ) do
-    				    not_found_404( :error => e ) 
-    				  end
-    					response.status = '404'
-    					response.content_type = 'text/html'
-    					response.write( html )
     				end
     			end
       		Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
@@ -51,6 +44,10 @@ module Waves
   		def deferred?( env )
         Waves::Application.instance.mapping.threaded?( env )
       end
+
+  		def not_found(request)
+  			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
+  		end
 
 		end
 

@@ -43,19 +43,20 @@ module Waves
   # == Examples
   #
   #   path %r{^/#{resource}/#{name}/?$} do |resource, name|
-  #     use( resource ) | controller { find( name ) } | 
-  #       view { | instance | show( resource => instance ) }
+  #     resource( resource ) do
+  #       controller { find( name ) } |  view { | instance | show( resource => instance ) }
+  #     end
   #   end
   #
   # In this example, we take the same rule from above but invoke a controller and view method.
-  # We use the +use+ directive and the resource parameter to set the MVC instances we're going
+  # We use the +resource+ directive and the resource parameter to set the MVC instances we're going
   # to use. This is necessary to use the +controller+ or +view+ methods. Each of these take
   # a block as arguments which are evaluated in the context of the instance. The +view+ method
   # can further take an argument which is "piped" from the result of the controller block. This
   # isn't required, but helps to clarify the request processing. Within a view block, a hash
-  # may also be passed in, which is converted into instance variables for the view instance. In
-  # this example, the +show+ method is assigned to an instance variable with the same name as 
-  # the resource type.
+  # may also be passed in to the view method, which is converted into instance variables for the
+  # view instance. In this example, the +show+ method is assigned to an instance variable with the
+  # same name as the resource type.
   #
   # So given the same URL as above - /person/john - what will happen is the +find+ method for
   # the +Person+ controller will be invoked and the result passed to the +Person+ view's +show+
@@ -66,12 +67,12 @@ module Waves
   # controller and view can thus be completely decoupled and become easier to reuse separately.
   #
   #   url 'http://admin.foobar.com:/' do
-  #     use( admin ) | view { console }
+  #     resource( :admin ) { view { console } }
   #   end
   #
   # In this example, we are using the +url+ method to map a subdomain of +foobar.com+ to the 
   # console method of the Admin view. In this case, we did not need a controller method, so
-  # we simply didn't call one. 
+  # we simply didn't call one.
   #
   # = Mapping Modules
   #
@@ -79,8 +80,7 @@ module Waves
   # mapping module. Some rule sets come packaged with Waves, such as PrettyUrls (rules for
   # matching resources using names instead of ids). The simplest way to define such modules for
   # reuse is by defining the +included+ class method for the rules module, and then define
-  # the rules using +module_eval+. This will likely be made simpler in a future release, but
-  # see the PrettyUrls module for an example of how to do this.
+  # the rules using +module_eval+. See the PrettyUrls module for an example of how to do this.
   #
   # *Important:* Using pre-packaged mapping rules does not prevent you from adding to or 
   # overriding these rules. However, order does matter, so you should put your own rules 
@@ -155,7 +155,17 @@ module Waves
 		def root( options = {}, params = {}, &block )
       path( %r{^/?$}, options, params, &block )
 	  end
+
+    # Maps an exception handler to a block.
+	  def handle(exception, options = {}, &block )
+	    handlers << [exception,options, block]
+	  end
 	  
+	  def threaded( pat, options = {}, params = {}, &block)
+	    params[:threaded] = true
+	    map( pat, options, params, &block)
+    end
+			  
 	  # Determines whether the request should be handled in a separate thread. This is  used
 	  # by event driven servers like thin and ebb, and is most useful for those methods that
 	  # take a long time to complete, like for example upload processes. E.g.:
@@ -170,12 +180,12 @@ module Waves
 			end
 			return false
 		end
-		
+
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
 		def []( request )
 		  
-			rx = { :before => [], :after => [], :action => nil }
+			rx = { :before => [], :after => [], :action => nil, :handlers => [] }
 			
 			( filters[:before] + filters[:wrap] ).each do | options, function |
 			  matches = match( request, options, function )
@@ -192,8 +202,11 @@ module Waves
 			  rx[:after] << matches if matches
 			end
 			
-			not_found(request) unless rx[:action]
-			
+			handlers.each do | exception, options, function |
+			  matches = match( request, options, function )
+			  rx[:handlers] << matches.unshift(exception) if matches
+		  end
+						
 			return rx
 		end
 		
@@ -207,11 +220,9 @@ module Waves
 		def mapping; @mapping ||= []; end
 		
 		def filters; @filters ||= { :before => [], :after => [], :wrap => [] }; end
-
-		def not_found(request)
-			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
-		end
 		
+		def handlers; @handlers ||= []; end
+
 		def match ( request, options, function )
 		  return nil unless satisfy( request, options )
 		  if options[:path]

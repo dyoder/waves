@@ -7,7 +7,7 @@ module Waves
         app.module_eval do
 
           extend Autocreate
-          [ :Configurations, :Models, :Views, :Controllers, :Helpers ].each do | name |
+          [ :Configurations, :Views].each do | name |
         		autocreate( name, Module.new ) do
               # dynamically access module constants
         			def self.[]( cname )
@@ -21,6 +21,7 @@ module Waves
             const_set( :Mapping, Module.new { |mod| extend Waves::Mapping } )
           end
           
+          
           # accessor methods for modules and other key application objects ...
         	class << self
         		def config ; Waves.config ; end
@@ -31,6 +32,7 @@ module Waves
         		def views ; self::Views ; end
         	end
         	
+        	include Waves::Layers::SimpleErrors
         end
       end
     end
