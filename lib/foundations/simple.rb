@@ -2,24 +2,28 @@ module Waves
   module Foundations
     module Simple
       
+      module Reflection
+        def self.included( mod )
+          mod.module_eval do
+            def self.[]( cname ) const_get( cname.to_s.camel_case ) end
+          end
+        end
+      end
+      
       def self.included( app )
-        
+
         app.module_eval do
 
-          const_set( :Configurations, Module.new {
+          extend Autocreate; extend Reloadable; 
+          autocreate( :Configurations, Module.new {
+            include Reflection
             const_set( :Development, Class.new( Waves::Configurations::Default ))
             const_set( :Mapping, Module.new { |mod| extend Waves::Mapping })
           })
-          const_set( :Models, Module.new )
-          const_set( :Views, Module.new { include Waves::Views::Mixin })
-          const_set( :Controllers, Module.new { include Waves::Controllers::Mixin })
-          const_set( :Helpers, Module.new )
-          
-          %w( Configurations Models Views Controllers Helpers ).each do |name|
-            const_get(name).module_eval do
-              def self.[]( cname ) const_get( cname.to_s.camel_case ) end
-            end
-          end
+          autocreate( :Models, Module.new { include Reflection })
+          autocreate( :Views, Module.new { include Reflection; include Waves::Views::Mixin })
+          autocreate( :Controllers, Module.new { include Reflection; include Waves::Controllers::Mixin })
+          autocreate( :Helpers, Module.new { include Reflection })
           
           # accessor methods for modules and other key application objects ...
         	class << self
