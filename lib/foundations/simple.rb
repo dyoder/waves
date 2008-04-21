@@ -7,7 +7,7 @@ module Waves
         app.module_eval do
 
           extend Autocreate
-          [ :Configurations, :Models, :Views, :Controllers, :Helpers ].each do | name |
+          [ :Configurations, :Views].each do | name |
         		autocreate( name, Module.new ) do
               # dynamically access module constants
         			def self.[]( cname )
@@ -19,6 +19,10 @@ module Waves
           self::Configurations.module_eval do
             const_set( :Development, Class.new( Waves::Configurations::Default ) )
             const_set( :Mapping, Module.new { |mod| extend Waves::Mapping } )
+          end
+          
+          self::Configurations::Mapping.module_eval do
+            handle(Waves::Dispatchers::NotFoundError) { response.status = 404 }
           end
           
           # accessor methods for modules and other key application objects ...

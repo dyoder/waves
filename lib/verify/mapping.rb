@@ -14,6 +14,10 @@ module Waves
         def url(*args,&block)
           mapping.url(*args,&block)
         end
+        
+        def handle(*args,&block)
+          mapping.handle(*args,&block)
+        end
       
       end
     end

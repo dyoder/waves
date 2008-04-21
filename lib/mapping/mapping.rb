@@ -154,12 +154,17 @@ module Waves
 		def root( options = {}, &block )
       path( %r{^/?$}, options, &block )
 	  end
+	  
+    # Maps an exception handler to a block.
+	  def handle(exception, options = {}, &block )
+	    handlers << [exception,options, block]
+	  end
 		
 		# Match the given request against the defined rules. This is typically only called
 		# by a dispatcher object, so you shouldn't typically use it directly.
 		def []( request )
 		  
-			rx = { :before => [], :after => [], :action => nil }
+			rx = { :before => [], :after => [], :action => nil, :handlers => [] }
 			
 			( filters[:before] + filters[:wrap] ).each do | options, function |
 			  matches = match( request, options, function )
@@ -176,8 +181,11 @@ module Waves
 			  rx[:after] << matches if matches
 			end
 			
-			not_found(request) unless rx[:action]
-			
+			handlers.each do | exception, options, function |
+			  matches = match( request, options, function )
+			  rx[:handlers] << matches.unshift(exception) if matches
+		  end
+						
 			return rx
 		end
 		
@@ -191,11 +199,9 @@ module Waves
 		def mapping; @mapping ||= []; end
 		
 		def filters; @filters ||= { :before => [], :after => [], :wrap => [] }; end
-
-		def not_found(request)
-			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
-		end
 		
+		def handlers; @handlers ||= []; end
+
 		def match ( request, options, function )
 		  return nil unless satisfy( request, options )
 		  if options[:path]

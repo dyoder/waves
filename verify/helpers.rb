@@ -12,7 +12,6 @@ require 'waves'
 # define basic app for use in testing
 # before methods may add to it using helper methods
 module Test ; include Waves::Foundations::Simple ; end
-module Test ; include Waves::Layers::SimpleErrors ; end
 Waves << Test
 Waves::Console.load( :mode => :development )
 
