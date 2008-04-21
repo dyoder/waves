@@ -18,6 +18,10 @@ module Waves
         def handle(*args,&block)
           mapping.handle(*args,&block)
         end
+        
+        def threaded(*args,&block)
+          mapping.threaded(*args,&block)
+        end
       
       end
     end

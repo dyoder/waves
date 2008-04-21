@@ -39,10 +39,15 @@ module Waves
   			end
   		end
   		
+  		# Called by event driven servers like thin and ebb. Return true if
+  		# the server should run the request in a separate thread.
+  		def deferred?( env )
+        Waves::Application.instance.mapping.threaded?( env )
+      end
+
   		def not_found(request)
   			raise Waves::Dispatchers::NotFoundError.new( request.url + ' not found.')
   		end
-  		
 
 		end
 
