@@ -161,6 +161,10 @@ module Waves
 	    handlers << [exception,options, block]
 	  end
 	  
+	  # Maps a request to a block that will be executed within it's 
+	  # own thread. This is especially useful when you're running
+	  # with an event driver server like thin or ebb, and this block
+	  # is going to take a relatively long time.
 	  def threaded( pat, options = {}, params = {}, &block)
 	    params[:threaded] = true
 	    map( pat, options, params, &block)
@@ -170,7 +174,9 @@ module Waves
 	  # by event driven servers like thin and ebb, and is most useful for those methods that
 	  # take a long time to complete, like for example upload processes. E.g.:
 	  #
-	  #   map("/upload", {:method => :post}, {:threaded => true})
+	  #   threaded("/upload", :method => :post) do
+	  #     handle_upload
+	  #   end
 	  #
 	  # You typically wouldn't use this method directly.
 	  def threaded?( request )
