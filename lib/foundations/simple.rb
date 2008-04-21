@@ -21,9 +21,6 @@ module Waves
             const_set( :Mapping, Module.new { |mod| extend Waves::Mapping } )
           end
           
-          self::Configurations::Mapping.module_eval do
-            handle(Waves::Dispatchers::NotFoundError) { response.status = 404 }
-          end
           
           # accessor methods for modules and other key application objects ...
         	class << self
@@ -35,6 +32,7 @@ module Waves
         		def views ; self::Views ; end
         	end
         	
+        	include Waves::Layers::SimpleErrors
         end
       end
     end
