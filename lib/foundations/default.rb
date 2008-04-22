@@ -55,6 +55,8 @@ module Waves
           	def views ; self::Views ; end
           end
         	
+        	include Waves::Layers::DefaultErrors
+        	
         end
       end
     end
