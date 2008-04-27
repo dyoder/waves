@@ -28,6 +28,6 @@ describe "An application module which includes the Simple foundation" do
     SimpleApplication::Views.should.respond_to :[]
     SimpleApplication::Controllers.should.respond_to :[]
   end
-  
+
   
 end

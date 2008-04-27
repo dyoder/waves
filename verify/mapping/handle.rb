@@ -13,11 +13,11 @@ specification "A developer can register exception handlers" do
     r.body.should.be.empty
   end
   
-  specify "A custom 404 handler should override the minimal" do
-    handle(Waves::Dispatchers::NotFoundError) { response.status = 404; response.body = "gone baby gone"}
-    r = get('/')
-    r.status.should == 404
-    r.body.should == "gone baby gone"
-  end
+  # specify "A custom 404 handler should override the minimal" do
+  #   handle(Waves::Dispatchers::NotFoundError) { response.status = 404; response.body = "gone baby gone"}
+  #   r = get('/')
+  #   r.status.should == 404
+  #   r.body.should == "gone baby gone"
+  # end
   
 end

@@ -14,16 +14,32 @@ module Waves
 
         app.module_eval do
 
-          extend Autocreate; extend Reloadable; 
+          extend Autocode; extend Reloadable; 
           autocreate( :Configurations, Module.new {
+            extend Autocode
             include Reflection
-            const_set( :Development, Class.new( Waves::Configurations::Default ))
-            const_set( :Mapping, Module.new { |mod| extend Waves::Mapping })
+            autocreate( :Default, Class.new )
+            autocreate( :Development, Class.new( Waves::Configurations::Default ))
+            autocreate( :Mapping, Module.new { |mod| extend Waves::Mapping })
           })
           autocreate( :Models, Module.new { include Reflection })
-          autocreate( :Views, Module.new { include Reflection; include Waves::Views::Mixin })
-          autocreate( :Controllers, Module.new { include Reflection; include Waves::Controllers::Mixin })
-          autocreate( :Helpers, Module.new { include Reflection })
+          autocreate( :Views, Module.new { 
+            extend Autocode
+            include Reflection
+            include Waves::Views::Mixin 
+            autocreate( :Default, Class.new )
+            })
+          autocreate( :Controllers, Module.new { 
+            extend Autocode
+            include Reflection
+            include Waves::Controllers::Mixin 
+            autocreate( :Default, Class.new )
+            })
+          autocreate( :Helpers, Module.new {
+            extend Autocode 
+            include Reflection 
+            autocreate( :Default, Module.new )
+            })
           
           # accessor methods for modules and other key application objects ...
         	class << self

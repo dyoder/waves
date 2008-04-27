@@ -4,7 +4,7 @@ require 'rubygems'
 require 'rack'
 require 'daemons'
 require 'live_console'
-require 'autocode'
+require '/Users/matthew/dev/src/autocode/lib/autocode'
 
 # for mimetypes only or when using as default handler
 require 'mongrel'
