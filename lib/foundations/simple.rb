@@ -16,28 +16,26 @@ module Waves
 
           extend Autocode; extend Reloadable; 
           autocreate( :Configurations, Module.new {
-            extend Autocode
-            include Reflection
+            extend Autocode; include Reflection
             autocreate( :Default, Class.new )
             autocreate( :Development, Class.new( Waves::Configurations::Default ))
             autocreate( :Mapping, Module.new { |mod| extend Waves::Mapping })
           })
-          autocreate( :Models, Module.new { include Reflection })
+          autocreate( :Models, Module.new { 
+            extend Autocode; include Reflection 
+            })
           autocreate( :Views, Module.new { 
-            extend Autocode
-            include Reflection
+            extend Autocode; include Reflection
             include Waves::Views::Mixin 
             autocreate( :Default, Class.new )
             })
           autocreate( :Controllers, Module.new { 
-            extend Autocode
-            include Reflection
+            extend Autocode; include Reflection
             include Waves::Controllers::Mixin 
             autocreate( :Default, Class.new )
             })
           autocreate( :Helpers, Module.new {
-            extend Autocode 
-            include Reflection 
+            extend Autocode; include Reflection 
             autocreate( :Default, Module.new )
             })
           
