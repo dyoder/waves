@@ -21,7 +21,7 @@ module Waves
           # Set autoloading from default.rb files
       	  autoinit :Configurations do
       	    autoload_class true, app.configurations["Default"]
-            autoload :Mapping
+            autoload_module :Mapping
       	  end
       	  
       	  autoinit :Models do
@@ -42,7 +42,7 @@ module Waves
           end
 
       	  autoinit :Helpers do
-      	    autoload true, :exemplar => app.helpers["Default"]
+      	    autoload_module true, :exemplar => app.helpers["Default"]
       	  end
       	  
           # accessor methods for modules and other key application objects ...
