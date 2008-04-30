@@ -1,5 +1,5 @@
 begin
-  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
+  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask rcov/rcovtask extensions/all
     utilities/string utilities/symbol date).each { |dep| require dep }
 rescue
   puts "Better do `rake setup` to get all the fancies you're missing"
@@ -94,6 +94,11 @@ end
 desc "Run verification suite."
 Rake::TestTask.new(:verify) do |t|
   t.test_files = FileList["verify/*/*.rb"].exclude("**/helpers.rb", "**/app_generation/*.rb")
+  t.verbose = true
+end
+
+Rcov::RcovTask.new do |t|
+  t.test_files = FileList['verify/*/*.rb'].exclude("verify/**/helpers.rb", "**/app_generation/*.rb")
   t.verbose = true
 end
 
