@@ -1,0 +1,14 @@
+module DefaultApplication
+  
+  module Configurations
+    
+    module Mapping
+      extend Waves::Mapping
+      # your custom rules go here
+      include Waves::Mapping::PrettyUrls::RestRules
+      include Waves::Mapping::PrettyUrls::GetRules
+    end
+
+  end
+
+end
