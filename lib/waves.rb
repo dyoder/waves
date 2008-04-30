@@ -67,5 +67,6 @@ require 'verify/request.rb'
 # waves foundations / layers
 require 'foundations/simple'
 require 'layers/simple_errors'
+require 'layers/mvc'
 require 'foundations/default'
 require 'layers/default_errors'

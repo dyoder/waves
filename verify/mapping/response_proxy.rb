@@ -4,6 +4,10 @@ require File.join(File.dirname(__FILE__), "..", "helpers")
 # Note: you have to define the resource classes using module_eval here, because otherwise
 # the autocreate code never gets triggered in the application.
 
+module Test
+  include Waves::Layers::MVC
+end
+
 Test::Controllers.module_eval do
   class Animal
     include Waves::Controllers::Mixin
@@ -18,7 +22,7 @@ Test::Views.module_eval do
   end
 end
 
-specification "A developer may succintly define a resource-based controller-view chain." do
+specification "A developer may succinctly define a resource-based controller-view chain." do
       
   before do
     mapping.clear

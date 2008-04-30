@@ -5,8 +5,8 @@ module Waves
       def self.included( app )
         
         app.module_eval do
-
-          self::Configurations::Mapping.module_eval do
+          
+          autoinit 'Configurations::Mapping' do
             handle(Waves::Dispatchers::NotFoundError) do
               html = Waves.application.views[:errors].process( request ) do
                 not_found_404( :error => Waves::Dispatchers::NotFoundError ) 
