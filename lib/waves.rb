@@ -4,7 +4,8 @@ require 'rubygems'
 require 'rack'
 require 'daemons'
 require 'live_console'
-require 'automatthew-autocode'
+gem 'automatthew-autocode'
+require 'autocode'
 
 # for mimetypes only or when using as default handler
 require 'mongrel'
