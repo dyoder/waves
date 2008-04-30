@@ -1,6 +1,6 @@
 begin
   $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
-    utilities/string utilities/symbol ).each { |dep| require dep }
+    utilities/string utilities/symbol date).each { |dep| require dep }
 rescue
   puts "Better do `rake setup` to get all the fancies you're missing"
 end
@@ -39,6 +39,14 @@ task( :install_gem ) do
     Dir['*.gem'].each do |gem|
 	Gem::Installer.new(gem).install
     end
+end
+
+desc "create .gemspec file (useful for github)"
+task :gemspec do
+  filename = "#{gem.name}.gemspec"
+  File.open(filename, "w") do |f|
+    f.puts gem.to_ruby
+  end
 end
 
 desc "Publish to RubyForge"
