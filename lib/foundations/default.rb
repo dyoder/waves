@@ -11,12 +11,13 @@ module Waves
           
           include Waves::Foundations::Simple
           include Waves::Layers::MVC
+          include Waves::Layers::DefaultErrors
           
           autocreate( :Helpers, Module.new {
             extend Autocode; include Reflection 
             autocreate( :Default, Module.new )
             })
-                
+               
           # Set autoloading from default.rb files
       	  autoinit :Configurations do
       	    autoload_class true, app.configurations["Default"]
@@ -48,7 +49,6 @@ module Waves
           def self.database ; @database ||= Sequel.open( config.database ) ; end
       		def self.helpers ; self::Helpers ; end
         	
-          include Waves::Layers::DefaultErrors
         	
         end
       end
