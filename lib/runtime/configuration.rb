@@ -173,7 +173,6 @@ module Waves
 			session :duration => 30.minutes, :path => '/tmp/sessions'
     	log :level => :info, :output => $stderr	
     	reloadable []
-      
 		end
 	end
 end

@@ -1,34 +1,21 @@
 module Waves
   module Foundations
     
-    module Reflection
-      def self.included( mod )
-        mod.module_eval do
-          def self.[]( cname ) const_get( cname.to_s.camel_case ) end
-        end
-      end
-    end
-    
     module Simple
       
       def self.included( app )
 
-        app.module_eval do
-
-          extend Autocode; extend Reloadable; 
+        app.instance_eval do
+          include Autocode
           autocreate( :Configurations, Module.new {
-            extend Autocode; include Reflection
+            include Autocode
             autocreate( :Default, Class.new )
             autocreate( :Development, Class.new( Waves::Configurations::Default ))
-            autocreate( :Mapping, Module.new { |mod| extend Waves::Mapping })
+            autocreate( :Mapping, Module.new { |mod| include Waves::Mapping })
           })
-          
-          # accessor methods for modules and other key application objects ...
-        	class << self
-        		def config ; Waves.config ; end
-        		def configurations ; self::Configurations ; end
-        	end
-        	
+      		meta_def( :config ) { Waves.config }
+      		meta_def( :configurations ) { self::Configurations }
+
         	include Waves::Layers::SimpleErrors
         	
         end
@@ -36,3 +23,4 @@ module Waves
     end
   end
 end
+

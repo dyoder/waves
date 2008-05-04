@@ -1,5 +1,7 @@
 module <%= name %>
+
   module Configurations
+  
     class Development < Default
       
       database :host => 'localhost', :adapter => 'sqlite', :database => '<%= name.downcase %>',
@@ -23,5 +25,7 @@ module <%= name %>
       end
       
     end
+    
   end
+  
 end
