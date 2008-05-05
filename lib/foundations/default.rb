@@ -5,7 +5,8 @@ module Waves
       def self.included( app )
         
         app.module_eval do
-          extend Autocode; extend Reloadable
+
+          include Autocode
           
           include Waves::Foundations::Simple
           include Waves::Layers::DefaultErrors
@@ -13,7 +14,7 @@ module Waves
                          
           # Set autoloading from default.rb files
       	  autoinit :Configurations do
-      	    autoload_class true, app.configurations["Default"]
+      	    autoload_class
             autoload_module :Mapping
       	  end        	
         	
