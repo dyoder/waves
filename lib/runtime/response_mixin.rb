@@ -1,5 +1,5 @@
 module Waves
-  
+
   # Defines a set of methods that simplify accessing common request and response methods.
   # These include methods not necessarily associated with the Waves::Request and Waves::Response
   # objects, but which may still be useful for constructing a response.
@@ -31,5 +31,5 @@ module Waves
     # Access the Waves::Logger.
     def log; Waves::Logger; end
   end
-  
+
 end

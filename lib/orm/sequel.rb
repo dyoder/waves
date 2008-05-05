@@ -2,11 +2,11 @@ require 'sequel'
 
 module Waves
   module Orm
-    
+
     Model = ::Sequel::Model
-    
+
     module Sequel
-      
+
       def sequel ; @sequel ||= ::Sequel.open( config.database ) ; end
       def database ; @database ||= sequel ; end
       def model_config(context, name); context.set_dataset(database[ name ]); end

@@ -1,10 +1,10 @@
 module Waves
-  
+
   # Views in Waves are ultimately responsible for generating the response body. Views mirror controllers - both have full access to the request and response, and both may modify the response and even short-circuit the request processing and return a result by calling redirect or calling Response#finish.
   #
-  # Views, like controllers, are classes with methods that are invoked by a mapping block (see Waves::Mapping). View instance methods take an assigns hash that are typically converted into instance variables accesible from within a template. 
+  # Views, like controllers, are classes with methods that are invoked by a mapping block (see Waves::Mapping). View instance methods take an assigns hash that are typically converted into instance variables accesible from within a template.
   #
-  # Like controllers, a default implementation is provided by the +waves+ command when you first create your application. This default can be overridden to change the behaviors for all views, or you can explicitly define a View class to provide specific behavior for one view. 
+  # Like controllers, a default implementation is provided by the +waves+ command when you first create your application. This default can be overridden to change the behaviors for all views, or you can explicitly define a View class to provide specific behavior for one view.
   #
   # The default implementation simply determines which template to render and renders it, returning the result as a string. This machinery is provided by the View mixin, so it is easy to create your own View implementations.
   #
@@ -35,7 +35,7 @@ module Waves
   #   end
   #
   #
-  # The layout method takes a name and an assigns hash that will be available within the layout template as instance variables. In this example, <tt>@title</tt> will be defined as <tt>@story.title</tt> within the layout template named 'default.' 
+  # The layout method takes a name and an assigns hash that will be available within the layout template as instance variables. In this example, <tt>@title</tt> will be defined as <tt>@story.title</tt> within the layout template named 'default.'
   #
   # Any number of layouts may be included within a single view, and layouts may even be nested within layouts. This makes it possible to create large numbers of highly structured views that can be easily changed with minimal effort. For example, you might specify a layout associated with form elements. By incorporating this into your views as a +layout+ template, you can make changes across all your forms by changing this single template.
   #
@@ -52,11 +52,11 @@ module Waves
   #
   # As always, the request and response objects, and a wide-variety of short-cut methods, are available within view templates via the Waves::ResponseMixin.
   #
-    
+
   module Views
 
     class NoTemplateError < Exception ; end
-  
+
     # A class method that returns the known Renderers, which is any module that is defined within Waves::Renderers and includes the Renderers::Mixin. You can define new Renderers simply be reopening Waves::Renderers and defining a module that mixes in Renderers::Mixin.
     def Views.renderers
       return [] if Renderers.constants.nil?
@@ -68,39 +68,39 @@ module Waves
 
     # The View mixin simply sets up the machinery for invoking a template, along with methods for accessing the request context and the standard interface for invoking a view method.
     module Mixin
-        
+
       attr_reader :request
-      
+
       include Waves::ResponseMixin
-      
+
       def self.included( c )
         def c.process( request, *args, &block )
           self.new( request ).instance_exec( *args, &block )
         end
       end
-      
+
       def initialize( request )
         @request = request
         @layout = :default
       end
-      
+
       def renderer(path)
-        Views.renderers.find do |renderer| 
+        Views.renderers.find do |renderer|
           File.exists?( renderer.filename( path ) )
         end
       end
-      
+
       def render( path, context = {} )
-        context.merge!( :request => request ) 
+        context.merge!( :request => request )
         template = renderer( path ) || renderer( :generic / File.basename(path) )
         raise NoTemplateError.new( path ) if template.nil?
         template.render( path, context )
       end
-      
+
       def method_missing(name,*args)
         render( "/#{self.class.basename.snake_case}/#{name}", *args )
       end
-      
+
     end
 
   end

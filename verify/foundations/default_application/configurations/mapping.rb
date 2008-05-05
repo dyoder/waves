@@ -1,7 +1,7 @@
 module DefaultApplication
-  
+
   module Configurations
-    
+
     module Mapping
       extend Waves::Mapping
       # your custom rules go here

@@ -1,9 +1,9 @@
 module Waves
   module Layers
     module MVC
-      
+
       def self.included( app )
-        
+
         app.module_eval do
           include Autocode
                     
@@ -12,7 +12,7 @@ module Waves
             autocreate_class
             autoload_class 
           })
-          
+
           autocreate( :Views, Module.new {
             include Autocode
             include Waves::Views::Mixin 

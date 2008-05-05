@@ -10,7 +10,7 @@ class AddComments < Sequel::Migration
       timestamp :created_on
     end
   end
-  
+
   def down
     drop_table :comments
   end

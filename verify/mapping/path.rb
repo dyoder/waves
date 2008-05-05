@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 specification "A developer can map requests using the request path." do
-      
+
   before do
     mapping.clear
     path('/', :method => :post ) { 'This is a simple post rule.' }
@@ -27,14 +27,14 @@ specification "A developer can map requests using the request path." do
   specify 'Map the path of a DELETE request to a lambda.' do
     delete('/').body.should == 'This is a simple delete rule.'
   end
-  
+
   specify 'When method is not explicitely set in a mapping it accepts all methods' do
     get( '/foo' ).body.should == "The server says, 'bar!'"
     post( '/foo' ).body.should == "The server says, 'bar!'"
     put( '/foo' ).body.should == "The server says, 'bar!'"
     delete( '/foo' ).body.should == "The server says, 'bar!'"
   end
-  
+
 
 end
 

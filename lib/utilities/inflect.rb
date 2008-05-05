@@ -7,7 +7,7 @@
 
 module Inflect
   module InflectorMethods
-    
+
     # Define a general exception.
     def word(singular, plural=nil)
       plural = singular unless plural
@@ -106,10 +106,10 @@ module Inflect
   class English
     @singular_of = {}
     @plural_of = {}
-    
+
     @singular_rules = []
     @plural_rules = []
-    
+
     class << self
       include InflectorMethods
     end
@@ -191,4 +191,4 @@ module Inflect
     plural_rule 's'  , 'ses'
   end
 end
-    
+
