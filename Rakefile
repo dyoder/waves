@@ -25,7 +25,7 @@ gem = Gem::Specification.new do |gem|
 end
 
 desc "Create the waves gem"
-task( :package => :clean ) { Gem::Builder.new( gem ).build }
+task( :package => :clean ) { Gem::Builder.new( gem ).build } 
 
 desc "Clean build artifacts"
 task( :clean ) { FileUtils.rm_rf Dir['*.gem'] }

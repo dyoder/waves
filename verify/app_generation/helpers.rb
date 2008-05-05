@@ -1,7 +1,7 @@
 %w( rubygems bacon open3 extensions/all).each { |f| require f }
 
-Bacon.extend Bacon::TestUnitOutpu
-Bacon.summary_on_exi
+Bacon.extend Bacon::TestUnitOutput
+Bacon.summary_on_exit
 
 require File.join(File.dirname(__FILE__), "..", "..", "lib", "utilities", "string")
 

@@ -1,7 +1,7 @@
 %w( rubygems bacon ).each { |f| require f }
 
-Bacon.extend Bacon::TestUnitOutpu
-Bacon.summary_on_exi
+Bacon.extend Bacon::TestUnitOutput
+Bacon.summary_on_exit
 
 # protect TextMate from itself.
 
@@ -12,7 +12,7 @@ require 'waves'
 # define basic app for use in testing
 # before methods may add to it using helper methods
 module Test ; include Waves::Foundations::Simple ; end
-Waves << Tes
+Waves << Test
 Waves::Console.load( :mode => :development )
 
 module Kernel
@@ -22,6 +22,6 @@ end
 
 Bacon::Context.instance_eval do
   include ::Waves::Verify::Helpers::Mapping
-  include ::Waves::Verify::Helpers::Reques
-  alias_method :specify, :i
+  include ::Waves::Verify::Helpers::Request
+  alias_method :specify, :it
 end

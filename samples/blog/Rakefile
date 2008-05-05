@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#
+# 
 # Warning:  This file is clobbered when you update your
 # application with the waves script.  Accordingly, you may
 # wish to keep your tasks in .rb or .rake files in lib/tasks

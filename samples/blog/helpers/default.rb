@@ -1,7 +1,7 @@
 module Blog
   module Helpers
-    module Defaul
-      attr_reader :request, :conten
+    module Default
+      attr_reader :request, :content
       include Waves::ResponseMixin
       include Waves::Helpers::Common
       include Waves::Helpers::Formatting

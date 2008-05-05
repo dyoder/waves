@@ -1,4 +1,4 @@
-doctype :html4_stric
+doctype :html4_strict
 
 html do
 
@@ -9,10 +9,10 @@ html do
     script :src => '/javascript/site.js', :type => 'text/javascript'
     link :href => '/css/site.css', :rel => 'stylesheet', :type => 'text/css'
   end
-
+  
   body do
-    layout_conten
+    layout_content
   end
 
 end
-
+  

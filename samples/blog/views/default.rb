@@ -1,13 +1,13 @@
 module Blog
-
+  
   module Views
-
-    class Defaul
-
+  
+    class Default
+      
       include Waves::Views::Mixin
-
+    
     end
-
+  
   end
-
+  
 end

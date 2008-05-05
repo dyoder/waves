@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 specification "A developer can map requests with options." do
-
+      
   before do
     mapping.clear
     path('/', :remote_addr => "10.10.10.10" ) { 'This request is from 10.10.10.10' }

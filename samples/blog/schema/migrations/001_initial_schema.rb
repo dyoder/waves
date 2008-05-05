@@ -6,10 +6,10 @@ class InitialSchema < Sequel::Migration
       text :name
       text :title
       text :summary
-      text :conten
+      text :content
     end
   end
-
+  
   def down
     drop_table :entries
   end

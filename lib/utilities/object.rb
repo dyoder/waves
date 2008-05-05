@@ -1,4 +1,4 @@
-class Objec
+class Object
   # This is an extremely powerful little function that will be built-in to Ruby 1.9.
   # This version is from Mauricio Fernandez via ruby-talk. Works like instance_eval
   # except that you can pass parameters to the block. This means you can define a block
@@ -12,6 +12,6 @@ class Objec
     ensure
       class << self; self end.class_eval{ undef_method(mname) } rescue nil
     end
-    re
+    ret
   end
 end

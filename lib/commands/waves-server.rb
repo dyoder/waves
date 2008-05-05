@@ -10,7 +10,7 @@ Choice.options do
     desc 'Defaults to value given in configuration.'
     cast Integer
   end
-  separator ''
+  separator ''  
   option :host do
     short '-h'
     long '--host=HOST'
@@ -32,13 +32,13 @@ Choice.options do
     desc 'Directory containing the application.'
     desc 'Defaults to the current directory.'
   end
-  separator ''
+  separator ''  
   option :daemon do
     short '-d'
     long '--daemon'
     desc 'Run as a daemon.'
   end
-  separator ''
+  separator ''  
   option :debugger do
     short '-u'
     long '--debugger'

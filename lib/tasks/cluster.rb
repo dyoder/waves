@@ -8,7 +8,7 @@ namespace :cluster do
       puts cmd ; `#{cmd}`
     end
   end
-
+  
   desc 'Stop a cluster of waves applications.'
   task :stop do |task|
      Dir[ :log / '*.pid' ].each do |pidfile|
@@ -17,9 +17,9 @@ namespace :cluster do
        Process.kill( 'INT', pid ) rescue nil
     end
   end
-
+  
   desc 'Restart a cluster of waves applications.'
   task :restart => [ :stop, :start ] do |task|
   end
-
+  
 end

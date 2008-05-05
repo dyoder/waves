@@ -6,11 +6,11 @@ class AddComments < Sequel::Migration
       foreign_key :entry_id, :table => :entries
       text :name
       text :email
-      text :conten
+      text :content
       timestamp :created_on
     end
   end
-
+  
   def down
     drop_table :comments
   end

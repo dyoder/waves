@@ -1,5 +1,5 @@
 module DefaultApplication
-  include Waves::Foundations::Defaul
+  include Waves::Foundations::Default
 end
 
 Waves << DefaultApplication

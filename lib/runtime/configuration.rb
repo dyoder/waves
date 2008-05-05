@@ -1,26 +1,26 @@
 module Waves
-
+  
   # Waves configurations are simply Ruby code, meaning you can use an Ruby expression as
-  # a value for a configuration parameter, extend and inherit your configurations, and
+  # a value for a configuration parameter, extend and inherit your configurations, and 
   # add your own configuration attributes. You can even use it as a configuration repository
   # for your applications.
   #
   # The form for configuration parameters to use the parameter name as a method name. Passing
   # in a parameter sets the value.
   #
-  # == Example
+  # == Example 
   #
   #    module Blog
   #      module Configurations
-  #        class Development < Defaul
+  #        class Development < Default
   #          host '127.0.0.1'
   #          port 2000
   #          reloadable [ Blog ]
-  #          log :level => :debug
+  #          log :level => :debug 
   #          application do
   #            use Rack::ShowExceptions
   #            run Waves::Dispatchers::Default.new
-  #          end
+  #          end        
   #        end
   #      end
   #    end
@@ -34,13 +34,13 @@ module Waves
   # You can inherit configurations, as is shown in the example above. Typically, you
   # can use the application's "default" configuration to set shared configurations,
   # and then inherit from it for specific variations.
-  #
+  # 
   # To define your own attributes, and still make them inheritable, you should use
   # the +attribute+ class method, like this:
   #
-  #   class Default < Waves::Configurations::Defaul
+  #   class Default < Waves::Configurations::Default
   #     attribute 'theme' # define a theme attribute
-  #     theme 'ultra'     # give it a defaul
+  #     theme 'ultra'     # give it a default
   #   end
   #
   # There are a number of reserved or built-in attributes. These are:
@@ -59,14 +59,14 @@ module Waves
   # One of the really nice features of Rack is the ability to install "middleware"
   # components to optimize the way you handle requests. Waves exposes this ability
   # directly to the application developer via the +application+ configuration parameter.
-  #
+  # 
   # *Example*
-  #
+  # 
   #   # Typical debugging configuration
   #   application do
   #     use Rack::ShowExceptions
   #     run Waves::Dispatchers::Default.new
-  #   end
+  #   end       
   #
   # == Configuring Database Access
   #
@@ -83,23 +83,23 @@ module Waves
   #   database :host => 'localhost', :adapter => 'mysql', :database => 'blog',
   #     :user => 'root', :password => 'guess'
   #
+  # 
+  # == Configuring Code Reloading 
   #
-  # == Configuring Code Reloading
-  #
-  # You can specify a list of modules to reload on each request using the +reloadable+
+  # You can specify a list of modules to reload on each request using the +reloadable+ 
   # configuration parameter. The Waves server will call +reload+ on each module to trigger
   # the reloading. Typically, your modules will use the Autocode gem to set parameters for
-  # reloading. This is done for you when you generate an application using the +waves+
+  # reloading. This is done for you when you generate an application using the +waves+ 
   # command, but you can change the default settings. See the documentation for Autocode
   # for more information. Typically, you will set this parameter to just include your
   # main application:
   #
   #   reloadable [ Blog ]
   #
-  # although you could do this with several modules just as easily (say, your primary
+  # although you could do this with several modules just as easily (say, your primary 
   # application and several helper applications).
   #
-  # == Configuring Logging
+  # == Configuring Logging 
   #
   # The +log+ configuration parameter takes the following options (as a hash):
   # - level: The level to filter logging at. Uses Ruby's built in Logger class.
@@ -115,13 +115,13 @@ module Waves
 
     class Base
 
-      # Set the given attribute with the given value. Typically, you wouldn'
+      # Set the given attribute with the given value. Typically, you wouldn't
       # use this directly.
       def self.[]=( name, val )
         meta_def("_#{name}") { val }
       end
 
-      # Get the value of the given attribute. Typically, you wouldn'
+      # Get the value of the given attribute. Typically, you wouldn't
       # use this directly.
       def self.[]( name ) ; send "_#{name}" ; end
 
@@ -133,13 +133,13 @@ module Waves
         end
         self[ name ] = nil
       end
-
+      
     end
-
+  
     # The Default configuration provides a good starting point for your applications,
     # defining a number of attributes that are required by Waves.
     class Default < Base
-
+      
       %w( host port ports log reloadable database session debug root ).
       each { |name| attribute(name) }
 
@@ -162,16 +162,16 @@ module Waves
 
       # Defines the application for use with Rack.
       def self.application( &block )
-        if block_given?
+        if block_given? 
           self['application'] = Rack::Builder.new( &block )
         else
           self['application']
         end
       end
-
+      
       debug true
       session :duration => 30.minutes, :path => '/tmp/sessions'
-      log :level => :info, :output => $stderr
+      log :level => :info, :output => $stderr 
       reloadable []
     end
   end
