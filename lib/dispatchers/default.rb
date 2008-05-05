@@ -48,7 +48,6 @@ module Waves
             ResponseProxy.new(request).instance_exec(*args,&block)
           end
         rescue Exception => e
-          debugger
           handler = mapping[:handlers].detect do | exception, block, args |
             e.is_a? exception
           end
