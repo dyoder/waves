@@ -9,11 +9,11 @@ module Waves
         def self.included(app)
           app.instance_eval do
             autoinit :Models do
-              autoload_class true, Sequel::Model
-              autocreate true, app.models["Default"] do
+              autocreate_class true, Sequel::Model do
                 set_dataset app.database[ basename.snake_case.plural.intern]
               end
-            end
+              autoload_class true
+        	  end
             meta_def( :database ) { @sequel ||= ::Sequel.open( config.database ) }
           end
         end
