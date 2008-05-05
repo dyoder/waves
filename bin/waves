@@ -2,9 +2,9 @@
 
 # rudimentary argument checks
 if ARGV.length != 1 || ARGV[0] == '--help'
-	$stderr.puts "Usage: waves {app_name}"
-	$stderr.puts "app_name may contain only letters, numbers, and underscores."
-	exit 1
+  $stderr.puts "Usage: waves {app_name}"
+  $stderr.puts "app_name may contain only letters, numbers, and underscores."
+  exit 1
 end
 
 app_path = ARGV[0]

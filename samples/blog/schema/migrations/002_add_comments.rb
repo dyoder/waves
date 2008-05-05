@@ -1,6 +1,6 @@
 class AddComments < Sequel::Migration
 
-	def up
+  def up
     create_table :comments do
       primary_key :id
       foreign_key :entry_id, :table => :entries
@@ -9,10 +9,10 @@ class AddComments < Sequel::Migration
       text :content
       timestamp :created_on
     end
-	end
-	
-	def down
-	  drop_table :comments
-	end
+  end
+  
+  def down
+    drop_table :comments
+  end
 
 end

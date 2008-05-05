@@ -88,158 +88,158 @@ module Waves
   # rules that require a POST) ahead of those with no constraints, otherwise the constrainted
   # rules may never be called.
   
-	module Mapping
-		
-		# If the pattern matches and constraints given by the options hash are satisfied, run the
-		# block before running any +path+ or +url+ actions. You can have as many +before+ matches
-		# as you want - they will all run, unless one of them calls redirect, generates an 
-		# unhandled exception, etc.
-		def before( path, options = {}, &block )
-		  if path.is_a? Hash
-		    options = path
-	    else
-	      options[:path] = path
+  module Mapping
+    
+    # If the pattern matches and constraints given by the options hash are satisfied, run the
+    # block before running any +path+ or +url+ actions. You can have as many +before+ matches
+    # as you want - they will all run, unless one of them calls redirect, generates an 
+    # unhandled exception, etc.
+    def before( path, options = {}, &block )
+      if path.is_a? Hash
+        options = path
+      else
+        options[:path] = path
       end
-			filters[:before] << [ options, block ]
-		end
-		
-		# Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
-		def after( path, options = {}, &block )
-		  if path.is_a? Hash
-		    options = path
-	    else
-	      options[:path] = path
+      filters[:before] << [ options, block ]
+    end
+    
+    # Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
+    def after( path, options = {}, &block )
+      if path.is_a? Hash
+        options = path
+      else
+        options[:path] = path
       end
-			filters[:after] << [ options, block ]
-		end
-		
-		# Run the action before and after the matching +url+ or +path+ action.
-		def wrap( path, options = {}, &block )
-		  if path.is_a? Hash
-		    options = path
-	    else
-	      options[:path] = path
+      filters[:after] << [ options, block ]
+    end
+    
+    # Run the action before and after the matching +url+ or +path+ action.
+    def wrap( path, options = {}, &block )
+      if path.is_a? Hash
+        options = path
+      else
+        options[:path] = path
       end
-			filters[:before] << [ options, block ]
-			filters[:after] << [ options, block ]
-		end		
+      filters[:before] << [ options, block ]
+      filters[:after] << [ options, block ]
+    end   
 
     # Maps a request to a block. Don't use this method directly unless you know what 
     # you're doing. Use +path+ or +url+ instead.
-		def map( path, options = {}, params = {}, &block )
-		  if path.is_a? Hash
-		    params = options
-		    options = path
-	    else
-	      options[:path] = path
+    def map( path, options = {}, params = {}, &block )
+      if path.is_a? Hash
+        params = options
+        options = path
+      else
+        options[:path] = path
       end
-			mapping << [ options, params, block ]
-		end
-		
-		# Match pattern against the +request.path+, along with satisfying any constraints 
-		# specified by the options hash. If the pattern matches and the constraints are satisfied,
-		# run the block. Only one +path+ or +url+ match will be run (the first one).
-		def path( pat, options = {}, params = {}, &block )
-			options[:path] = pat; map( options, params, &block )
-		end
+      mapping << [ options, params, block ]
+    end
+    
+    # Match pattern against the +request.path+, along with satisfying any constraints 
+    # specified by the options hash. If the pattern matches and the constraints are satisfied,
+    # run the block. Only one +path+ or +url+ match will be run (the first one).
+    def path( pat, options = {}, params = {}, &block )
+      options[:path] = pat; map( options, params, &block )
+    end
 
-		# Match pattern against the +request.url+, along with satisfying any constraints 
-		# specified by the options hash. If the pattern matches and the constraints are satisfied,
-		# run the block. Only one +path+ or +url+ match will be run (the first one).
-		def url( pat, options = {}, params = {}, &block )
-			options[:url] = pat; map( options, params, &block )
-		end
-		
-		# Maps the root of the application to a block. If an options hash is specified it must
-		# satisfy those constraints in order to run the block.
-		def root( options = {}, params = {}, &block )
+    # Match pattern against the +request.url+, along with satisfying any constraints 
+    # specified by the options hash. If the pattern matches and the constraints are satisfied,
+    # run the block. Only one +path+ or +url+ match will be run (the first one).
+    def url( pat, options = {}, params = {}, &block )
+      options[:url] = pat; map( options, params, &block )
+    end
+    
+    # Maps the root of the application to a block. If an options hash is specified it must
+    # satisfy those constraints in order to run the block.
+    def root( options = {}, params = {}, &block )
       path( %r{^/?$}, options, params, &block )
-	  end
+    end
 
     # Maps an exception handler to a block.
-	  def handle(exception, options = {}, &block )
-	    handlers << [exception,options, block]
-	  end
-	  
-	  # Maps a request to a block that will be executed within it's 
-	  # own thread. This is especially useful when you're running
-	  # with an event driven server like thin or ebb, and this block
-	  # is going to take a relatively long time.
-	  def threaded( pat, options = {}, params = {}, &block)
-	    params[:threaded] = true
-	    map( pat, options, params, &block)
+    def handle(exception, options = {}, &block )
+      handlers << [exception,options, block]
     end
-			  
-	  # Determines whether the request should be handled in a separate thread. This is  used
-	  # by event driven servers like thin and ebb, and is most useful for those methods that
-	  # take a long time to complete, like for example upload processes. E.g.:
-	  #
-	  #   threaded("/upload", :method => :post) do
-	  #     handle_upload
-	  #   end
-	  #
-	  # You typically wouldn't use this method directly.
-	  def threaded?( request )
-			mapping.find do | options, params, function |
-			  match = match( request, options, function )
-			  return params[:threaded] == true if match
-			end
-			return false
-		end
+    
+    # Maps a request to a block that will be executed within it's 
+    # own thread. This is especially useful when you're running
+    # with an event driven server like thin or ebb, and this block
+    # is going to take a relatively long time.
+    def threaded( pat, options = {}, params = {}, &block)
+      params[:threaded] = true
+      map( pat, options, params, &block)
+    end
+        
+    # Determines whether the request should be handled in a separate thread. This is  used
+    # by event driven servers like thin and ebb, and is most useful for those methods that
+    # take a long time to complete, like for example upload processes. E.g.:
+    #
+    #   threaded("/upload", :method => :post) do
+    #     handle_upload
+    #   end
+    #
+    # You typically wouldn't use this method directly.
+    def threaded?( request )
+      mapping.find do | options, params, function |
+        match = match( request, options, function )
+        return params[:threaded] == true if match
+      end
+      return false
+    end
 
-		# Match the given request against the defined rules. This is typically only called
-		# by a dispatcher object, so you shouldn't typically use it directly.
-		def []( request )
-		  
-			rx = { :before => [], :after => [], :action => nil, :handlers => [] }
-			
-			( filters[:before] + filters[:wrap] ).each do | options, function |
-			  matches = match( request, options, function )
-			  rx[:before] << matches if matches
-			end
-			
-			mapping.find do | options, params, function |
-			  rx[:action] = match( request, options, function )
-				break if rx[:action]
-			end
-			
-			( filters[:after] + filters[:wrap] ).each do | options, function |
-			  matches = match( request, options, function )
-			  rx[:after] << matches if matches
-			end
-			
-			handlers.each do | exception, options, function |
-			  matches = match( request, options, function )
-			  rx[:handlers] << matches.unshift(exception) if matches
-		  end
-						
-			return rx
-		end
-		
-		# Clear all mapping rules
-		def clear
-		  @mapping = @filters = nil;
-	  end		
-				
-		private
-		
-		def mapping; @mapping ||= []; end
-		
-		def filters; @filters ||= { :before => [], :after => [], :wrap => [] }; end
-		
-		def handlers; @handlers ||= []; end
+    # Match the given request against the defined rules. This is typically only called
+    # by a dispatcher object, so you shouldn't typically use it directly.
+    def []( request )
+      
+      rx = { :before => [], :after => [], :action => nil, :handlers => [] }
+      
+      ( filters[:before] + filters[:wrap] ).each do | options, function |
+        matches = match( request, options, function )
+        rx[:before] << matches if matches
+      end
+      
+      mapping.find do | options, params, function |
+        rx[:action] = match( request, options, function )
+        break if rx[:action]
+      end
+      
+      ( filters[:after] + filters[:wrap] ).each do | options, function |
+        matches = match( request, options, function )
+        rx[:after] << matches if matches
+      end
+      
+      handlers.each do | exception, options, function |
+        matches = match( request, options, function )
+        rx[:handlers] << matches.unshift(exception) if matches
+      end
+            
+      return rx
+    end
+    
+    # Clear all mapping rules
+    def clear
+      @mapping = @filters = nil;
+    end   
+        
+    private
+    
+    def mapping; @mapping ||= []; end
+    
+    def filters; @filters ||= { :before => [], :after => [], :wrap => [] }; end
+    
+    def handlers; @handlers ||= []; end
 
-		def match ( request, options, function )
-		  return nil unless satisfy( request, options )
-		  if options[:path]
-		    matches = options[:path].match( request.path )
-	    elsif options[:url]
-	      matches = options[:url].match( request.url )
+    def match ( request, options, function )
+      return nil unless satisfy( request, options )
+      if options[:path]
+        matches = options[:path].match( request.path )
+      elsif options[:url]
+        matches = options[:url].match( request.url )
       end
       return [ function, matches ? matches[1..-1] : nil ]
-	  end
-	  
-		def satisfy( request, options )
+    end
+    
+    def satisfy( request, options )
       options.nil? or options.all? do |name,wanted|
         got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ? 
           name.to_s.downcase : name.to_s.upcase ]
@@ -247,6 +247,6 @@ module Waves
           got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
       end
     end
-	end
+  end
 
 end

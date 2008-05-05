@@ -4,7 +4,7 @@ require 'rubygems'
 require 'rack'
 require 'daemons'
 require 'live_console'
-# gem 'dyoder-autocode'
+gem 'dyoder-autocode'
 require 'autocode'
 
 # for mimetypes only or when using as default handler

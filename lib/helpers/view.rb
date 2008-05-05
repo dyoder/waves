@@ -12,13 +12,13 @@ module Waves
     module View
       
       # Invokes the view for the given model, passing the assigns as instance variables.
-			def view( model, view, assigns = {} )
+      def view( model, view, assigns = {} )
         self << Waves.application.views[ model ].process( request ) do
-	        send( view, assigns )
-	      end
-			end
-			
-			
-		end
-	end
+          send( view, assigns )
+        end
+      end
+      
+      
+    end
+  end
 end

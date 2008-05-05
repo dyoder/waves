@@ -11,25 +11,25 @@ module Waves
     # Access the request parameters.
     def params; request.params; end
     # Access the request session.
-		def session; request.session; end
-		# Access the request path.
-		def path; request.path; end
-		# Access the request url.
-		def url; request.url; end
-		# Access the request domain.
-		def domain; request.domain; end
-		# Issue a redirect for the given location.
-		def redirect(location, status = '302'); request.redirect(location, status); end
-		# Access the primary application's models
-		def models; Waves.application.models; end
-		# Access the primary application's views
-		def views; Waves.application.views; end
-		# Access the primary application's controllers
-		def controllers; Waves.application.controllers; end
-		# Raise a "not found" exception.
-		def not_found; request.not_found; end
-		# Access the Waves::Logger.
-		def log; Waves::Logger; end
-	end
-	
+    def session; request.session; end
+    # Access the request path.
+    def path; request.path; end
+    # Access the request url.
+    def url; request.url; end
+    # Access the request domain.
+    def domain; request.domain; end
+    # Issue a redirect for the given location.
+    def redirect(location, status = '302'); request.redirect(location, status); end
+    # Access the primary application's models
+    def models; Waves.application.models; end
+    # Access the primary application's views
+    def views; Waves.application.views; end
+    # Access the primary application's controllers
+    def controllers; Waves.application.controllers; end
+    # Raise a "not found" exception.
+    def not_found; request.not_found; end
+    # Access the Waves::Logger.
+    def log; Waves::Logger; end
+  end
+  
 end

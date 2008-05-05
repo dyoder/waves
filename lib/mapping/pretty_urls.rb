@@ -23,7 +23,7 @@ module Waves
       
             extend Waves::Mapping
       
-      		  name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
+            name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
   
             # get all resources for the given model
             path %r{^/#{model}/?$}, :method => :get do | model |
@@ -61,7 +61,7 @@ module Waves
       
             extend Waves::Mapping
       
-      		  name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
+            name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
   
             # create a new resource for the given model
             path %r{^/#{model}/?$}, :method => :post do | model |

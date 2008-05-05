@@ -16,7 +16,7 @@ module Waves
               response.write( html )
             end
           end
-        	
+          
         end
       end
     end

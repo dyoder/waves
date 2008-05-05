@@ -19,15 +19,15 @@ module Waves
     module Model
       
       # Just like model.all. Returns all the instances of that model.
-			def all( model )
-			  Waves.application.models[ model ].all( domain )
+      def all( model )
+        Waves.application.models[ model ].all( domain )
       end
       
       # Finds a specific instance using the name field
-			def find( model, name )
-			  Waves.application.models[ model ][ :name => name ] rescue nil
-			end
-			
-		end
-	end
+      def find( model, name )
+        Waves.application.models[ model ][ :name => name ] rescue nil
+      end
+      
+    end
+  end
 end

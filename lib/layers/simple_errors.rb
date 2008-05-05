@@ -9,7 +9,7 @@ module Waves
           self::Configurations::Mapping.module_eval do
             handle(Waves::Dispatchers::NotFoundError) { response.status = 404 }
           end
-        	
+          
         end
       end
     end

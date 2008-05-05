@@ -13,11 +13,11 @@ module Waves
             autocreate( :Development, Class.new( Waves::Configurations::Default ))
             autocreate( :Mapping, Module.new { |mod| include Waves::Mapping })
           })
-      		meta_def( :config ) { Waves.config }
-      		meta_def( :configurations ) { self::Configurations }
+          meta_def( :config ) { Waves.config }
+          meta_def( :configurations ) { self::Configurations }
 
-        	include Waves::Layers::SimpleErrors
-        	
+          include Waves::Layers::SimpleErrors
+          
         end
       end
     end

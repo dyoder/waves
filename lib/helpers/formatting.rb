@@ -20,11 +20,11 @@ module Waves
       def textile( content )
         return if content.nil? or content.empty?
         ( ::RedCloth::TEXTILE_TAGS  << [ 96.chr, '&8216;'] ).each do |pat,ent|
-      		content.gsub!( pat, ent.gsub('&','&#') )
-      	end
-      	self << ::RedCloth.new( content ).to_html
+          content.gsub!( pat, ent.gsub('&','&#') )
+        end
+        self << ::RedCloth.new( content ).to_html
       end
 
-		end
-	end
+    end
+  end
 end

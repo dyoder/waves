@@ -27,7 +27,7 @@ module Waves
       # based on the migration files in the migration directory
       def self.next_migration_version
         version = ENV['version'] || latest_migration_version
-    		version.to_i + 1
+        version.to_i + 1
       end
       
       # Uses the migration files in the migration directory to determine

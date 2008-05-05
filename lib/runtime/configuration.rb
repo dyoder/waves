@@ -16,11 +16,11 @@ module Waves
   #          host '127.0.0.1'
   #          port 2000
   #          reloadable [ Blog ]
-  #          log :level => :debug	
+  #          log :level => :debug 
   #          application do
   #            use Rack::ShowExceptions
   #            run Waves::Dispatchers::Default.new
-  #          end				
+  #          end        
   #        end
   #      end
   #    end
@@ -64,9 +64,9 @@ module Waves
   # 
   #   # Typical debugging configuration
   #   application do
-	#   	use Rack::ShowExceptions
-	#   	run Waves::Dispatchers::Default.new
-	#   end				
+  #     use Rack::ShowExceptions
+  #     run Waves::Dispatchers::Default.new
+  #   end       
   #
   # == Configuring Database Access
   #
@@ -111,37 +111,37 @@ module Waves
   # log :level => :error, :output => 'log/blog.log'
   #
 
-	module Configurations
+  module Configurations
 
-		class Base
+    class Base
 
       # Set the given attribute with the given value. Typically, you wouldn't
       # use this directly.
-			def self.[]=( name, val )
-				meta_def("_#{name}") { val }
-			end
+      def self.[]=( name, val )
+        meta_def("_#{name}") { val }
+      end
 
       # Get the value of the given attribute. Typically, you wouldn't
       # use this directly.
-			def self.[]( name ) ; send "_#{name}" ; end
+      def self.[]( name ) ; send "_#{name}" ; end
 
       # Define a new attribute. After calling this, you can get and set the value.
-			def self.attribute( name )
-				meta_def(name) do |*args|
-					raise ArgumentError.new('Too many arguments.') if args.length > 1
-					args.length == 1 ? self[ name ] = args.first : self[ name ]
-				end
-				self[ name ] = nil
-			end
-			
-		end
-	
-	  # The Default configuration provides a good starting point for your applications,
-	  # defining a number of attributes that are required by Waves.
-		class Default < Base
-		  
-			%w( host port ports log reloadable database session debug root ).
-			each { |name| attribute(name) }
+      def self.attribute( name )
+        meta_def(name) do |*args|
+          raise ArgumentError.new('Too many arguments.') if args.length > 1
+          args.length == 1 ? self[ name ] = args.first : self[ name ]
+        end
+        self[ name ] = nil
+      end
+      
+    end
+  
+    # The Default configuration provides a good starting point for your applications,
+    # defining a number of attributes that are required by Waves.
+    class Default < Base
+      
+      %w( host port ports log reloadable database session debug root ).
+      each { |name| attribute(name) }
 
       # Set the handler for use with Rack, along with any handler-specific options
       # that will be passed to the handler's #run method. When accessing the value
@@ -154,27 +154,27 @@ module Waves
         end
       end
 
-			# Provide access to the Waves::MimeTypes class via the configuration. You
-			# could potentially point this to your own MIME types repository class.
-			def self.mime_types
-				Waves::MimeTypes
-			end
+      # Provide access to the Waves::MimeTypes class via the configuration. You
+      # could potentially point this to your own MIME types repository class.
+      def self.mime_types
+        Waves::MimeTypes
+      end
 
       # Defines the application for use with Rack.
-			def self.application( &block )
-			  if block_given? 
-  			  self['application'] = Rack::Builder.new( &block )
-  			else
-  			  self['application']
-  			end
-			end
+      def self.application( &block )
+        if block_given? 
+          self['application'] = Rack::Builder.new( &block )
+        else
+          self['application']
+        end
+      end
       
       debug true
-			session :duration => 30.minutes, :path => '/tmp/sessions'
-    	log :level => :info, :output => $stderr	
-    	reloadable []
-		end
-	end
+      session :duration => 30.minutes, :path => '/tmp/sessions'
+      log :level => :info, :output => $stderr 
+      reloadable []
+    end
+  end
 end
 
 
