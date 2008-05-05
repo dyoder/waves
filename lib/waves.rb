@@ -4,6 +4,7 @@ require 'rubygems'
 require 'rack'
 require 'daemons'
 require 'live_console'
+gem 'dyoder-autocode'
 require 'autocode'
 
 # for mimetypes only or when using as default handler
@@ -70,4 +71,6 @@ require 'verify/request.rb'
 # waves foundations / layers
 require 'foundations/simple'
 require 'layers/simple_errors'
+require 'layers/mvc'
 require 'foundations/default'
+require 'layers/default_errors'

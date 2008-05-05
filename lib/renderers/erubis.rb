@@ -1,7 +1,7 @@
 require 'erubis'
 
 module Erubis
-  
+
   # This is added to the Erubis Content class to allow the same helper methods
   # to be used with both Markaby and Erubis.
   class Context
@@ -28,19 +28,19 @@ module Erubis
     end
 
   end
-  
+
 end
-    
+
 module Waves
 
   module Renderers
-    
+
     class Erubis
-      
+
       include Renderers::Mixin
-      
+
       extension :erb
-      
+
       def self.render( path, assigns )
         eruby = ::Erubis::Eruby.new( template( path ) )
         helper = helper( path )
@@ -53,9 +53,9 @@ module Waves
         end
         context.render(eruby)
       end
-      
+
     end
-    
+
   end
-  
+
 end

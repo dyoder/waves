@@ -9,10 +9,10 @@ html do
     script :src => '/javascript/site.js', :type => 'text/javascript'
     link :href => '/css/site.css', :rel => 'stylesheet', :type => 'text/css'
   end
-  
+
   body do
     layout_content
   end
 
 end
-  
+
