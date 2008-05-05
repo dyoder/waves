@@ -16,12 +16,12 @@ module Waves
   #   waves-server -c development -p 2020 -d
   #   waves-server -c development -p 2021 -d
   #   waves-server -c development -p 2022 -d
-  #  
+  #
   class Server < Application
-    
-    # Access the server thread.   
+
+    # Access the server thread.
     attr_reader :thread
-    
+
     # Access the host we're binding to (set via the configuration).
     def host ; options[:host] || config.host ; end
 
@@ -48,7 +48,7 @@ module Waves
       handler.run( config.application.to_app, options ) do |server|
         @server = server
         trap('INT') { puts; stop } if @server.respond_to? :stop
-      end     
+      end
     end
 
     # Stop the server.
@@ -75,7 +75,7 @@ module Waves
       # Probably wouldn't need this if I added a block parameter to method_missing.
       def synchronize(&block) ; @server.synchronize(&block) ; end
     end
-    
+
     private
 
     def start_debugger
@@ -90,5 +90,5 @@ module Waves
       end
     end
   end
-  
+
 end

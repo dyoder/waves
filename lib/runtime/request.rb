@@ -3,11 +3,11 @@ module Waves
   # relating to the request. See Rack::Request for more information, since many methods
   # are actually delegated to Rack::Request.
   class Request
-    
+
     class ParseError < Exception ; end
-    
+
     attr_reader :response, :session
-    
+
     # Create a new request. Takes a env parameter representing the request passed in from Rack.
     # You shouldn't need to call this directly.
     def initialize( env )
@@ -15,36 +15,36 @@ module Waves
       @response = Waves::Response.new( self )
       @session = Waves::Session.new( self )
     end
-        
-    # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request. 
+
+    # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request.
     # Check the Rack documentation for more information.
     def method_missing(name,*args)
       @request.send(name,*args)
     end
-    
+
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
     def path
       @request.path_info
     end
-    
+
     # The request domain. Ex: +www.fubar.com+
     def domain
       @request.host
     end
-    
+
     # The request content type.
     def content_type
       @request.env['CONTENT_TYPE']
     end
-    
+
     # Supported request methods
     METHODS = %w{get post put delete head options trace}
-    
+
     # Override the Rack methods for querying the request method.
     METHODS.each do |method|
       class_eval "def #{method}?; method == :#{method} end"
     end
-    
+
     # The request method. Because browsers can't send PUT or DELETE
     # requests this can be simulated by sending a POST with a hidden
     # field named '_method' and a value with 'PUT' or 'DELETE'. Also
@@ -61,7 +61,7 @@ module Waves
         end
       end
     end
-    
+
     # Raise a not found exception.
     def not_found
       raise Waves::Dispatchers::NotFoundError.new( @request.url + ' not found.' )
@@ -71,7 +71,7 @@ module Waves
     def redirect( path, status = '302' )
       raise Waves::Dispatchers::Redirect.new( path, status )
     end
-    
+
   end
-  
+
 end

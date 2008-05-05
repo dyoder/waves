@@ -1,6 +1,6 @@
 @comments.map{ |c| c }.sort_by( &:created_on ).each do |comment|
   p 'Posted on ' << comment.created_on.strftime('%b %d, %Y') << ' by ' <<
-    ( ( comment.name.nil? or comment.name.empty? ) ? 
+    ( ( comment.name.nil? or comment.name.empty? ) ?
       'anonymous coward' : comment.name )
   textile comment.content
 end

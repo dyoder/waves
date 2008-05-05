@@ -1,8 +1,8 @@
 module Waves
   module Foundations
-    
+
     module Simple
-      
+
       def self.included( app )
 
         app.instance_eval do
@@ -17,7 +17,7 @@ module Waves
           meta_def( :configurations ) { self::Configurations }
 
           include Waves::Layers::SimpleErrors
-          
+
         end
       end
     end

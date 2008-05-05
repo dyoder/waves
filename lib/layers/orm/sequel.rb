@@ -5,8 +5,8 @@ module Waves
   module Layers
     module ORM
       module Sequel
-        
-        def self.included(app) 
+
+        def self.included(app)
           app.instance_eval do
             autoinit :Models do
               autoload_class true, Sequel::Model
@@ -17,7 +17,7 @@ module Waves
             meta_def( :database ) { @sequel ||= ::Sequel.open( config.database ) }
           end
         end
-        
+
       end
     end
   end

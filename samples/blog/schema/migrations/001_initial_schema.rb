@@ -9,7 +9,7 @@ class InitialSchema < Sequel::Migration
       text :content
     end
   end
-  
+
   def down
     drop_table :entries
   end

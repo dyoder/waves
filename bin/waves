@@ -12,7 +12,7 @@ app_name = File.basename(app_path)
 if app_name =~ /[^\w\d_]/
   raise ArgumentError, <<-TEXT
   Unusable name: \"#{app_name}\"
-  Application names may contain only letters, numbers, and underscores." 
+  Application names may contain only letters, numbers, and underscores."
 TEXT
 end
 
@@ -52,7 +52,7 @@ Dir["#{app_path}/**/EMPTY"].each { |path| rm path }
 Dir["#{app_path}/**/*.erb"].each do |path|
   unless path =~ %r{^#{app_path}/(schema/migrations/templates|templates)}
     name = app_name.camel_case
-    File.write( path.gsub(/\.erb$/,''), 
+    File.write( path.gsub(/\.erb$/,''),
       Erubis::Eruby.new( File.read( path ) ).result( binding ) )
     rm path
   end

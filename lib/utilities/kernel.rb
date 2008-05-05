@@ -1,6 +1,6 @@
 module Kernel
   #
-  # From Rails. This comes in handy when you want to return a value that you need to modify. 
+  # From Rails. This comes in handy when you want to return a value that you need to modify.
   # So instead of the awkward:
   #
   #   foo = Foo.new
@@ -8,13 +8,13 @@ module Kernel
   #   foo
   #
   # You can just say
-  # 
+  #
   #   returning Foo.new { |foo| foo.bar = 'bar' }
   #
   def returning( object, &block )
     yield object; object
   end
-  
+
   #
   # Inspired by a question on comp.lang.ruby. Sort of like returning, except
   # you don't need to pass in the returnee as an argument. The drawback is that,
@@ -29,6 +29,6 @@ module Kernel
   def with( object, &block )
     object.instance_eval(&block); object
   end
-  
+
 
 end

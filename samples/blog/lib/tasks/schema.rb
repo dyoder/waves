@@ -3,8 +3,8 @@ namespace :schema do
 
   desc 'Create a new Sequel Migration using name.'
   task :migration do |task|
-  
-    version = ( ENV['version'].nil? ? 
+
+    version = ( ENV['version'].nil? ?
       Sequel::Migrator.get_current_migration_version( Blog.database ) :
       ENV['version'].to_i  ) + 1
 
@@ -18,12 +18,12 @@ namespace :schema do
     File.write( destination, code )
 
   end
-  
+
   desc 'Performs migration from version, to version.'
   task :migrate do |task|
-    version = ENV['version']; version = version.to_i unless version.nil? 
+    version = ENV['version']; version = version.to_i unless version.nil?
     Sequel::Migrator.apply( Waves.application.database, :schema / :migrations , version )
   end
-  
+
 end
-  
+

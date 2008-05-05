@@ -1,35 +1,35 @@
 module Waves
-  
+
   #
-  # Controllers in Waves are simply classes that provide a request / response 
-  # context for operating on a model. While models are essentially just a way 
-  # to manage data in an application, controllers manage data in response to 
-  # a request. For example, a controller updates a model instance using 
+  # Controllers in Waves are simply classes that provide a request / response
+  # context for operating on a model. While models are essentially just a way
+  # to manage data in an application, controllers manage data in response to
+  # a request. For example, a controller updates a model instance using
   # parameters from the request.
   #
-  # Controller methods simply return data (a resource), if necessary, that 
+  # Controller methods simply return data (a resource), if necessary, that
   # can be then used by views to determine how to render that data.
-  # Controllers do not determine which view will be invoked. They are 
-  # independent of the view; one controller method might be suitable for 
-  # several different views. In some cases, controllers can choose to 
-  # directly modify the response and possibly even short-circuit the view 
+  # Controllers do not determine which view will be invoked. They are
+  # independent of the view; one controller method might be suitable for
+  # several different views. In some cases, controllers can choose to
+  # directly modify the response and possibly even short-circuit the view
   # entirely. A good example of this is a redirect.
   #
-  # Controllers, like Views and Mappings, use the Waves::ResponseMixin to 
+  # Controllers, like Views and Mappings, use the Waves::ResponseMixin to
   # provide a rich context for working with the request and response objects.
   # They can even call other controllers or views using the controllers method.
-  # In addition, they provide some basic reflection (access to the model and 
-  # model_name that corresponds to the class name for the given model) and 
-  # automatic parameter destructuring. This allows controller methods to access 
-  # the request parameters as a hash, so that a POST variable named 
+  # In addition, they provide some basic reflection (access to the model and
+  # model_name that corresponds to the class name for the given model) and
+  # automatic parameter destructuring. This allows controller methods to access
+  # the request parameters as a hash, so that a POST variable named
   # <tt>entry.title</tt> is accessed as <tt>params[:entry][:title]</tt>.
   #
   # Controllers often do not have to be explicitly defined. Instead, one or more
-  # default controllers can be defined that are used as exemplars for a given 
+  # default controllers can be defined that are used as exemplars for a given
   # model. By default, the +waves+ command generates a single default, placed in
   # the application's <tt>controllers/default.rb</tt> file. This can be modified
-  # to change the default behavior for all controllers. Alternatively, the 
-  # <tt>rake generate:controller</tt> command can be used to explicitly define a 
+  # to change the default behavior for all controllers. Alternatively, the
+  # <tt>rake generate:controller</tt> command can be used to explicitly define a
   # controller.
   #
   # As an example, the code for the default controller is below for the Blog application.
@@ -68,10 +68,10 @@ module Waves
   #   end
   #
   # Since the mapping file handles "glueing" controllers to views, controllers
-  # don't have to be at all concerned with views. They don't have to set 
-  # instance variables, layouts, or contain logic to select the appropriate 
+  # don't have to be at all concerned with views. They don't have to set
+  # instance variables, layouts, or contain logic to select the appropriate
   # view based on the request. All they do is worry about updating the model
-  # when necessary based on the request.  
+  # when necessary based on the request.
 
   module Controllers
 
@@ -87,24 +87,24 @@ module Waves
     #
 
     module Mixin
-      
+
       attr_reader :request
-      
+
       include Waves::ResponseMixin
 
-      # When you include this Mixin, a +process+ class method is added to your class, 
+      # When you include this Mixin, a +process+ class method is added to your class,
       # which accepts a request object and a block. The request object is used to initialize
       # the controller and the block is evaluated using +instance_eval+. This allows the
       # controller to be used within a mapping file.
-      
+
       def self.included( c )
         def c.process( request, &block )
           self.new( request ).instance_eval( &block )
         end
       end
-        
+
       def initialize( request ); @request = request; end
-      
+
       # The params variable is taken from the request object and "destructured", so that
       # a parameter named 'blog.title' becomes:
       #
@@ -113,23 +113,23 @@ module Waves
       # If you want to access the original parameters object, you can still do so using
       # +request.parameters+ instead of simply +params+.
       def params; @params ||= destructure(request.params); end
-      
+
       # You can access the name of the model related to this controller using this method.
       # It simply takes the basename of the module and converts it to snake case, so if the
       # model uses a different plurality, this won't, in fact, be the model name.
       def model_name; self.class.basename.snake_case; end
-      
+
       # This uses the model_name method to attempt to identify the model corresponding to this
       # controller. This allows you to write generic controller methods such as:
       #
       #   model.find( name )
       #
-      # to find an instance of a given model. Again, the plurality of the controller and 
+      # to find an instance of a given model. Again, the plurality of the controller and
       # model must be the same for this to work.
       def model; Waves.application.models[ model_name.intern ]; end
-      
+
       private
-      
+
       def destructure(hash)
         rval = {}
         hash.keys.map{ |key|key.split('.') }.each do |keys|
@@ -137,7 +137,7 @@ module Waves
         end
         rval
       end
-      
+
       def destructure_with_array_keys(hash,prefix,keys,rval)
         if keys.length == 1
           val = hash[prefix+keys.first]
@@ -150,9 +150,9 @@ module Waves
           destructure_with_array_keys(hash,(keys.shift<<'.'),keys,rval)
         end
       end
-                    
+
     end
-  
+
   end
 
 end

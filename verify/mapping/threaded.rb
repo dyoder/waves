@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 specification "Requests can be made threaded for event driven servers" do
-      
+
   before do
     mapping.clear
     threaded( '/upload', {:method => :post} ) { 'This is threaded.' }
@@ -20,6 +20,6 @@ specification "Requests can be made threaded for event driven servers" do
     ::Waves::Dispatchers::Default.new.deferred?(req).should == false
     get('/foo').body.should == "The server says, 'bar!'"
   end
-  
+
 end
 
