@@ -13,10 +13,7 @@ module Waves
           include Waves::Layers::MVC
                          
           # Set autoloading from default.rb files
-      	  autoinit :Configurations do
-      	    autoload_class
-            autoload_module :Mapping
-      	  end        	
+      	  autoinit :Configurations { autoload_class; autoload_module :Mapping }
         	
         end
       end
