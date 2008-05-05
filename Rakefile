@@ -6,26 +6,26 @@ rescue
 end
 
 gem = Gem::Specification.new do |gem|
-	gem.name = "waves"
-	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = '0.7.3'
-	gem.homepage = 'http://dev.zeraweb.com/waves'
-	gem.author = 'Dan Yoder'
-	gem.email = 'dan@zeraweb.com'
-	gem.platform = Gem::Platform::RUBY
-	gem.required_ruby_version = '>= 1.8.6'
-	%w( mongrel rack markaby erubis RedCloth autocode sequel sqlite3-ruby
-	    extensions live_console choice daemons bacon).each do |dep|
-	  gem.add_dependency dep
-	end
-	gem.files = Dir['lib/**/*.rb','app/**/*']
-	gem.has_rdoc = true
-	gem.bindir = 'bin'
-	gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
+  gem.name = "waves"
+  gem.summary = "Open-source framework for building Ruby-based Web applications."
+  gem.version = '0.7.3'
+  gem.homepage = 'http://dev.zeraweb.com/waves'
+  gem.author = 'Dan Yoder'
+  gem.email = 'dan@zeraweb.com'
+  gem.platform = Gem::Platform::RUBY
+  gem.required_ruby_version = '>= 1.8.6'
+  %w( mongrel rack markaby erubis RedCloth autocode sequel sqlite3-ruby
+      extensions live_console choice daemons bacon).each do |dep|
+    gem.add_dependency dep
+  end
+  gem.files = Dir['lib/**/*.rb','app/**/*']
+  gem.has_rdoc = true
+  gem.bindir = 'bin'
+  gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
 end
 
 desc "Create the waves gem"
-task( :package => :clean ) { Gem::Builder.new( gem ).build } 
+task( :package => :clean ) { Gem::Builder.new( gem ).build }
 
 desc "Clean build artifacts"
 task( :clean ) { FileUtils.rm_rf Dir['*.gem'] }
@@ -37,7 +37,7 @@ desc "Install Waves a local gem"
 task( :install_gem ) do
     require 'rubygems/installer'
     Dir['*.gem'].each do |gem|
-	Gem::Installer.new(gem).install
+  Gem::Installer.new(gem).install
     end
 end
 

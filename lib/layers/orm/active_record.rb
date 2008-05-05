@@ -12,11 +12,11 @@ end
 
 module Waves
   module Orm
-    
+
     Model = ::ActiveRecord::Base
-    
+
     module ActiveRecord
-      
+
       def active_record
         unless @active_record
           ::ActiveRecord::Base.establish_connection(config.database)
@@ -24,11 +24,11 @@ module Waves
         end
         @active_record
       end
-      
+
       def database
         @database ||= active_record
       end
-      
+
       def model_config(context, name)
         active_record
         context.set_table_name(name)

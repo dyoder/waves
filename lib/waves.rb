@@ -49,7 +49,7 @@ require 'runtime/configuration'
 require 'mapping/mapping'
 require 'mapping/pretty_urls'
 
-# waves mvc support
+# waves mvc suppor
 require 'controllers/mixin'
 require 'views/mixin'
 require 'renderers/mixin'
@@ -61,7 +61,7 @@ require 'helpers/formatting.rb'
 require 'helpers/model.rb'
 require 'helpers/view.rb'
 
-# waves test support
+# waves test suppor
 require 'verify/mapping.rb'
 require 'verify/request.rb'
 

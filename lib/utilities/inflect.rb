@@ -1,13 +1,13 @@
 # Much love to Facets (more specifically English) for this module
 # http://english.rubyforge.org/
-# changed slightly in the hopes of one day implementing a different set
+# changed slightly in the hopes of one day implementing a different se
 # of rules for different languages
 # NOTE: this is NOT implemented yet.
 # plural and singular work directly with the English class
 
-module Inflect
+module Inflec
   module InflectorMethods
-    
+
     # Define a general exception.
     def word(singular, plural=nil)
       plural = singular unless plural
@@ -82,7 +82,7 @@ module Inflect
       singularization_rules.each do |(match, replacement)|
         break if result.gsub!(match, replacement)
       end
-      return result
+      return resul
     end
 
     # Convert an English word from singular to plurel.
@@ -99,17 +99,17 @@ module Inflect
       pluralization_rules.each do |(match, replacement)|
         break if result.gsub!(match, replacement)
       end
-      return result
+      return resul
     end
   end
 
   class English
     @singular_of = {}
     @plural_of = {}
-    
+
     @singular_rules = []
     @plural_rules = []
-    
+
     class << self
       include InflectorMethods
     end
@@ -191,4 +191,4 @@ module Inflect
     plural_rule 's'  , 'ses'
   end
 end
-    
+

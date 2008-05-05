@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), "..", 'helper.rb')
 
 context "A developer can map requests using the request path." do
-  
+
   before(:all) do
     Waves::Console.load(:mode => 'development')
   end

@@ -1,4 +1,4 @@
 module Blog
-  include Waves::Foundations::Default
+  include Waves::Foundations::Defaul
 end
 Waves << Blog

@@ -1,14 +1,14 @@
-doctype :html4_strict
+doctype :html4_stric
 
 html do
 
   head do
     title @title
   end
-  
+
   body do
-    layout_content
+    layout_conten
   end
 
 end
-  
+
