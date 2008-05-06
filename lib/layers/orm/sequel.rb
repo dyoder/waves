@@ -12,7 +12,7 @@ module Waves
               autocreate_class true, Sequel::Model do
                 set_dataset app.database[ basename.snake_case.plural.intern]
               end
-              autoload_class true
+              autoload_class
         	  end
             meta_def( :database ) { @sequel ||= ::Sequel.open( config.database ) }
           end
