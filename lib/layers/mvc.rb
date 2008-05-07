@@ -29,8 +29,8 @@ module Waves
 
           autocreate( :Helpers, Module.new) do
             include Autocode
-            autocreate_class
-            autoload_class
+            autocreate_module
+            autoload_module
             autoinit :Default do
               attr_reader :request, :content
               include Waves::ResponseMixin
@@ -41,6 +41,11 @@ module Waves
               include Waves::Helpers::Form
             end
           end
+          
+          meta_def( :models ) { self::Models }
+          meta_def( :views ) { self::Views }
+          meta_def( :controllers ) { self::Controllers }
+          meta_def( :helpers ) { self::Helpers }
 
         end
       end
