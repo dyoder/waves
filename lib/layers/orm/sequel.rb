@@ -9,7 +9,7 @@ module Waves
         def self.included(app)
           app.instance_eval do
             autoinit :Models do
-              autocreate_class true, Sequel::Model do
+              autocreate_class true, ::Sequel::Model do
                 set_dataset app.database[ basename.snake_case.plural.intern]
               end
               autoload_class
