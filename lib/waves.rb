@@ -52,7 +52,9 @@ require 'mapping/pretty_urls'
 
 # waves mvc support
 require 'controllers/mixin'
+require 'controllers/base'
 require 'views/mixin'
+require 'views/base'
 require 'renderers/mixin'
 require 'renderers/markaby'
 require 'helpers/tag_helper'

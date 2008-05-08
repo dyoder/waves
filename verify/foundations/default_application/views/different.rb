@@ -2,7 +2,7 @@ module DefaultApplication
 
   module Views
 
-    class Default
+    class Different
 
       def upside_down
         

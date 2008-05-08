@@ -1,8 +1,6 @@
-module <%= name %>
-
+module Waves
   module Controllers
-
-    class Default
+    class Base
 
       include Waves::Controllers::Mixin
 
@@ -23,7 +21,5 @@ module <%= name %>
       def delete( name ); find( name ).destroy; end
 
     end
-
   end
-
 end

@@ -15,14 +15,12 @@ module Waves
 
           autocreate( :Views, Module.new) do
             include Autocode
-            include Waves::Views::Mixin
             autocreate_class
             autoload_class
           end
 
           autocreate( :Controllers, Module.new) do
             include Autocode
-            include Waves::Controllers::Mixin
             autocreate_class
             autoload_class
           end
