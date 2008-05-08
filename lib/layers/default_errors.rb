@@ -6,14 +6,16 @@ module Waves
 
         app.instance_eval do
 
-          autoinit 'Configurations::Mapping' do
-            handle(Waves::Dispatchers::NotFoundError) do
-              html = Waves.application.views[:errors].process( request ) do
-                not_found_404( :error => Waves::Dispatchers::NotFoundError )
+          autoinit :Configurations do
+            autoinit :Mapping do
+              handle(Waves::Dispatchers::NotFoundError) do
+                html = Waves.application.views[:errors].process( request ) do
+                  not_found_404( :error => Waves::Dispatchers::NotFoundError )
+                end
+                response.status = '404'
+                response.content_type = 'text/html'
+                response.write( html )
               end
-              response.status = '404'
-              response.content_type = 'text/html'
-              response.write( html )
             end
           end
 
