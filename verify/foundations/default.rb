@@ -1,5 +1,6 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
+require 'layers/orm/sequel'
 
 Dir.chdir File.dirname(__FILE__) / "default_application" do
 module DefaultApplication ; include Waves::Foundations::Default ; end
@@ -16,7 +17,7 @@ module DefaultApplication ; include Waves::Foundations::Default ; end
         DefaultApplication::Configurations::Default
         DefaultApplication::Configurations::Development
         DefaultApplication::Helpers::Testing
-        DefaultApplication::Models::Default
+        DefaultApplication::Models::Default.superclass.should == Waves::Layers::ORM::Model
         DefaultApplication::Views
         DefaultApplication::Views::Default
         DefaultApplication::Controllers
@@ -26,6 +27,7 @@ module DefaultApplication ; include Waves::Foundations::Default ; end
 
     it "should autoload Helpers, Models, Views, and Controllers when their files exist" do
       DefaultApplication::Helpers::Testing.should.respond_to :foundation_testing
+      DefaultApplication::Models::Default.should.respond_to :crayola
     end
 
     it "should have accessors defined" do

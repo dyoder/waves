@@ -4,13 +4,14 @@ module Waves
 
       def self.included( app )
 
-        app.module_eval do
+        app.instance_eval do
 
           include Autocode
 
           include Waves::Foundations::Simple
           include Waves::Layers::DefaultErrors
           include Waves::Layers::MVC
+          include Waves::Layers::ORM::Sequel
 
           # Set autoloading from default.rb files
           autoinit :Configurations do

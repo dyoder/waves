@@ -4,7 +4,7 @@ module Waves
 
       def self.included( app )
 
-        app.module_eval do
+        app.instance_eval do
 
           autoinit 'Configurations::Mapping' do
             handle(Waves::Dispatchers::NotFoundError) do

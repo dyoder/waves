@@ -4,7 +4,7 @@ module Waves
 
       def self.included( app )
 
-        app.module_eval do
+        app.instance_eval do
           include Autocode
 
           autocreate( :Models, Module.new) do
