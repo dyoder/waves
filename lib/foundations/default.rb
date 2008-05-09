@@ -1,3 +1,4 @@
+require 'layers/orm/sequel'
 module Waves
   module Foundations
     module Default
