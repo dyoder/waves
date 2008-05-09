@@ -9,7 +9,7 @@ module Waves
           include Autocode
           autocreate( :Configurations, Module.new) do
             include Autocode
-            autocreate true, Waves::Configurations::Base
+            autocreate true, Waves::Configurations::Default
             autocreate( :Mapping, Module.new) { extend Waves::Mapping }
           end
           meta_def( :config ) { Waves.config }
