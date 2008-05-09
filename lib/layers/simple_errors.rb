@@ -6,10 +6,8 @@ module Waves
 
         app.instance_eval do
 
-          autoinit :Configurations do
-            autoinit :Mapping do
-              handle(Waves::Dispatchers::NotFoundError) { response.status = 404 }
-            end
+          autoinit 'Configurations::Mapping' do
+            handle(Waves::Dispatchers::NotFoundError) { response.status = 404 }
           end
 
         end
