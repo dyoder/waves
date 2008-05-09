@@ -10,8 +10,8 @@ module DefaultApplication ; include Waves::Foundations::Default ; end
 
     it "should have basic submodules defined" do
       DefaultApplication::Configurations::Mapping
-      DefaultApplication::Configurations::Default
-      DefaultApplication::Configurations::Development
+      DefaultApplication::Configurations::Default.host.should == nil
+      DefaultApplication::Configurations::Development.host.should == '127.0.0.1'
       DefaultApplication::Helpers::Testing
       DefaultApplication::Models::Default.superclass.should == Waves::Layers::ORM::Model
       DefaultApplication::Views

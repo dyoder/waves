@@ -15,7 +15,8 @@ module Waves
           
           # Set autoloading from default.rb files
           autoinit :Configurations do
-            autoload_class
+            autocreate true, Waves::Configurations::Default
+            autoload true, :exemplar => Waves::Configurations::Default
             autoload_module :Mapping
           end
           
