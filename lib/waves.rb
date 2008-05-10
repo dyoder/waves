@@ -72,8 +72,9 @@ require 'verify/mapping.rb'
 require 'verify/request.rb'
 
 # waves foundations / layers
-require 'foundations/simple'
+require 'layers/simple'
 require 'layers/simple_errors'
+require 'foundations/simple'
 require 'layers/mvc'
-require 'foundations/default'
 require 'layers/default_errors'
+require 'foundations/default'
