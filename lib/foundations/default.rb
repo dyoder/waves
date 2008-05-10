@@ -16,19 +16,17 @@ module Waves
           
           # Set autoloading from default.rb files
           autoinit :Configurations do
-            autocreate true, Waves::Configurations::Default
-            autoload true, :exemplar => Waves::Configurations::Default
-            autoload_module :Mapping
+            autoload true
           end
           
           autoinit :Controllers do
             autocreate true, Waves::Controllers::Base
-            autoload true, :exemplar => Waves::Controllers::Base
+            autoload true
           end
           
           autoinit :Views do
             autocreate true, Waves::Views::Base
-            autoload true, :exemplar => Waves::Views::Base
+            autoload true
           end
 
         end
