@@ -12,8 +12,8 @@ module Waves
           
           autocreate( :Configurations, Module.new) do
             include Autocode
-            #autocreate_class true, Waves::Configurations::Default
-            #autocreate_module( :Mapping ) { extend Waves::Mapping }
+            autocreate_class true, Waves::Configurations::Default
+            autocreate_module( :Mapping ) { extend Waves::Mapping }
             autoload_class true, Waves::Configurations::Default
           end
 
