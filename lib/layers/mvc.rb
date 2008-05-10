@@ -3,6 +3,12 @@ module Waves
     module MVC
 
       def self.included( app )
+        
+        def app.models ; self::Models ; end
+        def app.views ; self::Views ; end
+        def app.controllers ; self::Controllers ; end
+        def app.helpers ; self::Helpers ; end
+        
 
         app.instance_eval do
           include Autocode
@@ -38,12 +44,7 @@ module Waves
               include Waves::Helpers::View
               include Waves::Helpers::Form
             end
-          end
-          
-          meta_def( :models ) { self::Models }
-          meta_def( :views ) { self::Views }
-          meta_def( :controllers ) { self::Controllers }
-          meta_def( :helpers ) { self::Helpers }
+          end          
 
         end
       end

@@ -11,7 +11,7 @@ module Waves
           include Waves::Layers::DefaultErrors
           include Waves::Layers::MVC
           include Waves::Layers::ORM::Sequel
-          
+
           # Set autoloading from default.rb files
           #autoinit :Configurations do
           #  autoload_class true
