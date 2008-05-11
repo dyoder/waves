@@ -114,7 +114,6 @@ module Waves
   module Configurations
 
     class Base
-
       # Set the given attribute with the given value. Typically, you wouldn't
       # use this directly.
       def self.[]=( name, val )
