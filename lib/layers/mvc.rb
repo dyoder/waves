@@ -21,13 +21,13 @@ module Waves
 
           autocreate( :Views, Module.new) do
             include Autocode
-            autocreate_class
+            autocreate_class true, Waves::Views::Base
             autoload_class
           end
 
           autocreate( :Controllers, Module.new) do
             include Autocode
-            autocreate_class
+            autocreate_class true, Waves::Controllers::Base
             autoload_class
           end
 
