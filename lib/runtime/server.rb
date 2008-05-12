@@ -37,7 +37,9 @@ module Waves
     end
 
     # Start and / or access the Waves::Logger instance.
-    def log ; @log ||= Waves::Logger.start ; end
+    def log
+      @log ||= Waves::Logger.start
+    end
 
     # Start the server.
     def start
@@ -70,8 +72,12 @@ module Waves
       def run( options={} )
         @server.stop if @server; @server = new( options ); @server.start
       end
+      
       # Allows us to access the Waves::Server instance.
-      def method_missing(*args); @server.send(*args); end
+      def method_missing(*args)
+        @server.send(*args)
+      end
+      
       # Probably wouldn't need this if I added a block parameter to method_missing.
       def synchronize(&block) ; @server.synchronize(&block) ; end
     end

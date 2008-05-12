@@ -27,10 +27,15 @@ module Waves
       def output
         @output ||= ( config[:output] ? File.expand_path( config[:output] ) : $stderr )
       end
+      
       # Returns the active configuration for the logger.
-      def config ; @config ||= Waves::Server.config.log ; end
+      def config
+        @config ||= Waves::Server.config.log
+      end
+      
       # Returns the logging level used to filter logging events.
       def level ; @level ||= ::Logger.const_get( config[:level].to_s.upcase || 'INFO' ) ; end
+      
       # Starts the logger, using the active configuration to initialize it.
       def start
         @log = config[:rotation] ?
@@ -39,6 +44,7 @@ module Waves
         @log.level = level
         self
       end
+      
       # Forwards logging methods to the logger.
       def method_missing(name,*args,&block)
         @log.send name,*args, &block if @log

@@ -28,7 +28,7 @@ module Waves
   # main Waves application, you can use +Waves+.+application+.
   class Application
 
-  class << self; attr_accessor :instance; end
+    class << self; attr_accessor :instance; end
 
     # Accessor for options passed to the application. Valid options include
     attr_reader :options
@@ -41,16 +41,22 @@ module Waves
       Kernel.load( :lib / 'application.rb' ) if Waves.application.nil?
     end
 
-    def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
+    def synchronize( &block )
+      ( @mutex ||= Mutex.new ).synchronize( &block )
+    end
 
     # The 'mode' of the application determines which configuration it will run under.
-    def mode ; @mode ||= @options[:mode]||:development ; end
-
+    def mode
+      @mode ||= @options[:mode]||:development
+    end
+    
     # Debug is true if debug is set to true in the current configuration.
     def debug? ; config.debug ; end
 
     # Access the current configuration. *Example:* +Waves::Server.config+
-    def config ; Waves.application.configurations[ mode ] ; end
+    def config
+      Waves.application.configurations[ mode ]
+    end
 
     # Access the mappings for the application.
     def mapping ; Waves.application.configurations[ :mapping ] ; end

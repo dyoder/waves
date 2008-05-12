@@ -4,8 +4,7 @@ module <%= name %>
 
     class Development
 
-      database :host => 'localhost', :adapter => 'sqlite', :database => '<%= name.downcase %>',
-        :user => 'root', :password => ''
+      database :host => 'localhost', :adapter => 'sqlite', :database => '<%= name.downcase %>'
 
       reloadable [ <%= name %> ]
 
