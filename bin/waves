@@ -18,7 +18,7 @@ end
 
 
 require 'rubygems'
-require 'erubis'
+require 'genitor'
 require 'extensions/all'
 begin
   require 'utilities/string'
@@ -32,31 +32,23 @@ include FileUtils
 # are we calling this script from within the waves framework source?
 script_path = File.expand_path(__FILE__)
 WAVES_SRC = File.dirname(File.dirname(script_path))
-IN_WAVES_SRC = Dir.pwd.match(WAVES_SRC) ? true : false
-
 
 puts "** Creating new Waves application ..."
+
+# Determine path to template
 template = begin
   File.join File.dirname(File.readlink(__FILE__)), '..', 'app'
 rescue Exception
   File.join( File.dirname(__FILE__),'..','app')
 end
-mkdir(app_path)
-cp_r Dir["#{template}/*"], app_path
 
-# get rid of placeholder files left over from gem install
-Dir["#{app_path}/**/EMPTY"].each { |path| rm path }
-# Dir["#{app_path}/**/EMPTY"].each { |path| system "rm #{path}" }
-
-# next, process all template files ...
-Dir["#{app_path}/**/*.erb"].each do |path|
-  unless path =~ %r{^#{app_path}/(schema/migrations/templates|templates)}
-    name = app_name.camel_case
-    File.write( path.gsub(/\.erb$/,''),
-      Erubis::Eruby.new( File.read( path ) ).result( binding ) )
-    rm path
-  end
+generator = Genitor.new("waves:app") do |gen|
+  gen.source = template
+  gen.target = app_path
+  gen.template_assigns = {:name => app_name}
 end
+
+Rake::Task["waves:app"].invoke
 
 unless RUBY_PLATFORM =~ /mswin32/
   # make the scripts executable

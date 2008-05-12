@@ -1,10 +1,10 @@
-module <%= name %>
+module <%= @name %>
 
   module Configurations
 
     class Production < Default
 
-      database :host => 'localhost', :adapter => 'mysql', :database => '<%= name.downcase %>',
+      database :host => 'localhost', :adapter => 'mysql', :database => '<%= @name.downcase %>',
         :user => 'root', :password => ''
 
       reloadable []
