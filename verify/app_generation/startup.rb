@@ -2,16 +2,10 @@
 
 require File.join(File.dirname(__FILE__) , "helpers")
 
+clobber_test_app(AppPath)
+generate_test_app(AppPath)
 
 describe "startup.rb in a generated app" do
-  before do
-    clobber_test_app(AppPath)
-    generate_test_app(AppPath)
-  end
-
-  after do
-    clobber_test_app(AppPath)
-  end
   
   it "should make the scripts executable" do
     File.executable?(File.join(AppPath, "bin", "waves-console")).should.be.true
@@ -32,3 +26,5 @@ describe "startup.rb in a generated app" do
     end
   end
 end
+
+clobber_test_app(AppPath)

@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
+require 'rubygems'
+require 'choice'
+require 'genitor'
 
-# rudimentary argument checks
-if ARGV.length != 1 || ARGV[0] == '--help'
-  $stderr.puts "Usage: waves {app_name}"
-  $stderr.puts "app_name may contain only letters, numbers, and underscores."
-  exit 1
+Choice.options do
+  banner 'Usage:  waves path/to/app [-h]'
+  option :help  do
+    long '--help'
+    desc 'Show this message'
+  end
+  
 end
 
 app_path = ARGV[0]
@@ -16,43 +21,18 @@ if app_name =~ /[^\w\d_]/
 TEXT
 end
 
-
-require 'rubygems'
-require 'genitor'
-require 'extensions/all'
-begin
-  require 'utilities/string'
-rescue LoadError
-  require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
-end
-
-require 'fileutils'
-include FileUtils
-
-# are we calling this script from within the waves framework source?
-script_path = File.expand_path(__FILE__)
-WAVES_SRC = File.dirname(File.dirname(script_path))
-
-puts "** Creating new Waves application ..."
-
-# Determine path to template
-template = begin
-  File.join File.dirname(File.readlink(__FILE__)), '..', 'app'
-rescue Exception
-  File.join( File.dirname(__FILE__),'..','app')
-end
+template = File.join( File.dirname(__FILE__),'..','app')
 
 generator = Genitor.new("waves:app") do |gen|
   gen.source = template
   gen.target = app_path
   gen.template_assigns = {:name => app_name}
+  gen.executables = %w{ bin/waves-console  bin/waves-server}
 end
+
+puts "** Creating new Waves application ..."
 
 Rake::Task["waves:app"].invoke
 
-unless RUBY_PLATFORM =~ /mswin32/
-  # make the scripts executable
-  system "chmod ug+x #{app_path}/bin/waves-*"
-end
-
 puts "** Application created!"
+
