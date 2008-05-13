@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'choice'
-require 'genitor'
+require 'rakegen'
 
 Choice.options do
   banner 'Usage:  waves path/to/app [-h]'
@@ -23,7 +23,7 @@ end
 
 template = File.join( File.dirname(__FILE__),'..','app')
 
-generator = Genitor.new("waves:app") do |gen|
+generator = Rakegen.new("waves:app") do |gen|
   gen.source = template
   gen.target = app_path
   gen.template_assigns = {:name => app_name}
