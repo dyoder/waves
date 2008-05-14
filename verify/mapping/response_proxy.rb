@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 # Note: you have to define the resource classes using module_eval here, because otherwise
-# the autocreate code never gets triggered in the application.
+# the auto_create code never gets triggered in the application.
 
 module Test
   include Waves::Layers::MVC

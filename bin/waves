@@ -2,6 +2,11 @@
 require 'rubygems'
 require 'choice'
 require 'rakegen'
+begin
+  require 'utilities/string'
+rescue LoadError
+  require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
+end
 
 Choice.options do
   banner 'Usage:  waves path/to/app [-h]'
@@ -26,7 +31,7 @@ template = File.join( File.dirname(__FILE__),'..','app')
 generator = Rakegen.new("waves:app") do |gen|
   gen.source = template
   gen.target = app_path
-  gen.template_assigns = {:name => app_name}
+  gen.template_assigns = {:name => app_name.camel_case}
   gen.executables = %w{ bin/waves-console  bin/waves-server}
 end
 

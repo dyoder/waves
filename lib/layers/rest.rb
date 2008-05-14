@@ -4,7 +4,7 @@ module Waves
       
       def self.included(app)
         
-        autoinit "Controllers::Default" do
+        auto_eval "Controllers::Default" do
           
           include Waves::Controllers::Mixin
 

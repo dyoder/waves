@@ -11,31 +11,31 @@ module Waves
         
 
         app.instance_eval do
-          include Autocode
+          # include AutoCode
 
-          autocreate( :Models, Module.new) do
-            include Autocode
-            autocreate_class
-            autoload_class
+          auto_create_module( :Models ) do
+            include AutoCode
+            auto_create_class true
+            auto_load true, :directories => [:models]
           end
 
-          autocreate( :Views, Module.new) do
-            include Autocode
-            autocreate_class true, Waves::Views::Base
-            autoload_class
+          auto_create_module( :Views ) do
+            include AutoCode
+            auto_create_class true, Waves::Views::Base
+            auto_load true, :directories => [:views]
           end
 
-          autocreate( :Controllers, Module.new) do
-            include Autocode
-            autocreate_class true, Waves::Controllers::Base
-            autoload_class
+          auto_create_module( :Controllers ) do
+            include AutoCode
+            auto_create_class true, Waves::Controllers::Base
+            auto_load true, :directories => [:controllers]
           end
 
-          autocreate( :Helpers, Module.new) do
-            include Autocode
-            autocreate_module
-            autoload_module
-            autoinit :Default do
+          auto_create_module( :Helpers ) do
+            include AutoCode
+            auto_create_module
+            auto_load true, :directories => [:helpers]
+            auto_eval :Default do
               attr_reader :request, :content
               include Waves::ResponseMixin
               include Waves::Helpers::Common

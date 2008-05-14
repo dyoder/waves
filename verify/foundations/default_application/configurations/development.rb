@@ -1,6 +1,6 @@
 module DefaultApplication
   module Configurations
-    class Development
+    class Development < Base
 
       database :host => 'localhost', :adapter => 'sqlite', :database => 'defaultapplication',
         :user => 'root', :password => ''

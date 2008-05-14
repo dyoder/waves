@@ -14,11 +14,11 @@ module Waves
           
           app.instance_eval do
             
-            autoinit :Models do
-              autocreate_class true, Waves::Layers::ORM::Model do
+            auto_eval :Models do
+              auto_create_class true, Waves::Layers::ORM::Model do
                 set_dataset app.database[ basename.snake_case.plural.intern]
               end
-              autoload_class true, Waves::Layers::ORM::Model
+              auto_load true, :directories => [:models]
         	  end
             
           end

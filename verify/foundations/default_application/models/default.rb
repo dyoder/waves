@@ -2,7 +2,7 @@ module DefaultApplication
 
   module Models
     
-    class Default
+    class Default < ::Sequel::Model
       
       def self.crayola; true; end
       

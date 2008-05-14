@@ -10,7 +10,7 @@ module Waves
     # Also, initialize the database connection if necessary.
     def << ( app )
       @application = app if Module === app
-      app.database if app.respond_to? 'database'
+      # app.database if app.respond_to? 'database'
     end
 
     def instance ; Waves::Application.instance ; end

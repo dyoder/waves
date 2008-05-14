@@ -8,13 +8,13 @@ module Waves
         
         app.instance_eval do
 
-          include Autocode
+          include AutoCode
           
-          autocreate( :Configurations, Module.new) do
-            include Autocode
-            autocreate_class true, Waves::Configurations::Default
-            autocreate_module( :Mapping ) { extend Waves::Mapping }
-            autoload_class true, Waves::Configurations::Default
+          auto_create_module( :Configurations ) do
+            include AutoCode
+            auto_create_class true, Waves::Configurations::Default
+            auto_create_module( :Mapping ) { extend Waves::Mapping }
+            auto_load true, :directories => [:configurations]
           end
 
           include Waves::Layers::SimpleErrors

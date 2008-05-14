@@ -88,9 +88,9 @@ module Waves
   #
   # You can specify a list of modules to reload on each request using the +reloadable+
   # configuration parameter. The Waves server will call +reload+ on each module to trigger
-  # the reloading. Typically, your modules will use the Autocode gem to set parameters for
+  # the reloading. Typically, your modules will use the AutoCode gem to set parameters for
   # reloading. This is done for you when you generate an application using the +waves+
-  # command, but you can change the default settings. See the documentation for Autocode
+  # command, but you can change the default settings. See the documentation for AutoCode
   # for more information. Typically, you will set this parameter to just include your
   # main application:
   #
