@@ -4,7 +4,7 @@ module DefaultApplication
 
     module Mapping
       extend Waves::Mapping
-      # your custom rules go here
+      path( "/user-added") { response.body = "User added mapping"}
       include Waves::Mapping::PrettyUrls::RestRules
       include Waves::Mapping::PrettyUrls::GetRules
     end

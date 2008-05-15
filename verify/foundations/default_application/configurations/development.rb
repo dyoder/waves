@@ -2,8 +2,7 @@ module DefaultApplication
   module Configurations
     class Development < Default
 
-      database :host => 'localhost', :adapter => 'sqlite', :database => 'defaultapplication',
-        :user => 'root', :password => ''
+      database :adapter => 'sqlite', :database => 'defaultapplication.db'
 
       reloadable [ DefaultApplication ]
 
