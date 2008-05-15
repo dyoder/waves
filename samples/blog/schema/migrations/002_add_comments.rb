@@ -7,7 +7,7 @@ class AddComments < Sequel::Migration
       text :name
       text :email
       text :content
-      timestamp :created_on
+      timestamp :updated_on
     end
   end
 
