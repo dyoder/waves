@@ -2,7 +2,7 @@ module <%= @name %>
 
   module Configurations
 
-    class Development
+    class Development < Default
 
       database :host => 'localhost', :adapter => 'sqlite', :database => '<%= @name.downcase %>'
 
