@@ -2,7 +2,7 @@ module <%= @name %>
 
   module Configurations
 
-    class Production < Base
+    class Production < Default
 
       database :host => 'localhost', :adapter => 'mysql', :database => '<%= @name.downcase %>',
         :user => 'root', :password => ''
