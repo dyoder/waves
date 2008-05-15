@@ -2,9 +2,9 @@ module <%= @name %>
 
   module Configurations
 
-    class Development
+    class Development < Base
 
-      database :host => 'localhost', :adapter => 'sqlite', :database => '<%= @name.downcase %>'
+      database :adapter => 'sqlite', :database => '<%= @name.downcase %>'
 
       reloadable [ <%= @name %> ]
 

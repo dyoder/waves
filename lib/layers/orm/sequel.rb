@@ -15,8 +15,8 @@ module Waves
           app.instance_eval do
             
             auto_eval :Models do
-              auto_create_class true, Waves::Layers::ORM::Model do
-                set_dataset app.database[ basename.snake_case.plural.intern]
+              auto_eval true do
+                set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
               end
               auto_load true, :directories => [:models]
         	  end
