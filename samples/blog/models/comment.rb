@@ -2,7 +2,7 @@ module Blog
 
   module Models
 
-    class Comment < Base
+    class Comment < Default
       many_to_one :entry, :from => Blog::Models::Entry
     end
 

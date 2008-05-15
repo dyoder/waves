@@ -2,7 +2,7 @@ module Blog
 
   module Configurations
 
-    class Development < Base
+    class Development < Default
 
       database :adapter => 'sqlite', :database => 'blog.db'
 
