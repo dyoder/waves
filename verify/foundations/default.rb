@@ -12,22 +12,28 @@ Waves::Console.load( :mode => :development )
       DefaultApplication::Configurations::Mapping
       DefaultApplication::Configurations::Default.host.should == nil
       DefaultApplication::Configurations::Development.host.should == '127.0.0.1'
-      DefaultApplication::Helpers::Testing
-      DefaultApplication::Models::Default.superclass.should == Waves::Layers::ORM::Model
+      DefaultApplication::Models::Default
       DefaultApplication::Views::Default
       DefaultApplication::Controllers::Default
       DefaultApplication::Helpers::Default
+      DefaultApplication::Helpers::Testing
     end
 
     it "should auto_load Helpers, Models, Views, and Controllers when their files exist" do
+      DefaultApplication::Helpers::Default.instance_methods.should.include "layout"
+      DefaultApplication::Helpers::Testing.instance_methods.should.include "layout"
       DefaultApplication::Helpers::Testing.should.respond_to :foundation_testing
       DefaultApplication::Models::Default.should.respond_to :crayola
+      DefaultApplication::Models::Default.should.respond_to :set_dataset
       DefaultApplication::Models::Different.should.respond_to :sargent
-      # DefaultApplication::Controllers::Default.instance_methods.should.include "attributes"
+      DefaultApplication::Models::Different.should.respond_to :set_dataset
+      DefaultApplication::Controllers::Default.instance_methods.should.include "attributes"
       DefaultApplication::Controllers::Default.instance_methods.should.include "destroy_all"
+      DefaultApplication::Controllers::Different.instance_methods.should.include "attributes"
       DefaultApplication::Controllers::Different.instance_methods.should.include "destroy_all"
-      # DefaultApplication::Views::Default.instance_methods.should.include "renderer"
+      DefaultApplication::Views::Default.instance_methods.should.include "renderer"
       DefaultApplication::Views::Default.instance_methods.should.include "upside_down"
+      DefaultApplication::Views::Different.instance_methods.should.include "renderer"
       DefaultApplication::Views::Different.instance_methods.should.include "upside_down"
     end
 

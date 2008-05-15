@@ -10,7 +10,8 @@ module Waves
           include Waves::Layers::Simple
           include Waves::Layers::DefaultErrors
           include Waves::Layers::MVC
-          # include Waves::Layers::ORM::Sequel
+          include Waves::Layers::ORM::Sequel
+          
           
         end
         

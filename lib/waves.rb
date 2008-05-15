@@ -66,6 +66,7 @@ require 'helpers/form.rb'
 require 'helpers/formatting.rb'
 require 'helpers/model.rb'
 require 'helpers/view.rb'
+require 'helpers/base'
 
 # waves test support
 require 'verify/mapping.rb'

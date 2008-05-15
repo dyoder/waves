@@ -2,7 +2,7 @@ module DefaultApplication
 
   module Models
     
-    class Different
+    class Different < Base
       
       def self.sargent; true; end
       

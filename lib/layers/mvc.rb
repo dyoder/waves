@@ -15,7 +15,7 @@ module Waves
 
           auto_create_module( :Models ) do
             include AutoCode
-            auto_create_class true
+            auto_create_class true, Waves::Layers::ORM::Model
             auto_load true, :directories => [:models]
           end
 
@@ -33,17 +33,10 @@ module Waves
 
           auto_create_module( :Helpers ) do
             include AutoCode
-            auto_create_module
-            auto_load true, :directories => [:helpers]
-            auto_eval :Default do
-              attr_reader :request, :content
-              include Waves::ResponseMixin
-              include Waves::Helpers::Common
-              include Waves::Helpers::Formatting
-              include Waves::Helpers::Model
-              include Waves::Helpers::View
-              include Waves::Helpers::Form
+            auto_create_module do
+              include Waves::Helpers::Default
             end
+            auto_load true, :directories => [:helpers]
           end          
 
         end
