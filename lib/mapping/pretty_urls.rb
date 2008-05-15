@@ -66,8 +66,10 @@ module Waves
             # create a new resource for the given model
             path %r{^/#{model}/?$}, :method => :post do | model |
               resource( model.singular ) do
-                instance = controller { create }
-                redirect( "/#{model.singular}/#{instance.name}/editor" )
+                controller do 
+                  instance = create
+                  redirect( "/#{model_name}/#{instance.name}/editor" )
+                end
               end
             end
 
