@@ -75,7 +75,7 @@ module Waves
 
             # update the given resource for the given model
             path %r{^/#{model}/#{name}/?$}, :method => :put do | model, name |
-              resource( model ) { controller { update( name ) }; redirect( url ) }
+              resource( model ) { controller { update( name ); redirect( url ) }  }
             end
 
             # delete the given resource for the given model
