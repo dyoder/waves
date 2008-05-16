@@ -1,6 +1,5 @@
 require 'sequel'
 require File.dirname(__FILE__) / :sequel / :tasks / :schema if defined?(Rake)
-require File.dirname(__FILE__) / :sequel / :model
 
 module Waves
   module Layers
@@ -15,6 +14,7 @@ module Waves
           app.instance_eval do
             
             auto_eval :Models do
+              auto_create_class true, ::Sequel::Model
               auto_eval true do
                 set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
               end

@@ -1,4 +1,3 @@
-require 'layers/orm/sequel'
 module Waves
   module Foundations
     module Default
@@ -8,10 +7,8 @@ module Waves
         app.instance_eval do
 
           include Waves::Layers::Simple
+          include Waves::Layers::MVC          
           include Waves::Layers::DefaultErrors
-          include Waves::Layers::MVC
-          include Waves::Layers::ORM::Sequel
-          
           
         end
         

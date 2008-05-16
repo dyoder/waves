@@ -1,3 +1,5 @@
+require 'layers/orm/sequel'
 module <%= @name %>
   include Waves::Foundations::Default
+  include Waves::Layers::ORM::Sequel
 end

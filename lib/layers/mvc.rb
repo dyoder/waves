@@ -15,8 +15,6 @@ module Waves
 
           auto_create_module( :Models ) do
             include AutoCode
-            auto_create_class true, Waves::Layers::ORM::Model
-            auto_load true, :directories => [:models]
           end
 
           auto_create_module( :Views ) do

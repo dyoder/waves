@@ -3,7 +3,10 @@ require File.join(File.dirname(__FILE__) , "helpers")
 require 'layers/orm/sequel'
 
 Dir.chdir File.dirname(__FILE__) / "default_application" do
-module DefaultApplication ; include Waves::Foundations::Default ; end
+module DefaultApplication
+  include Waves::Foundations::Default
+  include Waves::Layers::ORM::Sequel
+end
 Waves::Console.load( :mode => :development )
 DA = DefaultApplication
 
