@@ -12,10 +12,10 @@ module Waves
           
           auto_create_module( :Configurations ) do
             include AutoCode
-            auto_load :Mapping, :directories => [:configurations]
-            auto_load true, :directories => [:configurations]
             auto_create_module( :Mapping ) { extend Waves::Mapping }
             auto_create_class true, Waves::Configurations::Default
+            auto_load :Mapping, :directories => [:configurations]
+            auto_load true, :directories => [:configurations]
           end
 
           include Waves::Layers::SimpleErrors
