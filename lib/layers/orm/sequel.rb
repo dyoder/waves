@@ -19,7 +19,7 @@ module Waves
                 set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
               end
               auto_load true, :directories => [:models]
-        	  end
+            end
             
           end
         end
@@ -28,4 +28,3 @@ module Waves
     end
   end
 end
-
