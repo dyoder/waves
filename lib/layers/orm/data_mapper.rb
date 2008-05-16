@@ -1,5 +1,5 @@
-# gem 'dm-core'
-$:.unshift("/Users/psq/src/datamapper/dm-core-sam/lib")
+gem 'dm-core'
+#$:.unshift("/Users/psq/src/datamapper/dm-core-sam/lib")
 
 require 'data_mapper'
 
