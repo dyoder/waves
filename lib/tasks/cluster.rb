@@ -2,7 +2,8 @@ namespace :cluster do
 
   desc 'Start a cluster of waves applications.'
   task :start do |task|
-    script = USE_WAVES_SRC ? 'bin/waves-server' : 'waves-server'
+    using_waves_src = defined?(WAVES) || ENV['WAVES'] || File.exist( File.dirname(__FILE__) / :waves )
+    script = using_waves_src ? :bin / 'waves-server' : 'waves-server'
     ( Waves::Console.config.ports || [ Waves::Console.config.port ] ).each do |port|
       cmd = "#{script} -p #{port} -c #{ENV['mode']||'development'} -d"
       puts cmd ; `#{cmd}`
