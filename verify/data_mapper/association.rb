@@ -2,6 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 require 'layers/orm/data_mapper'
+require 'flexmock'
 
 module DMApplication
   include Waves::Foundations::Default
@@ -20,11 +21,21 @@ module DMApplication
   end
 end
 
-
+module Bacon
+  class Context
+    include FlexMock::ArgumentTypes
+    include FlexMock::MockContainer
+  end
+end
 
 specification "DataMapper Associations" do
-
+  
   before do
+    @adapter = FlexMock::DefaultFrameworkAdapter.new
+  end
+
+  after do
+    flexmock_verify
   end
 
   specify 'Add before and after filters that push a new repo' do
@@ -38,6 +49,17 @@ specification "DataMapper Associations" do
     filters[:after][0][1].call
     end_size = ::DataMapper::Repository.context.size
     (end_size - after_size).should == -1
+  end
+
+  specify 'Add before and after filters that push a new repo with flexmock' do
+    mock_context = flexmock("context")
+    flexmock(::DataMapper::Repository, :context => mock_context)
+    mock_context.should_receive(:push).once
+    mock_context.should_receive(:pop).once
+
+    filters = DMAMapping.send :filters
+    filters[:before][0][1].call
+    filters[:after][0][1].call
   end
   
   specify 'It should initialize the database adapater' do
