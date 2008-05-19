@@ -45,6 +45,10 @@ module Waves
           block, args = mapping[:action]
           response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
           
+          mapping[:after].each do | block, args |
+            ResponseProxy.new(request).instance_exec(*args,&block)
+          end
+
         rescue Exception => e
           
           handler = mapping[:handlers].detect do | exception, block, args |
@@ -57,9 +61,8 @@ module Waves
           end
           
         ensure
-          
-          mapping[:after].each do | block, args |
-            ResponseProxy.new(request).instance_exec(*args,&block)
+          mapping[:always].each do | block, args |
+            ResponseProxy.new(request).instance_exec(*args,&block) rescue nil
           end
           
         end

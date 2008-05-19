@@ -125,6 +125,17 @@ module Waves
       filters[:after] << [ options, block ]
     end
 
+    # Like after, but will run even when an exception is thrown. Exceptions in
+    # always mappings are simply ignored.
+    def always( path, options = {}, &block )
+      if path.is_a? Hash
+        options = path
+      else
+        options[:path] = path
+      end
+      filters[:always] << [ options, block ]
+    end
+
     # Maps a request to a block. Don't use this method directly unless you know what
     # you're doing. Use +path+ or +url+ instead.
     def map( path, options = {}, params = {}, &block )
@@ -192,7 +203,7 @@ module Waves
     # by a dispatcher object, so you shouldn't typically use it directly.
     def []( request )
 
-      rx = { :before => [], :after => [], :action => nil, :handlers => [] }
+      rx = { :before => [], :after => [], :always => [], :action => nil, :handlers => [] }
 
       ( filters[:before] + filters[:wrap] ).each do | options, function |
         matches = match( request, options, function )
@@ -209,6 +220,11 @@ module Waves
         rx[:after] << matches if matches
       end
 
+      filters[:always].each do | options, function |
+        matches = match( request, options, function )
+        rx[:always] << matches if matches
+      end
+
       handlers.each do | exception, options, function |
         matches = match( request, options, function )
         rx[:handlers] << matches.unshift(exception) if matches
@@ -219,33 +235,30 @@ module Waves
 
     # Clear all mapping rules
     def clear
-      @mapping = @filters = nil;
+      @mapping = @filters = @handlers = nil;
     end
 
     private
 
     def mapping; @mapping ||= []; end
 
-    def filters; @filters ||= { :before => [], :after => [], :wrap => [] }; end
+    def filters; @filters ||= { :before => [], :after => [], :wrap => [], :always => [] }; end
 
     def handlers; @handlers ||= []; end
 
     def match ( request, options, function )
       return nil unless satisfy( request, options )
-      if options[:path]
-        matches = options[:path].match( request.path ) unless options[:path] == true
-      elsif options[:url]
-        matches = options[:url].match( request.url ) unless options[:path] == true
-      end
+      return [ function, nil ] if ( options[:path] == true or options[:url] == true )
+      matches = options[:path].match( request.path ) if options[:path]
+      matches = options[:url].match( request.url ) if options[:url]
       return [ function, matches ? matches[1..-1] : nil ]
     end
 
     def satisfy( request, options )
       options.nil? or options.all? do |name,wanted|
-        got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ?
-          name.to_s.downcase : name.to_s.upcase ]
-        ( ( wanted.is_a?(Regexp) && wanted.match( got.to_s ) ) or
-          wanted == true or got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
+        return true if wanted == true
+        got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ? name.to_s.downcase : name.to_s.upcase ]
+        ( ( wanted.is_a?(Regexp) and wanted.match( got.to_s ) ) or got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
       end
     end
   end
