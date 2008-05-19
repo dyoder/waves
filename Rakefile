@@ -15,7 +15,7 @@ gem = Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
   %w( mongrel rack markaby erubis RedCloth autocode sequel sqlite3-ruby
-      extensions live_console choice daemons bacon rakegen).each do |dep|
+      extensions live_console choice daemons bacon flexmock rakegen).each do |dep|
     gem.add_dependency dep
   end
   gem.files = Dir['lib/**/*.rb','app/**/*']
