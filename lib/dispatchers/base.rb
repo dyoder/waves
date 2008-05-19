@@ -24,18 +24,7 @@ module Waves
       # taking an +env+ parameter.
       def call( env )
         Waves::Application.instance.synchronize do
-          request = Waves::Request.new( env )
-          response = request.response
-          t = Benchmark.realtime do
-            begin
-              safe( request )
-            rescue Dispatchers::Redirect => redirect
-              response.status = redirect.status
-              response.location = redirect.path
-            end
-          end
-          Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
-          response.finish
+          _call( env )
         end
       end
 
@@ -43,6 +32,23 @@ module Waves
       # the server should run the request in a separate thread.
       def deferred?( env )
         Waves::Application.instance.mapping.threaded?( env )
+      end
+      
+      private
+      
+      def _call( env )
+        request = Waves::Request.new( env )
+        response = request.response
+        t = Benchmark.realtime do
+          begin
+            safe( request )
+          rescue Dispatchers::Redirect => redirect
+            response.status = redirect.status
+            response.location = redirect.path
+          end
+        end
+        Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
+        response.finish
       end
 
     end
