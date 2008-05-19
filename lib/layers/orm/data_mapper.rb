@@ -25,7 +25,7 @@ module Waves
                 before :path => /.*/ do
                   ::DataMapper::Repository.context.push(::DataMapper::Repository.new(:main_repository))
                 end
-                after :path => /.*/ do
+                ensure :path => /.*/ do
                   ::DataMapper::Repository.context.pop
                 end
               end

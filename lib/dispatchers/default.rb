@@ -27,13 +27,14 @@ module Waves
       # Takes a Waves::Request and returns a Waves::Reponse
       def safe( request  )
 
+        response = request.response
+
+        Waves::Application.instance.reload if Waves::Application.instance.debug?
+        response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
+
+        mapping = Waves::Application.instance.mapping[ request ]
+
         begin
-          response = request.response
-
-          Waves::Application.instance.reload if Waves::Application.instance.debug?
-          response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
-
-          mapping = Waves::Application.instance.mapping[ request ]
 
           mapping[:before].each do | block, args |
             ResponseProxy.new(request).instance_exec(*args,&block)
@@ -43,11 +44,9 @@ module Waves
 
           block, args = mapping[:action]
           response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
-
-          mapping[:after].each do | block, args |
-            ResponseProxy.new(request).instance_exec(*args,&block)
-          end
+          
         rescue Exception => e
+          
           handler = mapping[:handlers].detect do | exception, block, args |
             e.is_a? exception
           end
@@ -56,6 +55,13 @@ module Waves
           else
             raise e
           end
+          
+        ensure
+          
+          mapping[:after].each do | block, args |
+            ResponseProxy.new(request).instance_exec(*args,&block)
+          end
+          
         end
 
       end

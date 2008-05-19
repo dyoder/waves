@@ -104,6 +104,7 @@ module Waves
     end
 
     # Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
+    # Note that after methods will run even if an exception is thrown during processing.
     def after( path, options = {}, &block )
       if path.is_a? Hash
         options = path
@@ -155,7 +156,7 @@ module Waves
     def root( options = {}, params = {}, &block )
       path( %r{^/?$}, options, params, &block )
     end
-
+    
     # Maps an exception handler to a block.
     def handle(exception, options = {}, &block )
       handlers << [exception,options, block]
@@ -232,9 +233,9 @@ module Waves
     def match ( request, options, function )
       return nil unless satisfy( request, options )
       if options[:path]
-        matches = options[:path].match( request.path )
+        matches = options[:path].match( request.path ) unless options[:path] == true
       elsif options[:url]
-        matches = options[:url].match( request.url )
+        matches = options[:url].match( request.url ) unless options[:path] == true
       end
       return [ function, matches ? matches[1..-1] : nil ]
     end
@@ -244,7 +245,7 @@ module Waves
         got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ?
           name.to_s.downcase : name.to_s.upcase ]
         ( ( wanted.is_a?(Regexp) && wanted.match( got.to_s ) ) or
-          got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
+          wanted == true or got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
       end
     end
   end
