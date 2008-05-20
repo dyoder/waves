@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), "..", "helpers")
 
 begin
-  require 'layers/orm/data_mapper2'
+  require 'layers/orm/data_mapper'
   require 'flexmock'
 
   module DMApplication
