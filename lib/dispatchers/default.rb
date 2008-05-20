@@ -62,7 +62,11 @@ module Waves
           
         ensure
           mapping[:always].each do | block, args |
-            ResponseProxy.new(request).instance_exec(*args,&block) rescue nil
+            begin
+              ResponseProxy.new(request).instance_exec(*args,&block) 
+            rescue Exception => e
+              Waves::Logger.info e.to_s
+            end
           end
           
         end

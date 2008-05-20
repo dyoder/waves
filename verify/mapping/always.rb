@@ -5,13 +5,13 @@ require File.join(File.dirname(__FILE__), "..", "helpers")
 specification "A developer can ensure" do
 
   before do
-    mapping.clear
+    # mapping.clear
     path('/' ) { raise RuntimeError.new('bar') }
     always( true ) { ::TEST_VALUE == 'bar' }
   end
 
   specify 'processing is guaranteed regardless of what happens in an action' do
-    lambda{ get('/') }
+    lambda { get('/') }.should.raise RuntimeError
     ::TEST_VALUE.should == 'bar'
   end
 

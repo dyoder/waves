@@ -126,7 +126,7 @@ module Waves
     end
 
     # Like after, but will run even when an exception is thrown. Exceptions in
-    # always mappings are simply ignored.
+    # always mappings are simply logged and ignored.
     def always( path, options = {}, &block )
       if path.is_a? Hash
         options = path
