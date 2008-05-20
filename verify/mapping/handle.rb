@@ -5,19 +5,20 @@ specification "A developer can register exception handlers" do
 
   before do
     mapping.clear
+    mapping.handle(Waves::Dispatchers::NotFoundError) do
+       response.status = 404; response.body = "404 Not Found"
+    end
+    mapping.handle(Waves::Dispatchers::NotFoundError) do
+      response.status = 404; response.body = "Something Different"
+    end
   end
 
   specify 'The minimal 404 handler in SimpleErrors' do
+
     r = get('/')
     r.status.should == 404
     r.body.should == '404 Not Found'
   end
 
-  # specify "A custom 404 handler should override the minimal" do
-  #   handle(Waves::Dispatchers::NotFoundError) { response.status = 404; response.body = "gone baby gone"}
-  #   r = get('/')
-  #   r.status.should == 404
-  #   r.body.should == "gone baby gone"
-  # end
 
 end
