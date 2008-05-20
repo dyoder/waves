@@ -22,10 +22,10 @@ module Waves
              
             auto_eval :Configurations do
               auto_eval :Mapping do
-                before :path => /.*/ do
+                before true do
                   ::DataMapper::Repository.context.push(::DataMapper::Repository.new(:main_repository))
                 end
-                ensure :path => /.*/ do
+                always true do
                   ::DataMapper::Repository.context.pop
                 end
               end
