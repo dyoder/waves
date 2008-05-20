@@ -5,7 +5,7 @@ describe "A developer can map requests to filters." do
 
   before do
     mapping.clear
-
+    handle(Waves::Dispatchers::NotFoundError) { response.status = 404}
     mapping.before( :path => '/filters', :method => :post ) { request.response.write('Before post:') }
     mapping.before( :path => '/filters' ) { request.response.write('Before:') }
     mapping.wrap( :path => '/filters', :method => :post ) { request.response.write(':Wrap post:') }
