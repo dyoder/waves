@@ -23,7 +23,9 @@ module Waves
       # Like any Rack application, Waves' dispatchers must provide a call method
       # taking an +env+ parameter.
       def call( env )
-        Waves::Application.instance.synchronize do
+        if Waves.config.synchronize?
+          Waves::Application.instance.synchronize { _call( env ) }
+        else
           _call( env )
         end
       end

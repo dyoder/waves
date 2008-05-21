@@ -139,7 +139,7 @@ module Waves
     # defining a number of attributes that are required by Waves.
     class Default < Base
 
-      %w( host port ports log reloadable database session debug root ).
+      %w( host port ports log reloadable database session debug root synchronize? ).
       each { |name| attribute(name) }
 
       # Set the handler for use with Rack, along with any handler-specific options
@@ -168,7 +168,7 @@ module Waves
         end
       end
 
-      debug true
+      debug true ; synchronize? true
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
