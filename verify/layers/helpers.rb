@@ -7,3 +7,12 @@ Bacon.summary_on_exit
 $:.unshift( File.join(File.dirname(__FILE__), "..", "..", "lib") )
 require 'waves'
 
+def rm_if_exist(name)
+  FileUtils.rm name if File.exist? name
+end
+
+# add block to Bacon's before and after blocks
+def wrap(&block)
+  @before << block
+  @after << block
+end

@@ -14,7 +14,7 @@ module Waves
                 end
                 response.status = '404'
                 response.content_type = 'text/html'
-                response.write( html )
+                response.body = html
               end
             end
           end

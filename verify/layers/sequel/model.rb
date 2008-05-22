@@ -19,10 +19,8 @@ TA = TestApplication
 
 describe "An application module which includes the Sequel ORM layer should" do
   
-  before { FileUtils.rm 'test.db' if File.exist? 'test.db' }
-  
-  after { FileUtils.rm 'test.db' if File.exist? 'test.db' }
-  
+  wrap { rm_if_exist 'test.db' }
+    
   it "auto_create models that inherit from Sequel::Model" do
     TA::Models::Default.superclass.should == Sequel::Model
   end
