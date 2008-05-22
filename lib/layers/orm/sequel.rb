@@ -13,12 +13,12 @@ module Waves
           
           app.instance_eval do
             
-            auto_eval :Models do
+            auto_create :Models do
+              include AutoCode
               auto_create_class true, ::Sequel::Model
               auto_eval true do
                 set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
               end
-              auto_load true, :directories => [:models]
             end
             
           end

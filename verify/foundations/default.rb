@@ -1,11 +1,10 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
-require 'layers/orm/sequel'
+# require 'layers/orm/sequel'
 
 Dir.chdir File.dirname(__FILE__) / "default_application" do
 module DefaultApplication
   include Waves::Foundations::Default
-  include Waves::Layers::ORM::Sequel
 end
 Waves::Console.load( :mode => :development )
 DA = DefaultApplication
@@ -29,10 +28,7 @@ DA = DefaultApplication
       DA::Helpers::Testing.instance_methods.should.include "layout"
       DA::Helpers::Testing.should.respond_to :foundation_testing
       DA::Models::Default.should.respond_to :crayola
-      DA::Models::Default.dataset.to_table_reference.should == "(SELECT * FROM defaults)"
-      DA::Models::Mocker.dataset.to_table_reference.should == "(SELECT * FROM mockers)"
       DA::Models::Different.should.respond_to :sargent
-      DA::Models::Different.should.respond_to :set_dataset
       DA::Controllers::Default.instance_methods.should.include "attributes"
       DA::Controllers::Default.instance_methods.should.include "destroy_all"
       DA::Controllers::Different.instance_methods.should.include "attributes"
@@ -44,7 +40,7 @@ DA = DefaultApplication
     end
 
     it "should have accessors defined" do
-      [ :database, :config, :configurations, :controllers, :models, :helpers, :views ].each do |method|
+      [ :config, :configurations, :controllers, :models, :helpers, :views ].each do |method|
         DA.should.respond_to method
       end
     end
