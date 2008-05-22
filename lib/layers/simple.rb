@@ -18,8 +18,6 @@ module Waves
             auto_load true, :directories => [:configurations]
           end
 
-          include Waves::Layers::SimpleErrors
-
         end
       end
     end
