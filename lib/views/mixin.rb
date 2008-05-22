@@ -84,6 +84,8 @@ module Waves
         @layout = :default
       end
 
+      # Return the first renderer for which a template file can be found.
+      # Uses Renderers::Mixin.filename to construct the filename for each renderer.
       def renderer(path)
         Views.renderers.find do |renderer|
           File.exists?( renderer.filename( path ) )
