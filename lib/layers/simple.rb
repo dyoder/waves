@@ -5,6 +5,7 @@ module Waves
 
         def app.config ; Waves.config ; end
         def app.configurations ; self::Configurations ; end
+        def app.paths ; configurations::Mapping.named; end
         
         app.instance_eval do
 

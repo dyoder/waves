@@ -18,6 +18,12 @@ specification "A developer can register named mappings" do
     Waves.mapping.named.show("foo", "bar").should == "/foo/bar"
     
   end
+  
+  specify "accessible via Application.paths" do
+    
+    Test.paths.show("foo", "bar").should == "/foo/bar"
+    
+  end
 
 
 end
