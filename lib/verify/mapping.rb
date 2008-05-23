@@ -26,6 +26,10 @@ module Waves
         def threaded(*args,&block)
           mapping.threaded(*args,&block)
         end
+        
+        def generator(*args,&block)
+          mapping.generator(*args,&block)
+        end
 
       end
     end
