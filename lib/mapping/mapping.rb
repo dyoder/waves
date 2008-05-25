@@ -140,8 +140,6 @@ module Waves
     # you're doing. Use +path+ or +url+ instead.
     def map( path, options = {}, params = {}, &block )
       case path
-      when Array
-        options[:path] = Regexp.new( "^#{options[:generator].call( *path ).gsub('/','\/')}$" )
       when Hash
         params = options; options = path
       when String
@@ -201,32 +199,6 @@ module Waves
       return false
     end
     
-    #
-    # This method is used to create named routes, like this (resource and name would likely be regular expressions):
-    #   path [ resource, name ], :method => :get, 
-    #     :generator => generator( :show ) { |resource,name| "/#{resource}/#{name}" } do | r,n |
-    #     ...
-    #   end
-    #
-    def generator( name, &block )
-      @named ||= {}
-      @named[name] = block
-    end
-    
-    class NamedProxy
-      def initialize( named ) @named = named ; end
-      def method_missing(name,*args) @named[name].call(*args) ; end
-    end
-    
-    # You can access named routes using #named, like this:
-    #
-    #   Waves.mappings.named.show( 'post', 'named-mappings' )
-    #
-    def named
-      @named_proxy ||= NamedProxy.new( @named ||= {}  )
-    end
-      
-
     # Match the given request against the defined rules. This is typically only called
     # by a dispatcher object, so you shouldn't typically use it directly.
     def []( request )
