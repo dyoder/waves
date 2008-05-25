@@ -117,91 +117,64 @@ module Waves
     # as you want - they will all run, unless one of them calls redirect, generates an
     # unhandled exception, etc.
     def before( path, options = {}, &block )
-      if path.is_a? Hash
-        options = path
-      else
-        options[:path] = path
-      end
-      filters[:before] << [ options, block ]
+      mappings[:before] << [ merge( path, options ), block ]
     end
 
     # Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
     # Note that after methods will run even if an exception is thrown during processing.
     def after( path, options = {}, &block )
-      if path.is_a? Hash
-        options = path
-      else
-        options[:path] = path
-      end
-      filters[:after] << [ options, block ]
+      mappings[:after] << [ merge( path, options ), block ]
     end
 
     # Run the action before and after the matching +url+ or +path+ action.
     def wrap( path, options = {}, &block )
-      if path.is_a? Hash
-        options = path
-      else
-        options[:path] = path
-      end
-      filters[:before] << [ options, block ]
-      filters[:after] << [ options, block ]
+      mappings[:before] << [ options = merge( path, options ), block ]
+      mappings[:after] << [ options, block ]
     end
 
     # Like after, but will run even when an exception is thrown. Exceptions in
     # always mappings are simply logged and ignored.
     def always( path, options = {}, &block )
-      if path.is_a? Hash
-        options = path
-      else
-        options[:path] = path
-      end
-      filters[:always] << [ options, block ]
+      mappings[:always] << [ merge( path, options ), block ]
     end
 
     # Maps a request to a block. Don't use this method directly unless you know what
     # you're doing. Use +path+ or +url+ instead.
-    def map( path, options = {}, params = {}, &block )
-      case path
-      when Hash
-        params = options; options = path
-      when String
-        options[:path] = path
-      end
-      mapping << [ options, params, block ]
+    def map( path, options = {}, &block )
+      mappings[:action] << [ merge( path, options ), block ]
     end
 
     # Match pattern against the +request.path+, along with satisfying any constraints
     # specified by the options hash. If the pattern matches and the constraints are satisfied,
     # run the block. Only one +path+ or +url+ match will be run (the first one).
-    def path( pat, options = {}, params = {}, &block )
-      options[:path] = pat; map( options, params, &block )
+    def path( path, options = {}, &block )
+      map( path, options, &block )
     end
 
     # Match pattern against the +request.url+, along with satisfying any constraints
     # specified by the options hash. If the pattern matches and the constraints are satisfied,
     # run the block. Only one +path+ or +url+ match will be run (the first one).
-    def url( pat, options = {}, params = {}, &block )
-      options[:url] = pat; map( options, params, &block )
+    def url( url, options = {}, &block )
+      map( options.merge!( :url => url ), &block )
     end
 
     # Maps the root of the application to a block. If an options hash is specified it must
     # satisfy those constraints in order to run the block.
-    def root( options = {}, params = {}, &block )
-      path( %r{^/?$}, options, params, &block )
+    def root( options = {}, &block )
+      path( '/', options, &block )
     end
     
     # Maps an exception handler to a block.
-    def handle(exception, options = {}, &block )
-      handlers << [exception,options, block]
+    def handle( exception, options = {}, &block )
+      mappings[:handler] << [ exception, options, block ]
     end
 
     # Maps a request to a block that will be executed within it's
     # own thread. This is especially useful when you're running
     # with an event driven server like thin or ebb, and this block
     # is going to take a relatively long time.
-    def threaded( pat, options = {}, params = {}, &block)
-      params[:threaded] = true
-      map( pat, options, params, &block)
+    def threaded( path, options = {}, &block)
+      map( path, options.merge!( :threaded => true ), &block)
     end
 
     # Determines whether the request should be handled in a separate thread. This is  used
@@ -214,59 +187,57 @@ module Waves
     #
     # You typically wouldn't use this method directly.
     def threaded?( request )
-      mapping.find do | options, params, function |
+      mapping.find do | options, function |
         match = match( request, options, function )
-        return params[:threaded] == true if match
+        options[:threaded] == true if match
       end
-      return false
     end
     
     # Match the given request against the defined rules. This is typically only called
     # by a dispatcher object, so you shouldn't typically use it directly.
     def []( request )
-
-      rx = { :before => [], :after => [], :always => [], :action => nil, :handlers => [] }
-
-      ( filters[:before] + filters[:wrap] ).each do | options, function |
-        matches = match( request, options, function )
-        rx[:before] << matches if matches
-      end
-
-      mapping.find do | options, params, function |
-        rx[:action] = match( request, options, function )
-        break if rx[:action]
-      end
-
-      ( filters[:after] + filters[:wrap] ).each do | options, function |
-        matches = match( request, options, function )
-        rx[:after] << matches if matches
-      end
-
-      filters[:always].each do | options, function |
-        matches = match( request, options, function )
-        rx[:always] << matches if matches
-      end
-
-      handlers.each do | exception, options, function |
-        matches = match( request, options, function )
-        rx[:handlers] << matches.unshift(exception) if matches
-      end
-
-      return rx
+      returning( Hash.new { |h,k| h[k] = [] } ) do | r |
+        r[:before] = ( mappings[:before] + mappings[:wrap] ).map { | opts, blk | match( request, opts, blk ) }.compact
+        r[:after] = ( mappings[:after] + mappings[:wrap] ).map { | opts, blk | match( request, opts, blk ) }.compact
+        r[:always] = mappings[:always].map { | opts, blk | match( request, opts, blk ) }.compact
+        r[:handler] = mappings[:handler].map { | e, opts, blk | match( request, opts, blk ) }.compact.reverse
+        mappings[:action].find { | opts, blk | r[:action] = match( request, opts, blk ) }
+      end    
     end
 
     # Clear all mapping rules
     def clear
-      @mapping = @filters = @handlers = nil;
+      @mapping = Hash.new{ |h,k| h[k] = [] }
     end
 
     private
-
-    def mapping; @mapping ||= []; end
-
-    def filters; @filters ||= { :before => [], :after => [], :wrap => [], :always => [] }; end
-
-    def handlers; @handlers ||= []; end
+    
+    def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end
+    def named ; @named ||= Attributes.new ; end
+    
+    def merge( path, options = {} )
+      process( Hash === path ? path : options.merge!( :path => path ) )
+    end
+    
+    def process( options )
+      path, key = if options[:path]
+        [ options[:path], :path ] 
+      elsif options[:url]
+        [ options[:url], :url ]
+      else
+        raise RuntimeError.new("no path or url specified for mapping")
+      end
+      g = generator( path )
+      named[ options[:named] ] = g if options[:named]
+      options[ key ] = Regexp.new( "^" + g.call( options, %r{([\w\-\_]+)} ) + "\/?$" )
+      return options
+    end
+    
+    def generator( path )
+      lambda do |keys,default|
+          path.gsub( /\{([\w\-\_]+)\}/ ) { |key| puts "\n\nKEY: #{key[0]}\n\n"; keys[ key[0] ] || default.to_s }
+      end
+    end
 
     def match ( request, options, function )
       return nil unless satisfy( request, options )

@@ -23,20 +23,20 @@ module Waves
 
             extend Waves::Mapping
 
-            name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
+            name = '([\w\-\_\.\+\@]+)'
 
             # get all resources for the given model
-            path %r{^/#{model}/?$}, :method => :get do | model |
+            path '/{model}', :method => :get do | model |
               resource( model.singular ) { controller { all } | view { |data| list( model => data ) } }
             end
 
             # get the given resource for the given model
-            path %r{^/#{model}/#{name}/?$}, :method => :get do | model, name |
+            path '/{model}/{name}', :method => :get do | model, name |
               resource( model ) { controller { find( name ) } | view { |data| show( model => data ) } }
             end
 
             # display an editor for the given resource / model
-            path %r{^/#{model}/#{name}/editor/?$}, :method => :get do | model, name |
+            path '/{model}/{name}/editor', :method => :get do | model, name |
               resource( model ) {  controller { find( name ) } | view { |data| editor( model => data ) } }
             end
 
@@ -64,7 +64,7 @@ module Waves
             name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
 
             # create a new resource for the given model
-            path %r{^/#{model}/?$}, :method => :post do | model |
+            path '/{model}', :method => :post do | model |
               resource( model.singular ) do
                 controller do 
                   instance = create
@@ -74,12 +74,12 @@ module Waves
             end
 
             # update the given resource for the given model
-            path %r{^/#{model}/#{name}/?$}, :method => :put do | model, name |
+            path '/{model}/{name}', :method => :put do | model, name |
               resource( model ) { controller { update( name ); redirect( url ) }  }
             end
 
             # delete the given resource for the given model
-            path %r{^/#{model}/#{name}/?$}, :method => :delete do | model, name |
+            path '/{model}/{name}', :method => :delete do | model, name |
               resource( model ) { controller { delete( name ) } }
             end
 
