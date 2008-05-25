@@ -33,8 +33,9 @@ module Waves
 
           auto_create_module( :Helpers ) do
             include AutoCode
-            auto_create_module { include Waves::Helpers::Default }
+            auto_create_module
             auto_load true, :directories => [ :helpers ]
+            auto_eval( true ){ include Waves::Helpers::Default }
           end          
 
         end
