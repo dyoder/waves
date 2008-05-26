@@ -23,22 +23,11 @@ module Waves
 
             extend Waves::Mapping
 
-            name = '([\w\-\_\.\+\@]+)'
+            path '/{model}', :named => :all, :method => :get, :action => all_and_list
 
-            # get all resources for the given model
-            path '/{model}', :method => :get do | model |
-              resource( model.singular ) { controller { all } | view { |data| list( model => data ) } }
-            end
+            path '/{model}/{name}', :named => :get, :action => find_and_show, :method => :get
 
-            # get the given resource for the given model
-            path '/{model}/{name}', :method => :get do | model, name |
-              resource( model ) { controller { find( name ) } | view { |data| show( model => data ) } }
-            end
-
-            # display an editor for the given resource / model
-            path '/{model}/{name}/editor', :method => :get do | model, name |
-              resource( model ) {  controller { find( name ) } | view { |data| editor( model => data ) } }
-            end
+            path '/{model}/{name}/editor', :named => :editor, :action => find_editor, :method => :get
 
           end
 
@@ -61,27 +50,13 @@ module Waves
 
             extend Waves::Mapping
 
-            name = '([\w\-\_\.\+\@]+)'; model = '([\w\-]+)'
-
-            # create a new resource for the given model
-            path '/{model}', :method => :post do | model |
-              resource( model.singular ) do
-                controller do 
-                  instance = create
-                  redirect( "/#{model_name}/#{instance.name}/editor" )
-                end
-              end
+            path '/{model}', :named => :create, :method => :post do |model|
+              redirect( named.editor( :model => model, :name => controllers[model].create.name ) )
             end
 
-            # update the given resource for the given model
-            path '/{model}/{name}', :method => :put do | model, name |
-              resource( model ) { controller { update( name ); redirect( url ) }  }
-            end
+            path '/{model}/{name}', :named => :update, :action => update_and_redirect, :method => :put
 
-            # delete the given resource for the given model
-            path '/{model}/{name}', :method => :delete do | model, name |
-              resource( model ) { controller { delete( name ) } }
-            end
+            path '/{model}/{name}', :named => :delete, :action => delete, :method => :delete
 
           end
 

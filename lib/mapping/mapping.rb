@@ -117,39 +117,37 @@ module Waves
     # as you want - they will all run, unless one of them calls redirect, generates an
     # unhandled exception, etc.
     def before( path, options = {}, &block )
-      mappings[:before] << [ merge( path, options ), block ]
+      mappings[:before] << normalize( path, options, block )
     end
 
     # Similar to before, except it runs its actions after any matching +url+ or +path+ actions.
     # Note that after methods will run even if an exception is thrown during processing.
     def after( path, options = {}, &block )
-      mappings[:after] << [ merge( path, options ), block ]
+      mappings[:after] << normalize( path, options, block )
     end
 
     # Run the action before and after the matching +url+ or +path+ action.
     def wrap( path, options = {}, &block )
-      mappings[:before] << [ options = merge( path, options ), block ]
-      mappings[:after] << [ options, block ]
+      mappings[:before] << ( options = normalize( path, options, block ) )
+      mappings[:after] << options
     end
 
     # Like after, but will run even when an exception is thrown. Exceptions in
     # always mappings are simply logged and ignored.
     def always( path, options = {}, &block )
-      mappings[:always] << [ merge( path, options ), block ]
+      mappings[:always] << normalize( path, options, block )
     end
 
     # Maps a request to a block. Don't use this method directly unless you know what
     # you're doing. Use +path+ or +url+ instead.
     def map( path, options = {}, &block )
-      mappings[:action] << [ merge( path, options ), block ]
+      mappings[:action] << normalize( path, options, block )
     end
 
     # Match pattern against the +request.path+, along with satisfying any constraints
     # specified by the options hash. If the pattern matches and the constraints are satisfied,
     # run the block. Only one +path+ or +url+ match will be run (the first one).
-    def path( path, options = {}, &block )
-      map( path, options, &block )
-    end
+    alias_method :path, :map
 
     # Match pattern against the +request.url+, along with satisfying any constraints
     # specified by the options hash. If the pattern matches and the constraints are satisfied,
@@ -197,29 +195,36 @@ module Waves
     # by a dispatcher object, so you shouldn't typically use it directly.
     def []( request )
       returning( Hash.new { |h,k| h[k] = [] } ) do | r |
-        r[:before] = ( mappings[:before] + mappings[:wrap] ).map { | opts, blk | match( request, opts, blk ) }.compact
-        r[:after] = ( mappings[:after] + mappings[:wrap] ).map { | opts, blk | match( request, opts, blk ) }.compact
-        r[:always] = mappings[:always].map { | opts, blk | match( request, opts, blk ) }.compact
-        r[:handler] = mappings[:handler].map { | e, opts, blk | match( request, opts, blk ) }.compact.reverse
-        mappings[:action].find { | opts, blk | r[:action] = match( request, opts, blk ) }
+        # r[:before] = ( mappings[:before] + mappings[:wrap] ).map { | opts | match( request, opts ) }.compact
+        # r[:after] = ( mappings[:after] + mappings[:wrap] ).map { | opts | match( request, opts ) }.compact
+        # r[:always] = mappings[:always].map { | opts | match( request, opts ) }.compact
+        # r[:handler] = mappings[:handler].map { | e, opts, blk | match( request, opts ) }.compact.reverse
+        mappings[:action].find { | opts | r[:action] = match( request, opts ) }
       end    
     end
 
     # Clear all mapping rules
-    def clear
-      @mapping = Hash.new{ |h,k| h[k] = [] }
+    def clear ; @mapping = Hash.new{ |h,k| h[k] = [] } ; end
+        
+    # Attempts to generate a lambda for use in a mapping rule based on the name of
+    # the method. Ex: find_and_show would generate a block like this:
+    #   lambda { |r,n| view.show( r => controller[:r].find(n) ) }
+    #
+    def method_missing(name,*p)
+      lambda { | *q | action( name, p + q ) }
     end
-
+    
     private
     
     def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end
-    def named ; @named ||= Attributes.new ; end
     
-    def merge( path, options = {} )
-      process( Hash === path ? path : options.merge!( :path => path ) )
-    end
+    class Names ; include Attributes ; end
+    def named ; @named ||= Names.new ; end
     
-    def process( options )
+    def normalize( path, options = {}, block = nil )
+      options[:path] = path unless path.is_a? Hash
+      options[:action] = block unless block.nil?
+      options[:match] = {} unless options[:match]
       path, key = if options[:path]
         [ options[:path], :path ] 
       elsif options[:url]
@@ -229,29 +234,33 @@ module Waves
       end
       g = generator( path )
       named[ options[:named] ] = g if options[:named]
-      options[ key ] = Regexp.new( "^" + g.call( options, %r{([\w\-\_]+)} ) + "\/?$" )
+      options[ key ] = Regexp.new( "^" + g.call( options, %r{([\w\-\_\.\+\@]+)} ) + "\/?$" )
       return options
     end
     
     def generator( path )
       lambda do |keys,default|
-          path.gsub( /\{([\w\-\_]+)\}/ ) { |key| puts "\n\nKEY: #{key[0]}\n\n"; keys[ key[0] ] || default.to_s }
+        path.gsub( /\{([\w\-\_]+)\}/ ) { |key| keys[ :match ][ key[0] ] || default.to_s }
       end
     end
 
-    def match ( request, options, function )
+    def match ( request, options )
       return nil unless satisfy( request, options )
-      return [ function, nil ] if ( options[:path] == true or options[:url] == true )
-      matches = options[:path].match( request.path ) if options[:path]
-      matches = options[:url].match( request.url ) if options[:url]
-      return [ function, matches ? matches[1..-1] : nil ]
+      pattern = options[:path] || options[:url]
+      if true == pattern
+        [ options[:action], nil ]
+      elsif matches = pattern.match( request.path ) 
+        [ options[:action], matches[1..-1] ]
+      end
     end
 
     def satisfy( request, options )
-      options.nil? or options.all? do |name,wanted|
-        return true if wanted == true
-        got = request.send( name ) rescue request.env[  ( name =~ /^rack\./ ) ? name.to_s.downcase : name.to_s.upcase ]
-        ( ( wanted.is_a?(Regexp) and wanted.match( got.to_s ) ) or got.to_s == wanted.to_s ) unless ( wanted.nil? or got.nil? )
+      keys = options.keys - [:action,:match,:threaded,:named,:path,:url]
+      keys.all? do |key|
+        wanted = options[key]
+        got = request.respond_to?( key ) ? request.send( key ) : 
+          request.env[  ( key =~ /^rack\./ ) ? key.to_s.downcase : key.to_s.upcase ]
+        got.to_s == wanted.to_s unless ( wanted.nil? or got.nil? )
       end
     end
   end
