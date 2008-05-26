@@ -205,15 +205,7 @@ module Waves
 
     # Clear all mapping rules
     def clear ; @mapping = Hash.new{ |h,k| h[k] = [] } ; end
-        
-    # Attempts to generate a lambda for use in a mapping rule based on the name of
-    # the method. Ex: find_and_show would generate a block like this:
-    #   lambda { |r,n| view.show( r => controller[:r].find(n) ) }
-    #
-    def method_missing(name,*p)
-      lambda { | *q | action( name, p + q ) }
-    end
-    
+            
     private
     
     def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end

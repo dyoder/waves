@@ -23,11 +23,14 @@ module Waves
 
             extend Waves::Mapping
 
-            path '/{model}', :named => :all, :method => :get, :action => all_and_list
-
-            path '/{model}/{name}', :named => :get, :action => find_and_show, :method => :get
-
-            path '/{model}/{name}/editor', :named => :editor, :action => find_editor, :method => :get
+            path '/{resource}', :named => :all, :method => :get,
+              :action => lambda { | resource | with( resource ).all.and.render( :list ) }
+              
+            path '/{resource}/{name}', :named => :get, :method => :get,
+              :action => lambda { | resource, name | with( resource ).find( name ).and.render( :show ) }
+              
+            path '/{resource}/{name}/editor', :named => :editor, :method => :get,
+              :action => lambda { | resource, name | with( resource ).find( name ).and.render( :editor ) }
 
           end
 
@@ -50,13 +53,16 @@ module Waves
 
             extend Waves::Mapping
 
-            path '/{model}', :named => :create, :method => :post do |model|
-              redirect( named.editor( :model => model, :name => controllers[model].create.name ) )
+            path '/{resource}', :named => :create, :method => :post do | resource |
+              with( resource ).create.and.redirect( :editor, :resource => resource, :name => instance.name )
             end
 
-            path '/{model}/{name}', :named => :update, :action => update_and_redirect, :method => :put
+            path '/{resource}/{name}', :named => :update, :method => :put do | resource, name |
+              with(resource).update( name ).and.redirect( :show, :resource => resource, :name => name )
+            end
 
-            path '/{model}/{name}', :named => :delete, :action => delete, :method => :delete
+            path '/{resource}/{name}', :named => :delete, :method => :delete,
+              :action => lambda { | resource, name | with( resource ).delete( name ) }
 
           end
 
