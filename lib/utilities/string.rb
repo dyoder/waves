@@ -33,7 +33,7 @@ class String
   end
 
   def snake_case
-    gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2}"}.tr("-", "_").downcase
+    gsub(/\s+/,'').gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2}"}.tr("-", "_").downcase
   end
 
   def title_case
