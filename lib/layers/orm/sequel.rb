@@ -18,7 +18,12 @@ module Waves
               auto_create_class true, ::Sequel::Model
               auto_load true, :directories => [ :models ]
               auto_eval true do
-                set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                # if there's already a dataset, please don't clobber it.
+                begin
+                  dataset
+                rescue
+                  set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                end
               end
             end
             
