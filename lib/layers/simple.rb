@@ -16,6 +16,9 @@ module Waves
             auto_create_class true, Waves::Configurations::Default
             auto_load :Mapping, :directories => [:configurations]
             auto_load true, :directories => [:configurations]
+            auto_eval :Mapping do
+              extend Waves::Mapping
+            end
           end
 
         end
