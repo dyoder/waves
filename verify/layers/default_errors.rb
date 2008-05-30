@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 
 include ::Waves::Verify::Helpers::Request
 
-module TestApplication
+module DEApplication
   include Waves::Foundations::Simple
   include Waves::Layers::DefaultErrors
   module Views
@@ -17,9 +17,9 @@ module TestApplication
   stub!(:views).and_return(Views)
 end
 
-Waves << TestApplication
+Waves << DEApplication
 Waves::Console.load( :mode => :development )
-TA = TestApplication
+DEA = DEApplication
 
 
 describe "An application which includes the DefaultErrors layer" do

@@ -14,6 +14,10 @@ begin
   DMAMapping = DMA::Configurations::Mapping
   DMApplication::Configurations::Default
 
+  module DMA ; include Waves::Foundations::Simple ; end
+  Waves << DMA
+  Waves::Console.load( :mode => :development )
+
   module DMApplication
     module Configurations
       class Development < Default
@@ -39,20 +43,21 @@ begin
       flexmock_verify
     end
 
-    specify 'Add before and after filters that push a new repo' do
+    it 'should add before and after filters that push a new repo' do
       filters = DMAMapping.send :filters
-      filters[:after][0][0][:path].should == /.*/
-      filters[:before][0][0][:path].should == /.*/
+      filters.should.not == nil
+      filters[:before][0][0][:path].should == true
+      filters[:always][0][0][:path].should == true
       before_size = ::DataMapper::Repository.context.size
       filters[:before][0][1].call
       after_size = ::DataMapper::Repository.context.size
       (after_size - before_size).should == 1
-      filters[:after][0][1].call
+      filters[:always][0][1].call
       end_size = ::DataMapper::Repository.context.size
       (end_size - after_size).should == -1
     end
 
-    specify 'Add before and after filters that push a new repo with flexmock' do
+    it 'should add before and after filters that push a new repo with flexmock' do
       mock_context = flexmock("context")
       flexmock(::DataMapper::Repository, :context => mock_context)
       mock_context.should_receive(:push).once
@@ -60,22 +65,22 @@ begin
 
       filters = DMAMapping.send :filters
       filters[:before][0][1].call
-      filters[:after][0][1].call
+      filters[:always][0][1].call
     end
   
-    specify 'It should initialize the database adapater' do
+    it 'should initialize the database adapater' do
       DMA.database.class.should.not == nil
       DMA.database.class.should == ::DataMapper::Adapters::Sqlite3Adapter
     end
 
-    specify 'It should load models' do
+    it 'It should load models' do
       # pending
     end
 
   end
 rescue LoadError => e
   describe "DataMapper Associations" do
-    it 'should be required' do
+    it 'should be able to load dm-core' do
       puts "Datamapper associations specs not run! Could not load dm-core: #{e}"
     end
   end
