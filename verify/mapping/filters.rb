@@ -27,22 +27,22 @@ describe "A developer can map requests to filters." do
 
     mapping.before('/pathstring') { request.response.write("Before pathstring") }
     mapping.wrap('/pathstring') { request.response.write("Wrap pathstring") }
-    mapping.map('/pathstring') { "During pathstring" }
+    mapping.path('/pathstring') { "During pathstring" }
     mapping.after('/pathstring') { request.response.write("After pathstring") }
 
     mapping.before(%r{^/pathregexp$}) { request.response.write("Before pathregexp") }
     mapping.wrap(%r{^/pathregexp$}) { request.response.write("Wrap pathregexp") }
-    mapping.map(%r{^/pathregexp$}) { "During pathregexp" }
+    mapping.path(%r{^/pathregexp$}) { "During pathregexp" }
     mapping.after(%r{^/pathregexp$}) { request.response.write("After pathregexp") }
 
     mapping.before('/pathstring/name', :method => :post) { request.response.write("Before pathstring post") }
     mapping.wrap('/pathstring/name', :method => :post) { request.response.write("Wrap pathstring post") }
-    mapping.map('/pathstring/name', :method => :post) { "During pathstring post" }
+    mapping.path('/pathstring/name', :method => :post) { "During pathstring post" }
     mapping.after('/pathstring/name', :method => :post) { request.response.write("After pathstring post") }
 
     mapping.before(%r{^/pathregexp/name$}, :method => :post) { request.response.write("Before pathregexp post") }
     mapping.wrap(%r{^/pathregexp/name$}, :method => :post) { request.response.write("Wrap pathregexp post") }
-    mapping.map(%r{^/pathregexp/name$}, :method => :post) { "During pathregexp post" }
+    mapping.path(%r{^/pathregexp/name$}, :method => :post) { "During pathregexp post" }
     mapping.after(%r{^/pathregexp/name$}, :method => :post) { request.response.write("After pathregexp post") }
   end
 
@@ -61,5 +61,5 @@ describe "A developer can map requests to filters." do
   it "When having 'before', 'after' and 'wrap' filters but no corresponding map action this results in a 404" do
     get('/filters_with_no_map').status.should == 404
   end
-
+  
 end
