@@ -2,9 +2,6 @@ module Waves
 
   module Renderers
 
-    extend AutoCode
-    # auto_load :renderers, Class
-
     # The renderers mixin provides a number of methods to simplify writing new renderers.
     # Just include this in your Renderer class and write your render method.
     module Mixin

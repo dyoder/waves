@@ -60,7 +60,7 @@ module Waves
     # A class method that returns the known Renderers, which is any module that is defined within Waves::Renderers and includes the Renderers::Mixin. You can define new Renderers simply be reopening Waves::Renderers and defining a module that mixes in Renderers::Mixin.
     def Views.renderers
       return [] if Renderers.constants.nil?
-      Renderers.constants.inject([]) do |rx,cname|
+      Renderers.constants.sort.inject([]) do |rx,cname|
         ( Module === (c=Renderers.const_get(cname)) &&
           c < Renderers::Mixin ) ? ( rx << c ) : rx
       end
