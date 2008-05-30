@@ -22,5 +22,4 @@ describe "An application module which includes the Simple foundation" do
     SimpleApplication::Configurations.should.respond_to :[]
   end
 
-
 end

@@ -1,21 +1,21 @@
 # require 'test_helper' because RubyMate needs help
-require File.join(File.dirname(__FILE__), "..", "helpers")
+require File.join(File.dirname(__FILE__), "helpers")
 
 # Note: you have to define the resource classes using module_eval here, because otherwise
 # the auto_create code never gets triggered in the application.
 
-module Test
+module MappingApp
   include Waves::Layers::MVC
 end
 
-Test::Controllers.module_eval do
+MappingApp::Controllers.module_eval do
   class Animal
     include Waves::Controllers::Mixin
     def cow() 'Moo!' end
   end
 end
 
-Test::Views.module_eval do
+MappingApp::Views.module_eval do
   class Animal
     include Waves::Views::Mixin
     def say( says ) "This animal says: '#{says}'" end

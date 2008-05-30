@@ -71,9 +71,6 @@ require 'renderers/mixin'
 require 'renderers/erubis'
 require 'renderers/markaby'
 
-# waves test support
-require 'verify/mapping.rb'
-require 'verify/request.rb'
 
 # waves foundations / layers
 require 'layers/simple'

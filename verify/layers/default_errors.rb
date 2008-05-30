@@ -1,9 +1,7 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
 
-include ::Waves::Verify::Helpers::Request
-
-module DEApplication
+module DefaultErrorsApp
   include Waves::Foundations::Simple
   include Waves::Layers::DefaultErrors
   module Views
@@ -17,9 +15,8 @@ module DEApplication
   stub!(:views).and_return(Views)
 end
 
-Waves << DEApplication
+Waves << DefaultErrorsApp
 Waves::Console.load( :mode => :development )
-DEA = DEApplication
 
 
 describe "An application which includes the DefaultErrors layer" do

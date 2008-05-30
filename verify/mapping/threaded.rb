@@ -1,5 +1,5 @@
 # require 'test_helper' because RubyMate needs help
-require File.join(File.dirname(__FILE__), "..", "helpers")
+require File.join(File.dirname(__FILE__), "helpers")
 
 specification "Requests can be made threaded for event driven servers" do
 

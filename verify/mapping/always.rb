@@ -1,7 +1,6 @@
 # require 'test_helper' because RubyMate needs help
-require File.join(File.dirname(__FILE__), "..", "helpers")
-
-require 'facon'
+require File.join(File.dirname(__FILE__), "helpers")
+::TEST_VALUE = 'foo'
 
 specification "A developer can ensure" do
 
