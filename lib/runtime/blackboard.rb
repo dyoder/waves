@@ -3,6 +3,22 @@ module Waves
   # Encapsulates the blackboard associated with a given request. The scope of the blakcboard is
   # the same as the request object it gets attached to.
   #
+  # The Waves blackboard is a very simple shared storaged usable during the request processing.
+  # It is available within:
+  #    - mappings
+  #    - controllers
+  #    - helpers
+  #
+  # Adding a value:
+  #   blackboard.value1 = 1
+  #   blackboard[:value2] = 2
+  #
+  # Retrieving values
+  #   blackboard.value1
+  #   blackboard[:value2]
+  #
+  # see also blackboard_verify.rb  
+  
   class Blackboard
 
     # Create a new blackboard object using the given request.
