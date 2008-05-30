@@ -8,6 +8,7 @@ module Waves
 
           auto_eval :Configurations do
             auto_eval :Mapping do
+              extend Waves::Mapping
               handle(Waves::Dispatchers::NotFoundError) do
                 html = Waves.application.views[:errors].process( request ) do
                   not_found_404( :error => Waves::Dispatchers::NotFoundError )

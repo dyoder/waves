@@ -2,7 +2,7 @@ module Blog
 
   module Models
 
-    class Entry < Default
+    class Entry < Sequel::Model
       one_to_many :comments, :class => Blog::Models::Comment, :key => :entry_id
     end
 

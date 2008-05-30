@@ -139,10 +139,10 @@ module Waves
     # Maps a request to a block. Don't use this method directly unless you know what
     # you're doing. Use +path+ or +url+ instead.
     def map( path, options = {}, params = {}, &block )
-      if path.is_a? Hash
-        params = options
-        options = path
-      else
+      case path
+      when Hash
+        params = options; options = path
+      when String
         options[:path] = path
       end
       mapping << [ options, params, block ]
@@ -198,7 +198,7 @@ module Waves
       end
       return false
     end
-
+    
     # Match the given request against the defined rules. This is typically only called
     # by a dispatcher object, so you shouldn't typically use it directly.
     def []( request )
@@ -262,5 +262,6 @@ module Waves
       end
     end
   end
+  
 
 end

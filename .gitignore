@@ -3,3 +3,4 @@ app/log/*.log
 tmp/**/*
 doc/rdoc
 *.db
+log

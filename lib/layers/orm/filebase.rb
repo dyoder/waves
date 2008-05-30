@@ -5,10 +5,9 @@ module Waves
       module Filebase
         
         def self.included(app)
-          app.module_eval
+          app.module_eval do
             auto_eval( :Models ) do
-          	  include AutoCode
-          	  auto_eval true { include Filebase::Model[ :db / self.name.snake_case ] }
+          	  auto_eval( true ) { include Filebase::Model[ :db / self.name.snake_case ] }
           	end
           end
         end

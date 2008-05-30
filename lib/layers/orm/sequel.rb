@@ -16,8 +16,14 @@ module Waves
             auto_create :Models do
               include AutoCode
               auto_create_class true, ::Sequel::Model
+              auto_load true, :directories => [ :models ]
               auto_eval true do
-                set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                default = superclass.basename.snake_case.pluralize.intern
+                if @dataset && @dataset.opts[:from] != [ default ]
+                  # don't clobber dataset from autoloaded file
+                else
+                  set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                end
               end
             end
             

@@ -5,7 +5,7 @@ require 'layers/orm/sequel'
 module TestApplication
   include AutoCode
   module Configurations
-    module Development
+    class Development
       stub!(:database).and_return(:adapter => 'sqlite', :database => 'test.db')
     end
   end
