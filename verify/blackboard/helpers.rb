@@ -18,6 +18,6 @@ Bacon::Context.instance_eval do
   alias_method :specify, :it
 end
 
-module Test ; include Waves::Foundations::Simple ; end
-Waves << Test
+module BlackBoardVerify ; include Waves::Foundations::Simple ; end
+Waves << BlackBoardVerify
 Waves::Console.load( :mode => :development )

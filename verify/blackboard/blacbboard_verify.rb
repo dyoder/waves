@@ -41,7 +41,7 @@ specification "Blackboard" do
   
 end
 
-module Test
+module BlackBoardVerify
   module Controllers
     class Test
       include Waves::Controllers::Mixin
@@ -49,7 +49,7 @@ module Test
   end
 end
 
-module Test
+module BlackBoardVerify
   module Configurations
     module Mapping
       extend Waves::Mapping
@@ -57,7 +57,7 @@ module Test
   end
 end
 
-module Test
+module BlackBoardVerify
   module Helpers
     module Test
       extend Waves::Helpers::Default
@@ -65,7 +65,7 @@ module Test
   end
 end
 
-module Test
+module BlackBoardVerify
   module Views
     module Test
       extend Waves::Views::Mixin
@@ -83,10 +83,10 @@ specification "Blackboard included in other classes" do
 
   it 'should be included in other classes' do
     request = mock(:request)
-    Test::Controllers::Test.instance_methods.should.include "blackboard"
+    BlackBoardVerify::Controllers::Test.instance_methods.should.include "blackboard"
     Waves::Helpers::Default.instance_methods.should.include "blackboard"
     Waves::ResponseProxy.instance_methods.should.include "blackboard"
-    Test::Views::Test.methods.should.include "blackboard"
+    BlackBoardVerify::Views::Test.methods.should.include "blackboard"
   end
 
 end
