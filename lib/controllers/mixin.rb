@@ -103,7 +103,9 @@ module Waves
         end
       end
 
-      def initialize( request ); @request = request; end
+      def initialize( request )
+        @request = request
+        end
 
       # The params variable is taken from the request object and "destructured", so that
       # a parameter named 'blog.title' becomes:

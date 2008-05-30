@@ -30,6 +30,9 @@ module Waves
     def not_found; request.not_found; end
     # Access the Waves::Logger.
     def log; Waves::Logger; end
+    # Access the Blackboard
+    def blackboard; request.blackboard; end
+
   end
 
 end

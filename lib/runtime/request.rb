@@ -6,7 +6,7 @@ module Waves
 
     class ParseError < Exception ; end
 
-    attr_reader :response, :session
+    attr_reader :response, :session, :blackboard
 
     # Create a new request. Takes a env parameter representing the request passed in from Rack.
     # You shouldn't need to call this directly.
@@ -14,6 +14,7 @@ module Waves
       @request = Rack::Request.new( env )
       @response = Waves::Response.new( self )
       @session = Waves::Session.new( self )
+      @blackboard = Waves::Blackboard.new( self )
     end
 
     # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request.

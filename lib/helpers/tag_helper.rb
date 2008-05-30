@@ -7,6 +7,22 @@ module Waves
         value.to_s.gsub(/[&<>"]/) { |s| ESCAPE_TABLE[s] }
       end
       
+      # Returns an empty HTML tag of type +name+ which by default is XHTML 
+      # compliant. Setting +open+ to true will create an open tag compatible 
+      # with HTML 4.0 and below. Add HTML attributes by passing an attributes 
+      # hash to +options+. For attributes with no value like (disabled and 
+      # readonly), give it a value of true in the +options+ hash. You can use
+      # symbols or strings for the attribute names.
+      #
+      #   tag("br")
+      #    # => <br />
+      #   tag("br", nil, true)
+      #    # => <br>
+      #   tag("input", { :type => 'text', :disabled => true }) 
+      #    # => <input type="text" disabled="disabled" />
+      def tag(name, options = nil, open = false)
+        "<#{name}#{tag_options(options) if options}" + (open ? ">" : " />")
+      end
       
       # Returns the escaped +html+ without affecting existing escaped entities.
       #

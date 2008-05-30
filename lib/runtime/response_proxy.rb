@@ -6,7 +6,9 @@ module Waves
 
     include ResponseMixin
 
-    def initialize(request); @request = request; end
+    def initialize(request)
+      @request = request
+    end
 
     def resource( resource, &block )
       @resource = resource; yield.call

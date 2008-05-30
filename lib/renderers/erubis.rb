@@ -7,6 +7,8 @@ module Erubis
   class Context
     include Waves::Helpers::UrlHelper
     include Waves::Helpers::TagHelper
+    include Waves::Helpers::AssetHelper
+    include Waves::Helpers::NumberHelper
     
     def <<(s) 
       eval("_buf", @binding).concat s # add to rendered output
