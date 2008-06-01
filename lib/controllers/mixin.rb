@@ -7,7 +7,7 @@ module Waves
   # a request. For example, a controller updates a model instance using
   # parameters from the request.
   #
-  # Controller methods simply return data (a resource), if necessary, that
+  # Public controller methods simply return data (a resource), if necessary, that
   # can be then used by views to determine how to render that data.
   # Controllers do not determine which view will be invoked. They are
   # independent of the view; one controller method might be suitable for
@@ -77,8 +77,8 @@ module Waves
 
     #
     # This mixin provides some handy methods for Waves controllers. You will probably
-    # want to include it in any controllers you define for your application. The default
-    # controllers generated using the +wave+ command already do this.
+    # want to include it in any controllers you define for your application. The controllers
+    # autocreated in the Default foundation already do this.
     #
     # Basically, what the mixin does is adapt the class so that it can be used within
     # mappings (see Waves::Mapping); add some simple reflection to allow controller methods
@@ -97,8 +97,8 @@ module Waves
       # the controller and the block is evaluated using +instance_eval+. This allows the
       # controller to be used within a mapping file.
 
-      def self.included( c )
-        def c.process( request, &block )
+      def self.included( mod )
+        def mod.process( request, &block )
           self.new( request ).instance_eval( &block )
         end
       end
@@ -113,7 +113,7 @@ module Waves
       #   params['blog']['title']
       #
       # If you want to access the original parameters object, you can still do so using
-      # +request.parameters+ instead of simply +params+.
+      # +request.params+ instead of simply +params+.
       def params; @params ||= destructure(request.params); end
 
       # You can access the name of the model related to this controller using this method.
