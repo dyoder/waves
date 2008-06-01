@@ -18,6 +18,8 @@ describe "The default configuration class" do
   end
   
   it "defines the application for use with Rack" do
+    app = Rack::Builder.new() {}
+    Rack::Builder.should.receive(:new).with().and_return(app)
     Default.application do
       "stuff"
     end
