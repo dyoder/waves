@@ -93,7 +93,10 @@ end
 
 desc "Run verification suite."
 Rake::TestTask.new(:verify) do |t|
-  t.test_files = FileList["verify/**/*.rb"].exclude("**/helpers.rb", "**/app_generation/*.rb")
+  t.test_files = FileList["verify/**/*.rb"].exclude(
+  "**/helpers.rb",
+  "**/foundations/*_application/**/*", 
+  "**/app_generation/*.rb")
   t.verbose = true
 end
 
