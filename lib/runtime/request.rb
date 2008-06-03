@@ -16,6 +16,8 @@ module Waves
       @session = Waves::Session.new( self )
       @blackboard = Waves::Blackboard.new( self )
     end
+    
+    def rack_request; @request; end
 
     # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request.
     # Check the Rack documentation for more information.
