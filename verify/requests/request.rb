@@ -5,8 +5,6 @@ describe "A Waves request instance" do
   
   before do
     @request = Waves::Request.new(env_for)
-    
-
   end
   
   it "has session, response, and blackboard objects" do
@@ -30,7 +28,7 @@ describe "A Waves request instance" do
     @request.content_type
   end
   
-  it "passes method calls it can't handle along to the Rack request" do
+  it "delegates unknown methods to the Rack request" do
     @request.rack_request.should.receive(:chitty_bang_bang)
     @request.chitty_bang_bang
   end

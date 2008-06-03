@@ -13,6 +13,8 @@ module Waves
       @request = request
       @response = Rack::Response.new
     end
+    
+    def rack_response; @response; end
 
     %w( Content-Type Content-Length Location Expires ).each do |header|
       define_method( header.downcase.gsub('-','_')+ '=' ) do | val |
