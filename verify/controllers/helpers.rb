@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__) , "..", "helpers")
 
-module TestApp
+module VerifyControllers
   module Models
     class Default
     end
@@ -10,5 +10,4 @@ module TestApp
   end
 end
 
-TestApp::Models.stub!(:[]).with(:default).and_return(TestApp::Models::Default)
-Waves.application.stub!(:models).and_return(TestApp::Models)
+VerifyControllers::Models.stub!(:[]).with(:default).and_return(VerifyControllers::Models::Default)

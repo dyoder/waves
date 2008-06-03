@@ -7,8 +7,9 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "An instance of the basic Waves controller" do
   
   before do
+    Waves.application.stub!(:models).and_return(VerifyControllers::Models)
     @request = mock('request')
-    @dc = TestApp::Controllers::Default.new(@request)
+    @dc = VerifyControllers::Controllers::Default.new(@request)
   end
   
   it "can isolate its model's attributes from the request params" do
@@ -17,13 +18,13 @@ describe "An instance of the basic Waves controller" do
   end
   
   it "provides shortcut methods for common model interactions" do
-    TestApp::Models::Default.should.receive(:all)
+    VerifyControllers::Models::Default.should.receive(:all)
     @dc.all
     
-    TestApp::Models::Default.should.receive(:[]).with(:name => 'This').and_return('That')
+    VerifyControllers::Models::Default.should.receive(:[]).with(:name => 'This').and_return('That')
     @dc.find('This').should == 'That'
     
-    TestApp::Models::Default.should.receive(:create).with("Does it work?").and_return('It worked!')
+    VerifyControllers::Models::Default.should.receive(:create).with("Does it work?").and_return('It worked!')
     @dc.should.receive(:attributes).and_return("Does it work?")
     @dc.create.should == 'It worked!'
     

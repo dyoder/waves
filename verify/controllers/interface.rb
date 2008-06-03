@@ -4,8 +4,9 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "A Waves controller instance" do
     
   before do
+    Waves.application.stub!(:models).and_return(VerifyControllers::Models)
     @request = mock('request')
-    @dc = TestApp::Controllers::Default.new(@request)
+    @dc = VerifyControllers::Controllers::Default.new(@request)
   end
   
   it "initializes with and can access a request" do
@@ -29,7 +30,7 @@ describe "A Waves controller instance" do
     # Waves.application handwaving done in ./helpers
     
     @dc.model_name.should == 'default'
-    @dc.model.should == TestApp::Models::Default
+    @dc.model.should == VerifyControllers::Models::Default
   end  
   
 end
@@ -38,10 +39,10 @@ describe "The process method of a Waves controller class" do
   
   it "executes a block within the scope of a controller instance" do
     @request = mock('request')
-    result = TestApp::Controllers::Default.process(@request) do
+    result = VerifyControllers::Controllers::Default.process(@request) do
       self.class.name
     end
-    result.should == "TestApp::Controllers::Default"
+    result.should == "VerifyControllers::Controllers::Default"
   end
   
 end
