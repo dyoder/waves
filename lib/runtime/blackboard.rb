@@ -1,6 +1,6 @@
 module Waves
 
-  # Encapsulates the blackboard associated with a given request. The scope of the blakcboard is
+  # Encapsulates the blackboard associated with a given request. The scope of the blackboard is
   # the same as the request object it gets attached to.
   #
   # The Waves blackboard is a very simple shared storaged usable during the request processing.
