@@ -81,7 +81,7 @@ begin
 rescue LoadError => e
   describe "DataMapper Associations" do
     it 'should be able to load dm-core' do
-      puts "Datamapper associations specs not run! Could not load dm-core: #{e}"
+      puts "\nDatamapper associations specs not run! Could not load dm-core: #{e}\n"
     end
   end
 end
