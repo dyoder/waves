@@ -11,10 +11,11 @@ gem = Gem::Specification.new do |gem|
 	gem.email = 'dan@zeraweb.com'
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
-	%w( mongrel rack markaby erubis RedCloth autocode sequel 
+	%w( mongrel rack markaby erubis RedCloth sequel
 	    extensions live_console choice daemons ).each do |dep|
 	  gem.add_dependency dep
 	end
+	gem.add_dependency('autocode', '= 0.9.2')
 	gem.files = Dir['lib/**/*.rb','app/**/*']
 	gem.has_rdoc = true
 	gem.bindir = 'bin'
