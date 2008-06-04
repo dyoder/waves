@@ -24,13 +24,13 @@ module Waves
             extend Waves::Mapping
 
             path '/{resource}', :named => :all, :method => :get,
-              :action => lambda { | resource | with( resource ).all.and.render( :list ) }
+              :action => lambda { | resource | with( resource ).all and render( :list ) }
               
             path '/{resource}/{name}', :named => :get, :method => :get,
-              :action => lambda { | resource, name | with( resource ).find( name ).and.render( :show ) }
+              :action => lambda { | resource, name | with( resource ).find( name ) and render( :show ) }
               
             path '/{resource}/{name}/editor', :named => :editor, :method => :get,
-              :action => lambda { | resource, name | with( resource ).find( name ).and.render( :editor ) }
+              :action => lambda { | resource, name | with( resource ).find( name ) and render( :editor ) }
 
           end
 
@@ -54,11 +54,11 @@ module Waves
             extend Waves::Mapping
 
             path '/{resource}', :named => :create, :method => :post do | resource |
-              with( resource ).create.and.redirect( :editor, :resource => resource, :name => instance.name )
+              with( resource ).create and redirect( :editor, :resource => resource, :name => instance.name )
             end
 
             path '/{resource}/{name}', :named => :update, :method => :put do | resource, name |
-              with(resource).update( name ).and.redirect( :show, :resource => resource, :name => name )
+              with(resource).update( name ) and redirect( :show, :resource => resource, :name => name )
             end
 
             path '/{resource}/{name}', :named => :delete, :method => :delete,

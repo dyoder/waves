@@ -17,11 +17,9 @@ module Waves
     def render( method ) ; view.send(method, @resource => @data ) ; end
     def redirect( mapping, assigns ) ; request.redirect( mapping.named[mapping].call( assigns ) ) ; end
     def method_missing( name, *args, &block)
-      @data = controller.send( name, *args, &block ) unless @or and @data
+      @data = controller.send( name, *args, &block )
       return self
     end
-    def and ; self ; end
-    def or ; @or = true ; end
     def collection ; @data ; end
     def instance ; @data ; end
     # have to define this explicitly for now because for some reason sequel defines it on Object ...
