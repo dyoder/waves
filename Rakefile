@@ -100,8 +100,16 @@ Rake::TestTask.new(:verify) do |t|
   t.verbose = true
 end
 
-# Rcov::RcovTask.new do |t|
-#  t.test_files = FileList['verify/*/*.rb'].exclude("verify/**/helpers.rb", "**/app_generation/*.rb")
-#  t.verbose = true
-# end
+namespace :verify do
+  
+  FileList["verify/*/"].each do |area|
+    task = area.chomp("/").sub("verify/", '')
+    Rake::TestTask.new(task) do |t|
+      t.test_files = FileList["#{area}**/*.rb"].exclude("**/helpers.rb")
+      t.verbose = true
+    end
+  end
+
+end
+
 
