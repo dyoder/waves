@@ -1,7 +1,7 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
 
-describe "A Waves controller instance" do
+describe "A Waves controller" do
     
   before do
     Waves.application.stub!(:models).and_return(VerifyControllers::Models)

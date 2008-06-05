@@ -1,7 +1,7 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
 
-describe "The attributes of a configuration class" do
+describe "Configuration attributes" do
   
   class Basic < Waves::Configurations::Base; end
   
@@ -18,7 +18,7 @@ describe "The attributes of a configuration class" do
   
 end
 
-describe "The default configuration class" do
+describe "Waves::Configurations::Default" do
   
   class Default < Waves::Configurations::Default; end
   

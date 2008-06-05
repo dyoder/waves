@@ -14,7 +14,7 @@ module TestApplication
 end
 
 Waves << TestApplication
-Waves::Console.load( :mode => :development )
+# Waves::Console.load( :mode => :development )
 TA = TestApplication
 
 describe "An application module which includes the Sequel ORM layer" do
@@ -26,7 +26,7 @@ describe "An application module which includes the Sequel ORM layer" do
   end
   
   it "sets the dataset to use the snake_case of the class name as the table name" do
-    TA::Models::Default.dataset.to_table_reference.should == "(SELECT * FROM defaults)"
+    TA::Models::Default.dataset.send(:to_table_reference).should =~ /SELECT.+FROM.+defaults+/
   end
   
   it "provides an accessor for database" do
@@ -34,3 +34,6 @@ describe "An application module which includes the Sequel ORM layer" do
   end
   
 end
+
+# Waves.instance_variable_set(:@application, nil)
+# raise Waves.application.inspect

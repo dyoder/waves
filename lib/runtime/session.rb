@@ -5,6 +5,11 @@ module Waves
   # more information.
   #
   class Session
+    
+    def self.generate_session_id # from Camping ...
+      chars = [*'A'..'Z'] + [*'0'..'9'] + [*'a'..'z']
+      (0..48).inject(''){|s,x| s+=chars[ rand(chars.length) ] }
+    end
 
     # Create a new session object using the given request. This is not necessarily the
     # same as constructing a new session. The session_id cookie for the request domain
@@ -13,6 +18,15 @@ module Waves
     def initialize( request )
       @request = request
       @data ||= ( File.exist?( session_path  ) ? load_session : {} )
+    end
+    
+    # Return the session data as a hash
+    def to_hash
+      @data.to_hash
+    end
+    
+    def self.base_path
+      Waves::Application.instance.config.session[:path]
     end
 
     # Save the session data. You shouldn't typically have to call this directly, since it
@@ -34,16 +48,11 @@ module Waves
     private
 
     def session_id
-      @session_id ||= ( @request.cookies['session_id'] || generate_session_id )
-    end
-
-    def generate_session_id # from Camping ...
-      chars = [*'A'..'Z'] + [*'0'..'9'] + [*'a'..'z']
-      (0..48).inject(''){|s,x| s+=chars[ rand(chars.length) ] }
+      @session_id ||= ( @request.cookies['session_id'] || Waves::Session.generate_session_id )
     end
 
     def session_path
-      Waves::Application.instance.config.session[:path] / session_id
+      Waves::Session.base_path / session_id
     end
 
     def load_session

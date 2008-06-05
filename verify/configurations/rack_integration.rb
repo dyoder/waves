@@ -1,7 +1,7 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
 
-describe "The default configuration class" do
+describe "A Waves Configuration" do
   
   class Default < Waves::Configurations::Default; end
   
@@ -17,7 +17,7 @@ describe "The default configuration class" do
     Default.mime_types['foo.png'].should == 'image/png'
   end
   
-  it "defines the application for use with Rack" do
+  it "must define the application for use with Rack" do
     app = Rack::Builder.new() {}
     Rack::Builder.should.receive(:new).with().and_return(app)
     Default.application do

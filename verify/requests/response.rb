@@ -4,6 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "An instance of Waves::Response" do
   
   before do
+    Waves::Session.stub!(:base_path).and_return(BasePath)
     @request = Waves::Request.new(env_for)
     @response = Waves::Response.new(@request)
   end
@@ -44,6 +45,7 @@ end
 describe "Waves::Response#finish" do
   
   before do
+    Waves::Session.stub!(:base_path).and_return(BasePath)
     @request = Waves::Request.new(env_for)
     @response = Waves::Response.new(@request)
   end

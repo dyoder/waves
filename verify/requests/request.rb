@@ -4,6 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "A Waves request instance" do
   
   before do
+    Waves::Session.stub!(:base_path).and_return(BasePath)
     @request = Waves::Request.new(env_for)
   end
   
@@ -36,6 +37,10 @@ describe "A Waves request instance" do
 end
 
 describe "The HTTP request method" do
+  
+  before do
+    Waves::Session.stub!(:base_path).and_return(BasePath)
+  end
   
   it "is determined in a straightforward manner for straightforward requests" do
     @get = Waves::Request.new(env_for("/", :method => 'GET'))

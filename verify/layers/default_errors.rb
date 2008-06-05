@@ -15,7 +15,7 @@ module DefaultErrorsApp
   stub!(:views).and_return(Views)
 end
 
-Waves << DefaultErrorsApp
+# Waves << DefaultErrorsApp
 Waves::Console.load( :mode => :development )
 
 

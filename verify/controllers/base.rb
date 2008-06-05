@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 # Nota bene, y'all:  These model helper methods are very ORM specific, and should probably 
 # get moved into the ORM layers.
 
-describe "An instance of the basic Waves controller" do
+describe "The base Waves controller" do
   
   before do
     Waves.application.stub!(:models).and_return(VerifyControllers::Models)
