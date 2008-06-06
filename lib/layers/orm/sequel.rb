@@ -1,3 +1,4 @@
+gem 'sequel', '>= 2.0.0'
 require 'sequel'
 require File.dirname(__FILE__) / :sequel / :tasks / :schema if defined?(Rake)
 
@@ -35,8 +36,8 @@ module Waves
               
               def update( name )
                 instance = find( name )
-                instance.set( attributes )
-                instance.save_changes
+                instance.update_with_params( attributes )
+                instance
               end
             end
             
