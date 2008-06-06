@@ -27,9 +27,21 @@ module Waves
               end
             end
             
+            Waves::Controllers::Base.module_eval do
+              def all; model.all; end
+              def find( name ); model[ :name => name ] or not_found; end
+              def create; model.create( attributes ); end
+              def delete( name ); find( name ).destroy; end
+              
+              def update( name )
+                instance = find( name )
+                instance.set( attributes )
+                instance.save_changes
+              end
+            end
+            
           end
         end
-
       end
     end
   end
