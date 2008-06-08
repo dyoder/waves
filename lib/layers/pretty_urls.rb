@@ -1,3 +1,5 @@
+# TODO: Re-implement as a true layer ...
+
 module Waves
   module Mapping
 

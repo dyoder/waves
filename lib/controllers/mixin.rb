@@ -128,7 +128,9 @@ module Waves
       # to find an instance of a given model. Again, the plurality of the controller and
       # model must be the same for this to work.
       def model; Waves.application.models[ model_name.intern ]; end
-
+      
+      def attributes; params[model_name.singular.intern]; end
+      
       private
 
       def destructure( hash )
@@ -161,5 +163,8 @@ module Waves
     end
 
   end
+
+  # :)
+  const_set( :Base, Class.new ).module_eval { include Mixin }  
 
 end

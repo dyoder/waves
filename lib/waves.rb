@@ -33,6 +33,7 @@ require 'utilities/inflect/english'
 require 'utilities/proc'
 require 'utilities/hash'
 require 'utilities/attributes'
+require 'utilities/functor'
 # waves Runtime
 require 'dispatchers/base'
 require 'dispatchers/default'
