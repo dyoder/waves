@@ -8,16 +8,17 @@ end
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
   gem.summary = "Open-source framework for building Ruby-based Web applications."
-  gem.version = '0.7.3'
+  gem.version = '0.7.5'
   gem.homepage = 'http://dev.zeraweb.com/waves'
   gem.author = 'Dan Yoder'
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis RedCloth autocode sequel sqlite3-ruby
-      extensions live_console choice daemons bacon flexmock rakegen).each do |dep|
+  %w( mongrel rack markaby erubis RedCloth autocode sqlite3-ruby
+      extensions live_console choice daemons rakegen).each do |dep|
     gem.add_dependency dep
   end
+  gem.add_dependency('sequel', '>= 2.0.0')
   gem.files = Dir['lib/**/*.rb','app/**/*']
   gem.has_rdoc = true
   gem.bindir = 'bin'
