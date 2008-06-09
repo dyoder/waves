@@ -6,12 +6,13 @@ module Waves
       
       attr_accessor :target, :pattern
       def initialize( options )
-        @target = options[ :target ]
+        @keys = [] ; @target = options[ :target ]
         @pattern = compile( option[ :pattern ] )
       end
       
       def match( request )
-       ( m = pattern.match( request.send( target ) ) ) and m[1..-1]
+       return false unless m = pattern.match( request.send( target ) )
+       params = [] ; @keys.zip( m ) { | key, val | r[ key ] = val } ; params
       end
       
       private
@@ -19,8 +20,7 @@ module Waves
       functor( :compile, Regexp ) { |pattern| pattern }
 
       functor( :compile, String ) do | pattern |
-        pattern = Regexp.escape( pattern ).
-          gsub!( /<([\w\_\-\\]+)>/ ) { |match| "(#{ match })" }
+        pattern = Regexp.escape( pattern ).gsub!( /<([\w\_\-\\]+)>/ ) { |match| @keys << match ; "(#{ match })" }
         "^#{pattern}/?$"
       end
       

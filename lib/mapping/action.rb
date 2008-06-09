@@ -11,16 +11,20 @@ module Waves
         pattern = Pattern.new( options )
         matcher = Constraints.new( options )
         descriptors = Descriptors.new( options )
-        resource = options[:resource] or Class.new( Waves::Resources::Base )
+        resource = Waves.application[:resources][ options[:resource] ]
         resource.instance_eval{ define_method n, &block } if block_given?
       end
       
+      # how / when can i take the results of the pattern match 
+      # and merge them with the request params ... can't do it here
+      # because a number of actions may be run, but I can't store
+      # it as state because actions are shared between requests
       def call?( request )
-        constraints.satisfy?( request ) and @matches = pattern.match( request )
+        constraints.satisfy?( request ) and pattern.match( request )
       end
       
-      def call( request, *args )
-        resource.send( name, *@matches )
+      def call( request )
+        resource.new( request ).send( name )
       end
       
       def method_missing( name, *args )
@@ -28,6 +32,17 @@ module Waves
       end
       
     end
+    
+    class Binding
+      
+      def initialize( action, params )
+        @action = action ; @params = params
+      end
+      
+      def call( request )
+        request.params.merge!( @params )
+        @action.call( request )
+      end
 
   end
 

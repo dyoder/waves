@@ -33,38 +33,29 @@ module Waves
         Waves::Application.instance.reload if Waves::Application.instance.debug?
         response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
 
-        mapping = Waves::Application.instance.mapping[ request ]
+        mapping = Waves.mapping[ request ]
 
         begin
 
-          request.not_found unless mapping[:action]
-
-          mapping[:before].each do | block, args |
-            ResponseProxy.new(request).instance_exec(*args,&block)
-          end
-
-          block, args = mapping[:action]
-          response.write( ResponseProxy.new(request).instance_exec(*args, &block) )
+          request.not_found unless mapping[ :action ]
+          mapping[ :before ].each { | action | action.call( request ) }
           
-          mapping[:after].each do | block, args |
-            ResponseProxy.new(request).instance_exec(*args,&block)
-          end
-
-        rescue Exception => e
-          
-          handler = mapping[:handlers].detect do | exception, block, args |
-            e.is_a? exception
-          end
-          if handler
-            ResponseProxy.new(request).instance_exec(*handler[2], &handler[1])
-          else
+          begin
+            response.write( mapping[ :action ].first.call( request ) )
+          rescue Exception => e
+            mapping[ :after ].each { | action | action.call( request ) }
             raise e
           end
           
+        rescue Exception => e
+
+          raise e unless Waves.mapping.handle( e )
+
         ensure
-          mapping[:always].each do | block, args |
+
+          mapping[:always].each do | action |
             begin
-              ResponseProxy.new(request).instance_exec(*args,&block) 
+              action.call( request ) 
             rescue Exception => e
               Waves::Logger.info e.to_s
             end

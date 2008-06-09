@@ -105,10 +105,10 @@ module Waves
 
     end
 
+    # :)
+    const_set( :Base, Class.new ).module_eval { include Mixin }  
+
   end
-  
-  # :)
-  const_set( :Base, Class.new ).module_eval { include Mixin }  
   
 
 end

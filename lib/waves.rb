@@ -46,20 +46,17 @@ require 'runtime/server'
 require 'runtime/request'
 require 'runtime/response'
 require 'runtime/response_mixin'
-require 'runtime/response_proxy'
 require 'runtime/session'
 require 'runtime/blackboard'
 require 'runtime/configuration'
 
 # waves URI mapping
 require 'mapping/mapping'
-require 'mapping/pretty_urls'
+require 'resources/mixin'
 
 # waves mvc support
 require 'controllers/mixin'
-require 'controllers/base'
 require 'views/mixin'
-require 'views/base'
 require 'helpers/tag_helper'
 require 'helpers/url_helper'
 require 'helpers/common'
