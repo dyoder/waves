@@ -5,17 +5,17 @@ require 'rake/gempackagetask'
 gem = Gem::Specification.new do |gem|
 	gem.name = "waves"
 	gem.summary	= "Open-source framework for building Ruby-based Web applications."
-	gem.version = '0.7.2'
+	gem.version = '0.7.3'
 	gem.homepage = 'http://dev.zeraweb.com/waves'
 	gem.author = 'Dan Yoder'
 	gem.email = 'dan@zeraweb.com'
 	gem.platform = Gem::Platform::RUBY
 	gem.required_ruby_version = '>= 1.8.6'
-	%w( mongrel rack markaby erubis RedCloth
+	%w( mongrel rack markaby erubis RedCloth sequel
 	    extensions live_console choice daemons ).each do |dep|
 	  gem.add_dependency dep
 	end
-	gem.add_dependency('sequel', '< 2.0.0')
+	gem.add_dependency('sequel', '>= 2.0.0')
 	gem.add_dependency('autocode', '= 0.9.2')
 	gem.files = Dir['lib/**/*.rb','app/**/*']
 	gem.has_rdoc = true

@@ -2,15 +2,18 @@ Wave is an open source framework for building Ruby Web-applications.
 
 Waves is ... Full-featured and thread-safe. Compact and extensible. Configuration and convention. RESTful but also Magical (very important).
 
-Waves is powered by ... Rack and Mongrel (HTTP server), Sequel or Filebase (storage), Autocode (code reloading), LiveConsole (hot patching).
+Waves is powered by ... Rack and Mongrel (HTTP server), Sequel or Filebase (storage), AutoCode (code reloading), LiveConsole (hot patching).
 
 Main Web Site
 http://rubywaves.com/
 
-SVN / Issues / Wiki
-http://code.google.com/p/waves
+Source / Wiki
+http://github.com/dyoder/waves/tree/master
 
-Forums
+Issues
+http://waves.lighthouseapp.com
+
+Mailing List
 http://groups.google.com/group/rubywaves/
 
 RubyForge / Gem

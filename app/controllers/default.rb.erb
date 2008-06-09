@@ -16,8 +16,8 @@ module <%= name %>
 		
 			def update( name )
 			  instance = find( name )
-			  instance.set( attributes )
-			  instance.save_changes
+			  instance.update_with_params( attributes )
+			  instance
 			end
 		
 			def delete( name ); find( name ).destroy; end
