@@ -43,6 +43,7 @@ module Waves
         request.params.merge!( @params )
         @action.call( request )
       end
+    end
 
   end
 

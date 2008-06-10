@@ -4,10 +4,12 @@ module Waves
     
     class Pattern
       
+      include Functor::Method
+      
       attr_accessor :target, :pattern
       def initialize( options )
         @keys = [] ; @target = options[ :target ]
-        @pattern = compile( option[ :pattern ] )
+        @pattern = compile( options[ :pattern ] )
       end
       
       def match( request )

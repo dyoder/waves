@@ -32,9 +32,7 @@ module Waves
           
           auto_create_module( :Resources ) do
             include AutoCode
-            auto_create_class true, Waves::Resources::Base
-            # this should probably be refactored into a separate layer
-            auto_eval do
+            auto_create_class true, Waves::Resources::Base do
               def resource ; self.class.name ; end
               def resources ; resource.plural ; end
               def controller ; @controller ||= controllers[ resource ].process( @request ) { self } ; end

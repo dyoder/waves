@@ -44,6 +44,8 @@ module Waves
     
     private
     
+    def mappings; @mappings ||= {}; end
+    
     include Functor::Method
     
     functor( :normalize, Symbol, Hash ) { | name, options | options.merge!( :name => name ) }
