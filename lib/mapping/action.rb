@@ -12,7 +12,7 @@ module Waves
         matcher = Constraints.new( options )
         descriptors = Descriptors.new( options )
         resource = Waves.application[:resources][ options[:resource] ]
-        resource.instance_eval{ define_method n, &block } if block_given?
+        resource.instance_eval{ define_method name, &block } if block_given?
       end
       
       # how / when can i take the results of the pattern match 
