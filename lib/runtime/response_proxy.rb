@@ -1,5 +1,7 @@
 module Waves
 
+  # ResponseProxy is the heart of the Waves mapping feature, as it provides the context
+  # in which mapping actions are evaluated.
   class ResponseProxy
 
     attr_reader :request

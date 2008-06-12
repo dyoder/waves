@@ -4,7 +4,7 @@ require File.dirname(__FILE__) / :sequel / :tasks / :schema if defined?(Rake)
 
 module Waves
   module Layers
-    module ORM
+    module ORM # :nodoc:
       
       module Sequel
 
@@ -29,12 +29,23 @@ module Waves
             end
             
             Waves::Controllers::Base.module_eval do
-              def all; model.all; end
-              def find( name ); model[ :name => name ] or not_found; end
-              def create; model.create( attributes ); end
-              def delete( name ); find( name ).destroy; end
+              def all #:nodoc:
+                model.all
+              end
               
-              def update( name )
+              def find( name ) #:nodoc:
+                model[ :name => name ] or not_found
+              end
+              
+              def create #:nodoc:
+                model.create( attributes )
+              end
+              
+              def delete( name ) #:nodoc:
+                find( name ).destroy
+              end
+              
+              def update( name ) #:nodoc:
                 instance = find( name )
                 instance.update_with_params( attributes )
                 instance

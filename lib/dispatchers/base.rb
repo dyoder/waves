@@ -1,6 +1,6 @@
 module Waves
 
-  module Dispatchers
+  module Dispatchers # :nodoc:
 
     class NotFoundError < Exception ; end
 

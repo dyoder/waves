@@ -1,5 +1,5 @@
 module Waves
-  # You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster.start</tt> task use the +mode+ environment parameter to determine which configuration to use. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
+  # You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster:start</tt> task use the +mode+ environment variable to determine the active configuration. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
   #
   # *Example*
   #

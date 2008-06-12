@@ -8,7 +8,7 @@ module Waves
 
     # Register a module as a Waves application.
     # Also, initialize the database connection if necessary.
-    def << ( app )
+    def << ( app ) 
       @application = app if Module === app
       # app.database if app.respond_to? 'database'
     end
@@ -30,7 +30,7 @@ module Waves
 
     class << self; attr_accessor :instance; end
 
-    # Accessor for options passed to the application. Valid options include
+    # Accessor for options passed to the application.
     attr_reader :options
 
     # Create a new Waves application instance.

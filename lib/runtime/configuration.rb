@@ -137,6 +137,11 @@ module Waves
 
     # The Default configuration provides a good starting point for your applications,
     # defining a number of attributes that are required by Waves.
+    #   debug true
+    #   synchronize? true
+    #   session :duration => 30.minutes, :path => '/tmp/sessions'
+    #   log :level => :info, :output => $stderr
+    #   reloadable []
     class Default < Base
 
       %w( host port ports log reloadable database session debug root synchronize? ).

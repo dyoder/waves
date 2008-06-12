@@ -1,4 +1,8 @@
 module Waves
+  
+  # Helper methods can be defined for any view template by simply defining them within the default Helper module in <tt>helpers/default.rb</tt> of the generated application. Helpers specific to a particular View class can be explicitly defined by creating a helper module that corresponds to the View class. For examples, for the +User+ View class, you would define a helper module in <tt>user.rb</tt> named +User+.
+  #
+  # The default helper class initially includes a wide-variety of helpers, including helpers for layouts, Textile formatting, rendering forms, and nested views, as well as helpers for accessing the request and response objects. More helpers will be added in future releases, but in many cases, there is no need to include all of them in your application.
   module Helpers
 
     # Common helpers are helpers that are needed for just about any Web page. For example,
