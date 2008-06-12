@@ -62,7 +62,8 @@ task( :rdoc_publish => :rdoc ) do
 end
 
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_dir = 'doc/rdoc'; rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_dir = 'doc/rdoc'
+  rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/README', 'doc/HISTORY' ]
 end
 
