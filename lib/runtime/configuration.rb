@@ -1,12 +1,11 @@
 module Waves
 
-  # Waves configurations are simply Ruby code, meaning you can use an Ruby expression as
-  # a value for a configuration parameter, extend and inherit your configurations, and
-  # add your own configuration attributes. You can even use it as a configuration repository
-  # for your applications.
+  # Waves configurations are Ruby code.  This means you can use a Ruby expression as
+  # the value of a configuration parameter, extend and inherit your configurations, and
+  # add your own attributes. You can even use it as a repository
+  # for your application configuration.
   #
-  # The form for configuration parameters to use the parameter name as a method name. Passing
-  # in a parameter sets the value.
+  # You can access configuration parameters using the parameter name as a method, with the value as the argument.
   #
   # == Example
   #
@@ -27,23 +26,23 @@ module Waves
   #
   # There are three forms for accessing parameters:
   #
-  #   Waves.config.port                        # generic form - gets current config
-  #   Blog.configurations[:development]        # gets a value for a specific config
-  #   Blog::Configurations::Development.port   # Access config constant directly
+  #   Waves.config.port                        # generic form - gets the value for current config
+  #   Blog.configurations[:development].port   # gets the value for a specified config
+  #   Blog::Configurations::Development.port   # Access a specific config constant directly
   #
-  # You can inherit configurations, as is shown in the example above. Typically, you
-  # can use the application's "default" configuration to set shared configurations,
-  # and then inherit from it for specific variations.
+  # Configuration data is inheritable, as shown in the example above. Typically, you
+  # would set data common to all configuration in the Default class, from which
+  # your variations would inherit.
   #
   # To define your own attributes, and still make them inheritable, you should use
-  # the +attribute+ class method, like this:
+  # the +attribute+ class method:
   #
   #   class Default < Waves::Configurations::Default
-  #     attribute 'theme' # define a theme attribute
-  #     theme 'ultra'     # give it a default
+  #     attribute 'theme' # define an attribute named "theme"
+  #     theme 'ultra'     # set an inheritable default
   #   end
   #
-  # There are a number of reserved or built-in attributes. These are:
+  # Certain attributes are reserved for internal use by Waves:
   #
   # - application: configure the application for use with Rack
   # - database: takes a hash of parameters used to initalize the database; see below
