@@ -2,8 +2,14 @@ module Waves
 
   module Dispatchers
 
+    # A NotFoundError means what you think it means.  The dispatchers included with Waves do not
+    # natively intercept this exception.  Instead an exception handler must be registered in the application
+    # mappings.  The Simple foundation registers a minimal handler, while the Default foundation registers
+    # a slightly fleshier one.
     class NotFoundError < Exception ; end
 
+    # Redirect exceptions are rescued by the Waves dispatcher and used to set the 
+    # response status and location.
     class Redirect < Exception
       attr_reader :path, :status
       def initialize( path, status = '302' )
@@ -31,8 +37,8 @@ module Waves
       end
 
       # Called by event driven servers like thin and ebb. Returns true if
-      # the server should run the request in a separate thread.  This is usually
-      # set using Configurations::Mapping#threaded
+      # the server should run the request in a separate thread, as determined by
+      # Configurations::Mapping#threaded?
       def deferred?( env )
         Waves::Application.instance.mapping.threaded?( env )
       end
