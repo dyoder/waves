@@ -6,8 +6,22 @@ module Waves
   module Layers
     module ORM # :nodoc:
       
+      # Sets up the Sequel connection and configures AutoCode on Models, so that constants in that
+      # namespace get loaded from file or created as subclasses of Models::Default
       module Sequel
 
+        # On inclusion, this module:
+        # - creates on the application module a database method that establishes the Sequel connection
+        # - arranges for autoloading/autocreation of missing constants in the Models namespace
+        # - defines Sequel-specific helper methods on Waves::Controllers::Base
+        # 
+        # The controller helper methdods are:
+        # - all
+        # - find(name)
+        # - create
+        # - delete(name)
+        # - update(name)
+        #
         def self.included(app)
           
           def app.database ; @sequel ||= ::Sequel.open( config.database ) ; end
