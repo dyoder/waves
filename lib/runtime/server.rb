@@ -1,5 +1,5 @@
 module Waves
-  # You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster:start</tt> task use the +mode+ environment variable to determine the active configuration. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
+  # You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster:start</tt> task uses the +mode+ environment variable to determine the active configuration. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
   #
   # *Example*
   #
@@ -16,6 +16,8 @@ module Waves
   #   waves-server -c development -p 2020 -d
   #   waves-server -c development -p 2021 -d
   #   waves-server -c development -p 2022 -d
+  #
+  # The +cluster:stop+ task stops all of the instances.
   #
   class Server < Application
 
@@ -78,7 +80,7 @@ module Waves
         @server.send(*args)
       end
       
-      # Probably wouldn't need this if I added a block parameter to method_missing.
+      #-- Probably wouldn't need this if I added a block parameter to method_missing.
       def synchronize(&block) ; @server.synchronize(&block) ; end
     end
 
