@@ -1,3 +1,13 @@
+0.7.5
+- Foundations and Layers
+- Sequel ORM is now a Layer, instead of being baked in
+- Almost all boilerplate code removed from generated app, by virtue of the Layers refactoring
+- Configuration attribute for selecting a Rack handler
+- Mapping#handle method to register blocks that handle exceptions (e.g. NotFoundError)
+- Blackboard, a very simple shared storaged usable during request processing.
+- Fixed waves script to work when installed as gem (regression)
+- Revised and extended documentation
+- Expanded spec coverage
 0.7.3:
 - Added explicit require for daemons gem
 - Added support for running off source
