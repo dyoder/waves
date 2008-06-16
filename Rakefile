@@ -9,12 +9,12 @@ gem = Gem::Specification.new do |gem|
   gem.name = "waves"
   gem.summary = "Open-source framework for building Ruby-based Web applications."
   gem.version = '0.7.5'
-  gem.homepage = 'http://dev.zeraweb.com/waves'
+  gem.homepage = 'http://rubywaves.com'
   gem.author = 'Dan Yoder'
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis RedCloth autocode sqlite3-ruby
+  %w( mongrel rack markaby erubis RedCloth autocode
       extensions live_console choice daemons rakegen).each do |dep|
     gem.add_dependency dep
   end
@@ -38,7 +38,7 @@ desc "Install Waves a local gem"
 task( :install_gem ) do
     require 'rubygems/installer'
     Dir['*.gem'].each do |gem|
-  Gem::Installer.new(gem).install
+      Gem::Installer.new(gem).install
     end
 end
 
@@ -67,6 +67,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/README', 'doc/HISTORY' ]
 end
 
+# based on a blog post by Assaf Arkin
 desc "Set up dependencies so you can work from source"
 task( :setup ) do
   gems = Gem::SourceIndex.from_installed_gems
@@ -102,6 +103,7 @@ Rake::TestTask.new(:verify) do |t|
   t.verbose = true
 end
 
+# subset tasks, e.g. verify:mapping
 namespace :verify do
   
   FileList["verify/*/"].each do |area|
