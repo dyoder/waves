@@ -1,15 +1,7 @@
 module DefaultApplication
-
   module Views
-
-    class Default < Base
-
-      def upside_down
-        
-      end
-
+    class Default < Waves::Views::Base
+      def from_default; end
     end
-
   end
-
 end

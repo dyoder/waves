@@ -15,31 +15,38 @@ module Waves
         
 
         app.instance_eval do
-          # include AutoCode
 
-          auto_create_module( :Models ) do
-            include AutoCode
-            auto_create_class
+          auto_create_module( :Models ) { include AutoCode }
+          
+          auto_eval( :Models ) do
+            auto_create_class :Default
+            auto_load :Default, :directories => [:models]
+            auto_create_class true, app::Models::Default
             auto_load true, :directories => [ :models ]
           end
 
-          auto_create_module( :Views ) do
-            include AutoCode
-            auto_create_class true, Waves::Views::Base
+          auto_create_module( :Views ) { include AutoCode }
+          
+          auto_eval( :Views ) do
+            auto_create_class :Default, Waves::Views::Base
+            auto_load :Default, :directories => [:views]
+            auto_create_class true, app::Views::Default
             auto_load true, :directories => [ :views ]
           end
 
-          auto_create_module( :Controllers ) do
-            include AutoCode
-            auto_create_class true, Waves::Controllers::Base
-            auto_load true, :directories => [ :controllers ]
+          auto_create_module( :Controllers ) { include AutoCode }
+          
+          auto_eval( :Controllers ) do
+            auto_create_class :Default, Waves::Controllers::Base
+            auto_load :Default, :directories => [:controllers]
+            auto_create_class true, app::Controllers::Default
+            auto_load true, :directories => [ :controllers ]          
           end
 
           auto_create_module( :Helpers ) do
             include AutoCode
-            auto_create_module
+            auto_create_module { include Waves::Helpers::Default }
             auto_load true, :directories => [ :helpers ]
-            auto_eval( true ){ include Waves::Helpers::Default }
           end          
 
         end

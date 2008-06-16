@@ -2,9 +2,9 @@ module DefaultApplication
 
   module Views
 
-    class Different < Base
+    class Loaded < Default
 
-      def upside_down
+      def from_loaded
         
       end
 
