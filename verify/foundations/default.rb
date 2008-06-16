@@ -22,17 +22,17 @@ DA = DefaultApplication
       DA::Helpers::Testing
     end
 
-    it "should auto_load Helpers, Models, Views, and Controllers when their files exist" do
-      Waves::Application.instance.mapping.send(:mapping).should.not.be.empty
-      DA::Helpers::Default.instance_methods.should.include "layout"
-
-      DA::Models::Default.should.respond_to :crayola
-      DA::Controllers::Default.instance_methods.should.include "attributes"
-      DA::Controllers::Default.instance_methods.should.include "destroy_all"
-      
-      DA::Views::Default.instance_methods.should.include "renderer"
-      DA::Views::Default.instance_methods.should.include "from_default"
-    end
+    # it "**leftover tests of Default to be reapportioned**" do
+    #   Waves::Application.instance.mapping.send(:mapping).should.not.be.empty
+    #   DA::Helpers::Default.instance_methods.should.include "layout"
+    # 
+    #   DA::Models::Default.should.respond_to :crayola
+    #   DA::Controllers::Default.instance_methods.should.include "attributes"
+    #   DA::Controllers::Default.instance_methods.should.include "destroy_all"
+    #   
+    #   DA::Views::Default.instance_methods.should.include "renderer"
+    #   DA::Views::Default.instance_methods.should.include "from_default"
+    # end
     
     it "auto_creates Models when their files do not exist" do
       DA::Models::Created.superclass.should == DA::Models::Default
