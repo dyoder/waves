@@ -1,6 +1,9 @@
 # External Dependencies
 require 'rubygems'
 
+# Some scripts need to be able to locate items relative to waves source.
+WAVES = "#{File.dirname(__FILE__)}/.." unless defined?(WAVES)
+
 require 'rack'
 require 'daemons'
 require 'live_console'
