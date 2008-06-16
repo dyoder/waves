@@ -63,8 +63,8 @@ end
 
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'doc/rdoc'
-  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'doc/README'
-  rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/README', 'doc/HISTORY' ]
+  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README.rdoc'
+  rdoc.rdoc_files.add [ 'lib/**/*.rb', 'README.rdoc', 'doc/HISTORY' ]
 end
 
 # based on a blog post by Assaf Arkin
