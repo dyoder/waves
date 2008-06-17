@@ -39,7 +39,7 @@ Waves is powered by ... Rack and Mongrel (HTTP server), Sequel or Filebase (stor
   waves ~/dev/web/killer_app
   
   # working from source
-  ./bin/waves ~/dev/killer_app
+  ./bin/waves ~/dev/web/killer_app
 
 This generates a default application in the target directory.  The application module's name is the constant-cased version of the target directory basename, in this case KillerApp.  
 
@@ -64,9 +64,9 @@ And you can run migrations with:
 
 === Mappings
 
-The Waves equivalent to routes are mappings.  A mapping consists of a request-matching construct and an arbitrary block.  When a request matches a mapping, Waves runs that block.  In the simplest case, you do all the response work in the block, a la {Sinatra}[http://sinatrarb.com/Home].  The standard Waves application also offers an MVC infrastructure, spelled with a silent R for Resource.
+Mappings are the Waves equivalent to routes.  An individual mapping consists of a request-matching construct and an arbitrary block.  When a request matches a mapping, Waves runs that block.  In the simplest case, you do all the response work in the block, a la {Sinatra}[http://sinatrarb.com/Home].  The standard Waves application also offers an MVC infrastructure, with a silent R for Resource.
 
-The application keeps its mappings in <tt>configurations/mapping.rb</tt>.  It mixes in some RESTy mappings as a helpful starter:
+An application's mappings live in <tt>configurations/mapping.rb</tt>.  The generated default mixes in some RESTy mappings as a helpful starter:
 
 * Waves::Mapping::PrettyUrls::RestRules
 * Waves::Mapping::PrettyUrls::GetRules
@@ -84,7 +84,7 @@ Here's an example of a mapping adapted from GetRules:
     end
   end
 
-For convenience, we defined regexes to match the model and name components of a path.  The +path+ method registers a block for use with requests where the path matches the supplied regex and where the HTTP method is GET.  The parameters passed to the block are the MatchData captures, i.e. the strings caught by +model_regex+ and +name_regex+.
+For convenience, we defined regexes to match the model and name components of a path.  The +path+ method registers a block for use with requests where the path matches the supplied regex and where the HTTP method is GET.  The parameters passed to the block are the MatchData captures, i.e. the strings caught by +model_regex+ and +name_regex+. Note that you can supply strings instead of regexes to match exact text.  There is also a +url+ method for matching against the entire URL.
 
 So a GET to "/user/vyvyan", for example, will pass "user" and "vyvyan" to the block as the model and name parameters, respectively.
 
@@ -92,18 +92,22 @@ The +resource+ method uses its argument to determine which controller and view w
 
 The "|" character, as seen between the controller and view invocations, is a method that causes the result of the controller block to be passed into the view block.  Thus, in the controller block, an instance of Controllers::User calls its +find+ method with "vyvyan" as the argument.  The resulting object is passed to an instance of Views::User, which calls <tt>show( "user" => <some user object>)</tt>.  
 
-Any undefined method in a View attempts to render a template named after the method, with its argument turned into instance variables.  In the present example, the view will try to render <tt>templates/user/show.mab</tt> (or show.erb), providing it with @user = <the user object>.  You can, of course, define methods in the View to override this.
+When undefined methods are called on a View, it attempts to render a template named after the method, with the method argument passed into the renderer as instance variables.  In the present example, the view will try to render <tt>templates/user/show.mab</tt> (or show.erb), providing it with @user = <the user object>.  You can, of course, define methods in the View to override this.
+
+You can also register +before+, +after+, +wrap+, and +always+ mappings, with the same flexibility in matching requests.  The +handle+ method registers exception handling blocks, matching the exception class as well as the usual request attributes.
 
 For more complete documentation, see Waves::Mapping.
 
 == Running an application
 
-  cd my_app
+  cd killer_app
+  
+  # defaults to running on 127.0.0.1:3000, using the development config, not daemonized.
   waves-server -h 0.0.0.0 -p 3001 -c production --daemon
   
 There are also rake tasks for running a cluster:
 
-  rake cluster:start mode=production # reads the Production config for ports.
+  rake cluster:start mode=production # will read the Production config to determine which ports.
 
 You can work in an irb-based console:
 
