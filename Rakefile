@@ -19,7 +19,7 @@ gem = Gem::Specification.new do |gem|
     gem.add_dependency dep
   end
   gem.add_dependency('sequel', '>= 2.0.0')
-  gem.files = Dir['lib/**/*.rb','lib/**/*.erb','app/**/*']
+  gem.files = Dir['lib/**/*.rb','lib/**/*.erb','app/**/*', 'app/**/.gitignore']
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
