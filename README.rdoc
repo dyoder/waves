@@ -84,7 +84,7 @@ Here's an example of a mapping adapted from GetRules:
     end
   end
 
-For convenience, we defined regexes to match the model and name components of a path.  The +path+ method registers a block for use with requests where the path matches the supplied regex and where the HTTP method is GET.  The parameters passed to the block are the MatchData captures, i.e. the strings caught by +model_regex+ and +name_regex+.
+For convenience, we defined regexes to match the model and name components of a path.  The +path+ method registers a block for use with requests where the path matches the supplied regex and where the HTTP method is GET.  The parameters passed to the block are the MatchData captures, i.e. the strings caught by +model_regex+ and +name_regex+. Note that you can supply strings instead of regexes to match exact text.  There is also a +url+ method for matching against the entire URL.
 
 So a GET to "/user/vyvyan", for example, will pass "user" and "vyvyan" to the block as the model and name parameters, respectively.
 
