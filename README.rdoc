@@ -64,7 +64,6 @@ And you can run migrations with:
   # or with a version number
   rake schema:migrate version=1
 
-
 === Mappings
 
 Mappings are the Waves equivalent to routes.  An individual mapping consists of a request-matching construct and an arbitrary block.  When a request matches a mapping, Waves runs that block.  In the simplest case, you do all the response work in the block, a la {Sinatra}[http://sinatrarb.com/Home].  The standard Waves application also offers an MVC infrastructure, with a silent R for Resource.
@@ -155,5 +154,18 @@ The result is that you only need to define models, views, etc. <i>when the defau
     templates/         # Views expect templates to live here.
     views/             # (auto_load || auto_create)
 
+=== Web Server
+
+You can run on any {Rack-supported Web server}[], including Thin and Mongrel. Just edit your configuration file, like you did for your database settings(<tt>configurations/development.rb) and change the <tt>handler</tt> parameter. The default is Mongrel. For example, to switch to Thin:
+
+  handler ::Rack::Handler::Thin, :Host => host, :Port => port
+
+In addition, you can also configure your Rack application the same way. Just edit the <tt>application</tt> parameter:
+
+  application do
+    use ::Rack::ShowExceptions
+    use Rack::CommonLogger
+    run ::Waves::Dispatchers::Default.new
+  end
 
 
