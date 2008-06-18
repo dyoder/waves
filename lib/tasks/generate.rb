@@ -1,32 +1,80 @@
 namespace :generate do
-  
-  desc 'Generate a new model'
-  task :model do |task|
-    name = ENV['name']
-    # template = File.read :models / 'default.rb'
-    # File.write( :models / ENV['name'] + '.rb',
-    #   template.gsub('class Default < Sequel::Model',
-    #   "class #{ENV['name'].camel_case} < Sequel::Model(:#{ENV['name'].plural})") )
-  end
-  
-  desc 'Generate a new controller'
-  task :controller do |task|
-    # template = File.read :controllers / 'default.rb'
-    # File.write( :controllers / ENV['name'] + '.rb',
-    #   template.gsub('class Default',"class #{ENV['name'].camel_case}") )
-  end
-  
-  task :view do |task|
-    
-  end
 
-  task :helper do |task|
+  desc 'Generate a new controller, with name=<name>'
+  task :controller do |task|
+    name = ENV['name']
+    controller_name = name.camel_case
+    raise "Cannot generate Default yet" if controller_name == 'Default'
     
+    filename = File.expand_path "controllers/#{name}.rb"
+    if File.exist?(filename)
+      $stderr.puts "#{filename} already exists" 
+      exit
+    end
+
+    controller = <<TEXT
+module #{Waves.application.name}
+  module Controllers
+    class #{controller_name} < Default
+
+    end
+  end
+end
+TEXT
+
+    File.write( filename, controller )
   end
   
-  desc 'generates a model, controller, view, helper, and template dir'
-  task :resource do |task|
+  desc 'Generate new view, with name=<name>'
+  task :view do |task|
+    name = ENV['name']
+    view_name = name.camel_case
+    raise "Cannot generate Default yet" if view_name == 'Default'
     
+    filename = File.expand_path "views/#{name}.rb"
+    if File.exist?(filename)
+      $stderr.puts "#{filename} already exists" 
+      exit
+    end
+
+    view = <<TEXT
+module #{Waves.application.name}
+  module Views
+    class #{view_name} < Default
+
+    end
   end
+end
+TEXT
+
+    File.write( filename, view )
+  end
+ 
+  desc 'Generate a new helper, with name=<name>'
+  task :helper do |task|
+    name = ENV['name']
+    helper_name = name.camel_case
+    raise "Cannot generate Default yet" if helper_name == 'Default'
+    
+    filename = File.expand_path "helpers/#{name}.rb"
+    if File.exist?(filename)
+      $stderr.puts "#{filename} already exists" 
+      exit
+    end
+    
+    helper = <<TEXT
+module #{Waves.application.name}
+  module Helpers
+    module #{helper_name}
+      include Waves::Helpers::Default
+      
+    end
+  end
+end
+TEXT
+
+    File.write( filename, helper )
+  end
+  
   
 end
