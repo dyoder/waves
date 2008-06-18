@@ -47,7 +47,10 @@ This generates a default application in the target directory.  The application m
 
 Configure your database connection using the +database+ attribute in <tt>configurations/development.rb</tt>.  The default ORM is currently Sequel, but there are other ORM layers in the works.  The value of +database+ is used with {Sequel.connect}[http://sequel.rubyforge.org/classes/Sequel.html#M000069].  Sequel's current documentation seems to favor a URL-style argument, but we have been getting along fine with a hash.
 
+  # With the Sequel sqlite adapter, the :database parameter is read as a path
+  # relative to the application root.
   database :adapter => 'sqlite', :database => 'killer_app.db'
+
 
 Create the initial db schema.  You can create a {Sequel migration}[http://sequel.rubyforge.org/classes/Sequel/Migration.html] with:
 
