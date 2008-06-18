@@ -16,11 +16,13 @@ module Waves
 
         app.instance_eval do
 
-          auto_create_module( :Models ) { include AutoCode }
-          
-          auto_eval( :Models ) do
+          auto_create_module( :Models ) do
+            include AutoCode
             auto_create_class :Default
             auto_load :Default, :directories => [:models]
+          end
+          
+          auto_eval( :Models ) do
             auto_create_class true, app::Models::Default
             auto_load true, :directories => [ :models ]
           end
