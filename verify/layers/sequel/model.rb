@@ -23,10 +23,11 @@ describe "An application module which includes the Sequel ORM layer" do
     
   it "auto_creates models that inherit from Sequel::Model" do
     TA::Models::Default.superclass.should == Sequel::Model
+    TA::Models::Thingy.superclass.should == TA::Models::Default
   end
   
   it "sets the dataset to use the snake_case of the class name as the table name" do
-    TA::Models::Default.dataset.send(:to_table_reference).should =~ /SELECT.+FROM.+defaults+/
+    TA::Models::Thingy.dataset.send(:to_table_reference).should =~ /SELECT.+FROM.+thingies+/
   end
   
   it "provides an accessor for database" do
