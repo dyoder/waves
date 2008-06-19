@@ -1,5 +1,6 @@
 module Waves
-  module Orm
+  module Orm # :nodoc:
+    # Helper methods to establish an inter-ORM standard for migrations
     module Migration
 
       # stuff in this file largely lifted from Sequel.  Thanks, bro.

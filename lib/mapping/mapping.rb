@@ -1,11 +1,33 @@
 module Waves
 
-  # Waves::Mapping is a mixin for defining Waves URI mappings (mapping a request to Ruby code).
-  # Mappings can work against the request url, path, and elements of the request (such as the
-  # request method or accept header). Mappings may also include before, after, or wrap filters
-  # to be run if they match the request. Mappings are created using an appropriate mapping method
-  # along with a URL pattern (a string or regular expression), a hash of constraint options, and
-  # a block, which is the code to run if the pattern matches.
+  # Mappings in Waves are the interface between the request dispatcher and your
+  # application code.  The dispatcher matches each request against the mappings
+  # to determine a primary action and to collect sets of before, after, wrap, 
+  # and always actions.  The dispatcher also looks for an exception handler 
+  # registered in the mappings when attempting a rescue.
+  # 
+  # Each mapping associates a block with a set of constraints.  Mappings can be
+  # one of several types:
+  # 
+  # - action (the actual request processing and response)
+  # - handle (exception handling)
+  # - before 
+  # - after
+  # - wrap (registers its block as both a before and after action)
+  # - always (like an "ensure" clause in a rescue)
+  # 
+  # Actions are registered using path, url, or map.  The other types may be 
+  # registered using methods named after the type.
+  # 
+  # 
+  # The available constraints are:
+  # 
+  # - a string or regexp that the path or url must match
+  # - parameters to match against the HTTP request headers and the Rack-specific variables (e.g. 'rack.url_scheme')
+  # - an additional hash reserved for settings not related to the Rack request (e.g. giving Rack handers special instructions for certain requests.  See threaded? )
+  # 
+  # The dispatcher evaluates mapping blocks in an instance of ResponseProxy, 
+  # which provides access to foundational classes of a Waves application (i.e. controllers and views)
   #
   # == Examples
   #

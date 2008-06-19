@@ -3,13 +3,14 @@ module Waves
   module Dispatchers
 
     #
-    # The default dispatcher essentially checks the application's mapping to see
-    # what to do with the request URL. It checks before and after filters (wrap
-    # filters are just a combination of both) as well as path and url mappings.
+    # Waves::Dispatchers::Default matches requests against an application's mappings to 
+    # determine what main action to take, as well as what before, after, always, and exception-handling
+    # blocks must run.
     #
     # The default dispatcher also attempts to set the content type based on the
-    # MIME type implied by any file extension used in the request URL using Mongrel's
-    # MIME types YAML file.
+    # file extension used in the request URL. It does this using the class defined in
+    # the current configuration's +mime_types+ attribute, which defaults to Mongrel's
+    # MIME type handler.
     #
     # You can write your own dispatcher and use it in your application's configuration
     # file. By default, they use the default dispatcher, like this:

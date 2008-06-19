@@ -1,6 +1,6 @@
 module Waves
 
-  module Renderers
+  module Renderers # :nodoc:
 
     # The renderers mixin provides a number of methods to simplify writing new renderers.
     # Just include this in your Renderer class and write your render method.

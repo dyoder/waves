@@ -76,13 +76,12 @@ module Waves
   module Controllers
 
     #
-    # This mixin provides some handy methods for Waves controllers. You will probably
-    # want to include it in any controllers you define for your application. The controllers
-    # autocreated in the Default foundation already do this.
+    # Waves::Controllers::Mixin adapts a controller class for use in mappings and provides utility methods.     
+    # It is included in controllers autocreated by the Default foundation, so you do not need to include
+    # it in subclasses of the same. 
     #
-    # Basically, what the mixin does is adapt the class so that it can be used within
-    # mappings (see Waves::Mapping); add some simple reflection to allow controller methods
-    # to be written generically (i.e., without reference to a specific model); and provide
+    # The utility methods include simple reflection to allow controller methods
+    # to be written generically (i.e., without reference to a specific model) and
     # parameter destructuring for the request parameters.
     #
 
@@ -92,10 +91,10 @@ module Waves
 
       include Waves::ResponseMixin
 
-      # When you include this Mixin, a +process+ class method is added to your class,
-      # which accepts a request object and a block. The request object is used to initialize
-      # the controller and the block is evaluated using +instance_eval+. This allows the
-      # controller to be used within a mapping file.
+      # When this mixin is included it adds a class method named +process+,
+      # which accepts a request object and a block. The +process+ method initializes the
+      # controller with the request, then evaluates the block using +instance_eval+. This allows the
+      # controller to be used from within a mapping lambda (i.e. a ResponseProxy).
 
       def self.included( mod )
         def mod.process( request, &block )
@@ -105,7 +104,7 @@ module Waves
 
       def initialize( request )
         @request = request
-        end
+      end
 
       # The params variable is taken from the request object and "destructured", so that
       # a parameter named 'blog.title' becomes:
@@ -116,13 +115,13 @@ module Waves
       # +request.params+ instead of simply +params+.
       def params; @params ||= destructure(request.params); end
 
-      # You can access the name of the model related to this controller using this method.
-      # It simply takes the basename of the module and converts it to snake case, so if the
-      # model uses a different plurality, this won't, in fact, be the model name.
+      # Returns the name of the model corresponding to this controller by taking the basename
+      # of the module and converting it to snake case. If the model plurality is different than
+      # the controller, this will not, in fact, be the model name.
       def model_name; self.class.basename.snake_case; end
 
-      # This uses the model_name method to attempt to identify the model corresponding to this
-      # controller. This allows you to write generic controller methods such as:
+      # Returns the model corresponding to this controller by naively assuming that 
+      # +model_name+ must be correct. This allows you to write generic controller methods such as:
       #
       #   model.find( name )
       #

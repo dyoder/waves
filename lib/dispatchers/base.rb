@@ -2,8 +2,14 @@ module Waves
 
   module Dispatchers
 
+    # A NotFoundError means what you think it means.  The dispatchers included with Waves do not
+    # natively intercept this exception.  Instead an exception handler must be registered in the application
+    # mappings.  The Simple foundation registers a minimal handler, while the Default foundation registers
+    # a slightly fleshier one.
     class NotFoundError < Exception ; end
 
+    # Redirect exceptions are rescued by the Waves dispatcher and used to set the 
+    # response status and location.
     class Redirect < Exception
       attr_reader :path, :status
       def initialize( path, status = '302' )
@@ -12,16 +18,16 @@ module Waves
       end
     end
 
-    # The Base dispatcher simply makes it easier to write dispatchers by inheriting
-    # from it. It creates a Waves request, ensures the request processing is done
-    # within a mutex, benchmarks the request processing, logs it, and handles common
-    # exceptions and redirects. Derived classes need only process the request within
-    # their +safe+ method, which takes a Waves::Request and returns a Waves::Response.
+    # Waves::Dispatchers::Base provides the basic request processing structure.
+    # All other Waves dispatchers should inherit from it.  It creates a Waves request, 
+    # determines whether to enclose the request processing in a mutex, benchmarks it, 
+    # logs it, and handles common exceptions and redirects. Derived classes need only 
+    # process the request within the +safe+ method, which must take a Waves::Request and return a Waves::Response.
 
     class Base
 
-      # Like any Rack application, Waves' dispatchers must provide a call method
-      # taking an +env+ parameter.
+      # As with any Rack application, a Waves dispatcher must provide a call method
+      # that takes an +env+ parameter.
       def call( env )
         if Waves.config.synchronize?
           Waves::Application.instance.synchronize { _call( env ) }
@@ -30,8 +36,9 @@ module Waves
         end
       end
 
-      # Called by event driven servers like thin and ebb. Return true if
-      # the server should run the request in a separate thread.
+      # Called by event driven servers like thin and ebb. Returns true if
+      # the server should run the request in a separate thread, as determined by
+      # Configurations::Mapping#threaded?
       def deferred?( env )
         Waves::Application.instance.mapping.threaded?( env )
       end

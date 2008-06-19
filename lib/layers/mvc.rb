@@ -1,5 +1,9 @@
 module Waves
   module Layers
+    # The MVC layer establishes the Models, Views, Controllers, and Helpers namespaces inside 
+    # a Waves application.  In each namespace, undefined constants are handled by AutoCode, which
+    # loads the constant from the correct file in the appropriate directory if it exists, or creates
+    # from default otherwise.
     module MVC
 
       def self.included( app )

@@ -5,7 +5,7 @@
 # NOTE: this is NOT implemented yet.
 # plural and singular work directly with the English class
 
-module Inflect
+module Inflect # :nodoc:
   module InflectorMethods
 
     # Define a general exception.
@@ -103,7 +103,7 @@ module Inflect
     end
   end
 
-  class English
+  class English # :nodoc:
     @singular_of = {}
     @plural_of = {}
 

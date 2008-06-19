@@ -30,7 +30,7 @@ module Waves
 
     class << self; attr_accessor :instance; end
 
-    # Accessor for options passed to the application. Valid options include
+    # Accessor for options passed to the application.
     attr_reader :options
 
     # Create a new Waves application instance.

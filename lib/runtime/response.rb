@@ -1,9 +1,7 @@
 module Waves
   # Waves::Response represents an HTTP response and has methods for constructing a response.
   # These include setters for +content_type+, +content_length+, +location+, and +expires+
-  # headers. You may also set the headers directly using the [] operator. If you don't find
-  # what you are looking for here, check the documentation for Rack::Response since many
-  # methods for this class are delegated to Rack::Response.
+  # headers. You may also set the headers directly using the [] operator. See Rack::Response for documentation of any method not defined here.
   class Response
 
     attr_reader :request

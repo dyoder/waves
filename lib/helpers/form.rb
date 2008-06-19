@@ -15,6 +15,7 @@ module Waves
     # will invoke the +text+ form view (the template in +templates/form/text.mab+),
     # passing in the name ('blog.title') and the value (@blog.title) as instance variables.
     #
+    # These helpers are Markaby only.
     module Form
 
       # This method really is a place-holder for common wrappers around groups of

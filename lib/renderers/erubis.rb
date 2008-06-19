@@ -1,6 +1,6 @@
 require 'erubis'
 
-module Erubis
+module Erubis # :nodoc:
 
   # This is added to the Erubis Content class to allow the same helper methods
   # to be used with both Markaby and Erubis.

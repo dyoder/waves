@@ -1,5 +1,10 @@
 module Waves
   module Layers
+    # Configures Waves for minimal exception handling.  
+    # 
+    # For example,
+    # a NotFoundError results in response status of 404, with body text
+    # of "404 Not Found".
     module SimpleErrors
 
       def self.included( app )

@@ -6,6 +6,7 @@ module Waves
   module Layers
     module ORM
       
+      # Work in Progress
       module DataMapper
         
         def self.included(app)

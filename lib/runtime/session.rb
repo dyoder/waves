@@ -1,12 +1,13 @@
 module Waves
 
   # Encapsulates the session associated with a given request. A session has an expiration
-  # and path. You must set these in your configuration file. See Waves::Configuration for
-  # more information.
-  #
+  # and path, which must be provided in a Waves::Configuration. Sensible defaults are defined
+  # in Waves::Configurations::Default
   class Session
     
-    def self.generate_session_id # from Camping ...
+    # Concoct a (probably) unique session id
+    def self.generate_session_id 
+      # from Camping ...
       chars = [*'A'..'Z'] + [*'0'..'9'] + [*'a'..'z']
       (0..48).inject(''){|s,x| s+=chars[ rand(chars.length) ] }
     end

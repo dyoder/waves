@@ -1,5 +1,6 @@
 module Waves
 
+  # Mapping actions are evaluated in the context of a ResponseProxy.
   class ResponseProxy
 
     attr_reader :request
