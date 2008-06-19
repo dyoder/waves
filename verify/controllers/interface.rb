@@ -21,8 +21,8 @@ describe "A Waves controller" do
                             { :name => 'Pale Rye Ale', 
                               :brew => { :kind => 'mini-mash', :yeast => 'White Labs British Ale'}}}
                               
-    # @request.should.receive(:params).and_return(request_hash)
-    # @dc.params.should == destructured_hash
+    @request.should.receive(:params).and_return(request_hash)
+    @dc.params.should == destructured_hash
   end
 
   
