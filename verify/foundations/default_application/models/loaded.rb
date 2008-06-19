@@ -2,9 +2,9 @@ module DefaultApplication
 
   module Models
     
-    class Different < Base
+    class Loaded < Default
       
-      def self.sargent; true; end
+      def from_loaded; end
       
     end
 

@@ -2,7 +2,7 @@ module DefaultApplication
 
   module Models
     
-    class Default < Base
+    class Default
       
       def self.crayola; true; end
       
