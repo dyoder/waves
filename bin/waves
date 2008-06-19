@@ -2,6 +2,12 @@
 require 'rubygems'
 require 'choice'
 require 'rakegen'
+
+# if we're in the waves source, prepend it to the load path
+waves_lib = File.expand_path( "#{File.dirname(__FILE__)}/../../waves/lib" )
+$:.unshift waves_lib if File.exist?(waves_lib)
+require 'waves'
+
 begin
   require 'utilities/string'
 rescue LoadError
@@ -26,7 +32,7 @@ if app_name =~ /[^\w\d_]/
 TEXT
 end
 
-template = File.join( File.dirname(__FILE__),'..','app')
+template = "#{WAVES}/app"
 
 generator = Rakegen.new("waves:app") do |gen|
   gen.source = template

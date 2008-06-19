@@ -1,11 +1,12 @@
 # External Dependencies
 require 'rubygems'
 
+# Some scripts need to be able to locate items relative to waves source.
+WAVES = "#{File.dirname(__FILE__)}/.." unless defined?(WAVES)
+
 require 'rack'
 require 'daemons'
 require 'live_console'
-
-# gem 'dyoder-autocode'
 require 'autocode'
 
 # for mimetypes only or when using as default handler
