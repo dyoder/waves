@@ -1,8 +1,16 @@
 module Attributes
+  
+	def initialize(hash = {} )
+	  attributes = hash
+	end
 	
-	def initialize(hash={})
+	def attributes=( hash )
 	  # copy the hash, converting all keys to strings
 		@attrs = hash.inject({}) { |h,p| k,v = p; h[k.to_s] = v; h  }
+	end
+	
+	def attributes
+	  @attrs ||= {}
 	end
 	
 	def method_missing(name,*args)
@@ -23,16 +31,12 @@ module Attributes
 	end
 	
 	def set(name, val)
-		@attrs[name.to_s] = val
+		attributes[name.to_s] = val
 	end
 	
 	def get(name)
-		rval = ( @attrs[name.to_s] )
-		if Hash === rval
-			Attributes.new(rval)
-		else
-			rval
-		end
+		rval = attributes[name.to_s]
+		rval.is_a?( Hash ) ? Attributes.new( rval ) : rval
 	end
 	
 	def to_h
@@ -40,6 +44,10 @@ module Attributes
 	end
 	
   alias_method :to_hash, :to_h
+  
+  class Object
+    include Attributes
+  end
   
 end
 	

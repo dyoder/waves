@@ -4,31 +4,30 @@ module Waves
     
     class Action
       
-      attr_accessor :name, :resource, :pattern, :constraints, :descriptors
+      attr_reader :name, :resource, :pattern, :constraints, :descriptors
       
       def initialize( options, &block )
-        name = options[:name]
-        pattern = Pattern.new( options )
-        matcher = Constraints.new( options )
-        descriptors = Descriptors.new( options )
-        resource = Waves.application[:resources][ options[:resource] ]
-        resource.instance_eval{ define_method name, &block } if block_given?
+        @name = name = options[:name]
+        @pattern = pattern = Pattern.new( options )
+        @constraints = Constraints.new( options )
+        @descriptors = Descriptors.new( options )
+        if rname = options[ :resource ]
+          @resource = resource = Waves.application[:resources][ rname ]
+        else
+          resource = Waves.application[:resources][ :default ]
+          @resource = Waves::Resources::Proxy
+        end
+        resource.instance_eval { define_method name, &block } if name and block_given?
+        resource.paths.instance_eval { meta_def name, &pattern.generator }
       end
       
-      # how / when can i take the results of the pattern match 
-      # and merge them with the request params ... can't do it here
-      # because a number of actions may be run, but I can't store
-      # it as state because actions are shared between requests
-      def call?( request )
-        constraints.satisfy?( request ) and pattern.match( request )
+     def bind( request )
+        ( constraints.satisfy?( request ) and 
+          ( params = pattern.match( request ) ) and Binding.new( self, params ) )
       end
       
-      def call( request )
-        resource.new( request ).send( name )
-      end
-      
-      def method_missing( name, *args )
-        descriptors.send( name, *args )
+      def threaded?
+        descriptors.threaded?
       end
       
     end
@@ -41,10 +40,11 @@ module Waves
       
       def call( request )
         request.params.merge!( @params )
-        @action.call( request )
+        @action.resource.new( request ).send( @action.name )
       end
+      
     end
-
+    
   end
 
 end

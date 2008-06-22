@@ -3,7 +3,7 @@ module Waves
   module Mapping
     
     class Descriptors
-            
+      
       def initialize( options )
         @threaded = options[ :threaded ]
       end

@@ -7,6 +7,7 @@ WAVES = "#{File.dirname(__FILE__)}/.." unless defined?(WAVES)
 require 'rack'
 require 'daemons'
 require 'live_console'
+
 require 'autocode'
 require 'functor'
 
@@ -22,6 +23,8 @@ require 'date'
 require 'benchmark'
 # require 'memcache'
 require 'base64'
+
+require 'functor'
 
 # selected project-specific extensions
 require 'utilities/module'
@@ -53,10 +56,17 @@ require 'runtime/configuration'
 # waves URI mapping
 require 'mapping/mapping'
 require 'mapping/action'
+<<<<<<< HEAD:lib/waves.rb
 require 'mapping/pattern'
 require 'mapping/constraints'
 require 'mapping/descriptors'
+=======
+require 'mapping/constraints'
+require 'mapping/descriptors'
+require 'mapping/pattern'
+>>>>>>> Working version of new mappings, albeit somewhat buggy.:lib/waves.rb
 require 'resources/mixin'
+require 'resources/proxy'
 
 # waves mvc support
 require 'controllers/mixin'

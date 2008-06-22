@@ -48,6 +48,17 @@ module Waves
           auto_load true, :directories => [ :helpers ]
         end          
 
+        app.auto_eval :Resources do
+          const_set( :Default, Class.new( Waves::Resources::Base ) ).module_eval do
+            def __c ; @controller ||= controllers[ resource ].process( @request ) { self } ; end
+            def __v ; @view ||= views[ resource ].process( @request ) { self } ; end
+            def action( method, *args ) ; @data = __c.send( method, *args ) ; end
+            def render( method ) ; puts "RENDER: #{resource}"; __v.send( method, ( @data.kind_of?( Enumerable ) ? resources : resource ) => @data ) ; end
+            def method_missing( name, *args, &block) ; params[ name ] ; end
+          end
+          auto_create_class true, self::Default
+        end
+          
       end
     end
   end

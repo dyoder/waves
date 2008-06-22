@@ -5,55 +5,55 @@ module Waves
     METHODS = %w( get put post delete ).map( &:intern )
     RULES = %w( before action after always ).map( &:intern )
     
-    def method_missing( name, *args, &block )
-      mappings[ name ].push( map( *args, &block ) )
+    def mappings
+      @mappings ||= Hash.new { |h,k| h[k] = [] }
+    end
+    
+    def before( options, &block )
     end
     
     def wrap( name, *args, &block )
       before( name, *args, &block ) ; after( name, *args, &block )
     end
+
+    def after( options, &block )
+    end
+    
+    def always( options, &block )
+    end
+    
+    def handle( exception )
+    end
+
     
     def with( options, &block )
       @options = options; yield if block_given? ; @options = nil
     end
 
     def path( name, options = {}, &block )
-      mappings[ :action ] = map( options.merge!( :name => name, :target => :path ), &block )
+      map( options.merge!( :name => name, :target => :path ), &block )
     end
     
     def url( name, options = {}, &block )
-      mappings[ :action ] = map( options.merge!( :name => name, :target => :url ), &block )
+      map( options.merge!( :name => name, :target => :url ), &block )
     end
     
-    def map( *args, &block )
-      options = ( @options || {} ).merge( normalize( *args ) )
+    def map( options, &block )
+      options = ( @options || {} ).merge( options )
       options[ :target ] ||= :path
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
       options[ :pattern ] = options[ method ]
-      Action.new( options, &block )
+      mappings[ :action ].push( Action.new( options, &block ) )
     end
     
     def []( request )
-      results = {} ; RULES.each do | rule |
-        results[ rule ] = mappings[ rule ].select do | action | 
-          ( params = action.call?( request ) ) and Action::Binding.new( action, params )
+      returning Hash.new { |h,k| h[k] = [] } do | results |
+        RULES.each do | rule |
+          mappings[ rule ].each { | action | binding = action.bind( request ) and results[ rule ].push( binding ) }
         end
       end
-      return results
     end  
-    
-    private
-    
-    def mappings; @mappings ||= {}; end
-    
-    include Functor::Method
-    
-    functor( :normalize, Symbol, Hash ) { | name, options | options.merge!( :name => name ) }
-    functor( :normalize, String, Hash ) { | pattern, options | options.merge!( :pattern => pattern ) }
-    functor( :normalize, Regexp, Hash ) { | regexp, options | options.merge!( :pattern => regexp ) }
-    functor( :normalize, Exception ) { | exception | { :exception => exception } } 
-    functor( :normalize, Hash ) { | options | options }    
-    
+          
   end
 
 end

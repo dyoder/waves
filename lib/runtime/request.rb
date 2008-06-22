@@ -19,8 +19,10 @@ module Waves
 
     # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request.
     # Check the Rack documentation for more information.
-    def method_missing(name,*args)
-      @request.send(name,*args)
+    def method_missing( name, *args )
+      ( ( @request.respond_to?( name ) and @request.send( name,*args ) ) or
+        ( args.empty? and ( @request.env[ "HTTP_#{name.to_s.upcase}" ] or 
+          @request.env[ "rack.#{name.to_s.downcase}" ] ) ) or super )
     end
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
@@ -38,29 +40,17 @@ module Waves
       @request.env['CONTENT_TYPE']
     end
 
-    # Supported request methods
+    # Request method predicates, defined in terms of #method.
     METHODS = %w{get post put delete head options trace}
-
-    # Override the Rack methods for querying the request method.
-    METHODS.each do |method|
-      class_eval "def #{method}?; method == :#{method} end"
-    end
+    METHODS.each { |m| define_method( m ) { method == m } }
 
     # The request method. Because browsers can't send PUT or DELETE
     # requests this can be simulated by sending a POST with a hidden
     # field named '_method' and a value with 'PUT' or 'DELETE'. Also
     # accepted is when a query parameter named '_method' is provided.
     def method
-      @method ||= begin
-        request_method = @request.request_method.downcase
-        if request_method == 'post'
-          _method = @request['_method']
-          _method.downcase! if _method
-          METHODS.include?(_method) ? _method.intern : :post
-        else
-          request_method.intern
-        end
-      end
+      @method ||= ( ( ( m = @request.request_method.downcase ) == 'post' and 
+        ( n = @request['_method'] ) ) ? n.downcase : m ).intern
     end
 
     # Raise a not found exception.
