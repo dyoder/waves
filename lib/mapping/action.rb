@@ -21,11 +21,11 @@ module Waves
         resource.paths.instance_eval { meta_def name, &pattern.generator }
       end
       
-     def bind( request )
+      def bind( request )
         ( constraints.satisfy?( request ) and 
           ( params = pattern.match( request ) ) and Binding.new( self, params ) )
       end
-      
+
       def threaded?
         descriptors.threaded?
       end
@@ -42,7 +42,7 @@ module Waves
         request.params.merge!( @params )
         @action.resource.new( request ).send( @action.name )
       end
-      
+    
     end
     
   end
