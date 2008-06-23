@@ -8,42 +8,32 @@ module Waves
       
       include Functor::Method
       
-      attr_accessor :target, :pattern, :generator
-      
       def initialize( options )
-        @keys = [] ; @target = options[ :target ]
-        compile( options[ :pattern ] )
+        @target = options[ :target ]
+        @pattern = options[ :pattern ]
       end
       
-      def match( request )
-       return false unless m = @pattern.match( request.send( target ) )
-       zip( @keys, m[1..-1] )
+      functor( :match, Waves::Request ) { | request | match( @pattern, request.send( @target ) ) }
+      functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
+      functor( :match, Array, Array ) do | wants, gots |
+        r = {}; matches = wants.all? do | want |
+          match( r, want, gots.shift )
+        end
+        r if matches and gots.empty?
       end
-      
-      private
-      
-      functor( :compile, Array ) do | path |
-        @generator = lambda { |*args| self.instance_eval { generate( path, args )  } }
-        @pattern = Regexp.new( '^/' + path.map { |component| compile( component ) }.join('/') + '/?$' )
+      functor( :match, Hash, String, String ) { | r, want, got | got if want == got }
+      functor( :match, Hash, Regexp, String ) { | r, want, got | got if want === got }
+      functor( :match, Hash, Symbol, String ) do | r, want, got | 
+        r[ want.to_s ] = got if match( r, /([\w\_\-\#]+)/, got )
       end
-      
-      functor( :compile, String ) { |s| Regexp.escape( s ) }
-      functor( :compile, Regexp ) { |re| s }
-      functor( :compile, Symbol ) { |sy| @keys << sy.to_s ; '([\w\_\-\#]+)' }
-      functor( :compile, Hash ) { |h| @keys << h; '([\w\_\-\#]+)?' }
-
-      # this is a bit different than Array#zip ...
-      functor( :zip, Array, Array ) { | keys, vals | keys.inject( {} ) { | h, key | n, m = zip( key, vals ) ; h[ n ] = m ; h } }
-      functor( :zip, String, Array ) { | key, vals | [ key, vals.shift ] }
-      functor( :zip, Hash, Array ) { | h, vals | key = h.keys.first ; [ key.to_s, ( vals.shift || h[ key ] ) ] }
-
-      functor( :generate, Array, Array ) { | keys, vals | keys.map { |key| generate( key, vals ) }.compact.join('/') }
-      functor( :generate, :resource, Array ) { | key, vals | resource }
-      functor( :generate, :resources, Array ) { | key, vals | resources }
-      functor( :generate, Symbol, Array ) { | key, vals | generate( key, vals.shift ) }
-      functor( :generate, Symbol, Symbol ) { | key, val | val }
-      functor( :generate, Regexp, Array ) { | key, vals | nil }
-      functor( :generate, Hash, Array ) { | h, vals | vals.shift || h.values.first }
+      functor( :match, Hash, Hash, String ) do | r, want, got | 
+        key = want.keys.first
+        r[ key.to_s ] = match( r, key, got )
+      end
+      # hashes represent optional values with a default
+      functor( :match, Hash, Hash, nil ) { | r, want, got | r[ want.keys.first.to_s ] = want.values.first }
+      # everything else is mandatory ...
+      functor( :match, Hash, Object, nil ) { | r, want, got | false }
       
     end
 

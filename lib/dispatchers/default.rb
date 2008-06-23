@@ -42,9 +42,8 @@ module Waves
           
           begin
             response.write( mapping[ :action ].first.call( request ) )
-          rescue Exception => e
+          ensure
             mapping[ :after ].each { | action | action.call( request ) }
-            raise e
           end
           
         rescue Exception => e

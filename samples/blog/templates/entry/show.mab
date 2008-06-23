@@ -1,6 +1,6 @@
 layout :default, :title => @entry.title do
   a 'Show All Entries', :href => '/entries'
-  a 'Edit This Entry', :href => "/entry/#{@entry.name}/editor"
+  a 'Edit This Entry', :href => "/entry/#{@entry.name}/edit"
   h1 @entry.title
   textile @entry.content
   h1 'Comments'

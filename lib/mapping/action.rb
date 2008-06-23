@@ -18,7 +18,7 @@ module Waves
           @resource = Waves::Resources::Proxy
         end
         resource.instance_eval { define_method name, &block } if name and block_given?
-        resource.paths.instance_eval { meta_def name, &pattern.generator }
+        resource::Paths.instance_eval { define_method( name ) { |*args| generate( options[ :pattern ], args ) } }
       end
       
       def bind( request )

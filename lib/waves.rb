@@ -56,15 +56,10 @@ require 'runtime/configuration'
 # waves URI mapping
 require 'mapping/mapping'
 require 'mapping/action'
-<<<<<<< HEAD:lib/waves.rb
-require 'mapping/pattern'
-require 'mapping/constraints'
-require 'mapping/descriptors'
-=======
 require 'mapping/constraints'
 require 'mapping/descriptors'
 require 'mapping/pattern'
->>>>>>> Working version of new mappings, albeit somewhat buggy.:lib/waves.rb
+require 'mapping/paths'
 require 'resources/mixin'
 require 'resources/proxy'
 
