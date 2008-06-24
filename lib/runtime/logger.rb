@@ -42,6 +42,7 @@ module Waves
           ::Logger.new( output, config[:rotation].intern ) :
           ::Logger.new( output )
         @log.level = level
+        @log.datetime_format = "%Y-%m-%d %H:%M:%S "
         self
       end
       
