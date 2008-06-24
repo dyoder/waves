@@ -131,24 +131,30 @@ module Waves
 
       private
 
-      def destructure(hash)
-        rval = {}
-        hash.keys.map{ |key|key.split('.') }.each do |keys|
-          destructure_with_array_keys(hash,'',keys,rval)
+      def destructure( hash )
+        destructured = {}
+        hash.keys.map { |key| key.split('.') }.each do |keys|
+          destructure_with_array_keys(hash, '', keys, destructured)
         end
-        rval
+        destructured
       end
 
-      def destructure_with_array_keys(hash,prefix,keys,rval)
+      def destructure_with_array_keys( hash, prefix, keys, destructured )
         if keys.length == 1
-          val = hash[prefix+keys.first]
-          rval[keys.first.intern] = case val
-          when String then val.strip
-          when Hash then val
+          key = "#{prefix}#{keys.first}"
+          val = hash[key]
+          destructured[keys.first.intern] = case val
+          when String
+            val.strip
+          when Hash
+            val
+          when nil
+            raise key.inspect
           end
         else
-          rval = ( rval[keys.first.intern] ||= {} )
-          destructure_with_array_keys(hash,(keys.shift<<'.'),keys,rval)
+          destructured = ( destructured[keys.first.intern] ||= {} )
+          new_prefix = "#{prefix}#{keys.shift}."
+          destructure_with_array_keys( hash, new_prefix, keys, destructured )
         end
       end
 

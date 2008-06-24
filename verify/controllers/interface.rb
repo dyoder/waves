@@ -16,10 +16,13 @@ describe "A Waves controller" do
   it "can access a destructured version of the request params" do
     request_hash =      { 'beer.name' => 'Pale Rye Ale', 
                           'beer.brew.kind' => 'mini-mash', 
-                          'beer.brew.yeast' => 'White Labs British Ale' }
+                          'beer.brew.yeast' => 'White Labs British Ale' ,
+                          'beer.brew.hops.variety' => 'Fuggles' }
     destructured_hash = { :beer =>  
                             { :name => 'Pale Rye Ale', 
-                              :brew => { :kind => 'mini-mash', :yeast => 'White Labs British Ale'}}}
+                              :brew => {  :kind => 'mini-mash', 
+                                          :yeast => 'White Labs British Ale',
+                                          :hops => { :variety => 'Fuggles' }}}}
                               
     @request.should.receive(:params).and_return(request_hash)
     @dc.params.should == destructured_hash
