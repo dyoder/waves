@@ -6,7 +6,8 @@ module TestApplication
   include AutoCode
   module Configurations
     class Development
-      stub!(:database).and_return(:adapter => 'sqlite', :database => 'test.db')
+      stub!(:database).and_return(:adapter => 'sqlite',
+				  :database => "#{File.dirname(__FILE__)}test.db")
     end
   end
   stub!(:config).and_return(Configurations::Development)
