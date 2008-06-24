@@ -2,50 +2,44 @@ module Waves
 
   module Mapping
     
+    include Functor::Method
+    
     METHODS = %w( get put post delete ).map( &:intern )
-    RULES = %w( before action after always ).map( &:intern )
+    RULES = %w( before action after always, handle ).map( &:intern )
     
     def mappings
       @mappings ||= Hash.new { |h,k| h[k] = [] }
     end
     
-    def before( options, &block )
+    def method_missing( name, *args, &block )
+      return super unless RULES.include? name
+      map( name, args, &block )
     end
-    
-    def wrap( name, *args, &block )
-      before( name, *args, &block ) ; after( name, *args, &block )
-    end
-
-    def after( options, &block )
-    end
-    
-    def always( options, &block )
-    end
-    
-    def handle( exception )
-    end
-
     
     def with( options, &block )
       @options = options; yield if block_given? ; @options = nil
     end
 
-    def path( name, options = {}, &block )
-      map( options.merge!( :name => name, :target => :path ), &block )
+    functor( :map, String, Array, Proc ) { | rule, args, block | map( *( args << block ) ) }
+    functor( :map, String, Array ) { | rule, args | mappings[ rule ] << map( *args ) }
+    functor( :map, String, Hash, Proc ) do | name, options, block |
+      options[:name] = name ; options[:block] = block ; map( options )
     end
-    
-    def url( name, options = {}, &block )
-      map( options.merge!( :name => name, :target => :url ), &block )
-    end
-    
-    def map( options, &block )
+    functor( :map, String, Hash ) { | name, options | options[:name] = name ; map( options ) }
+    functor( :map, Hash ) do | options |
       options = ( @options || {} ).merge( options )
-      options[ :target ] ||= :path
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
       options[ :pattern ] = options[ method ]
-      mappings[ :action ].push( Action.new( options, &block ) )
+      Action.new( options )
     end
-    
+    functor( :map, Exception, String, Hash, Proc ) do | e, name, options, block |
+      options[:name] = name ; map( e, options, block )
+    end
+    functor( :map, Exception, Hash, Proc ) do | e, options, block |
+      options[:block] = block ; map( e, options )
+    end
+    functor( :map, Exception, Hash ) { | options, block | Handler.new( e, options ) }
+        
     def []( request )
       returning Hash.new { |h,k| h[k] = [] } do | results |
         RULES.each do | rule |
@@ -53,7 +47,12 @@ module Waves
         end
       end
     end  
-          
+
+    private
+    
+    def normalize( options )
+    end
+    
   end
 
 end

@@ -15,7 +15,7 @@ module Blog
       path( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
       path( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
       path( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
-      path( :update, :put => [ :resource, :name ] ) { puts "REDIRECT: #{paths.read( name ) }" ; action( :update, name ) and redirect( paths.read( name ) ) }
+      path( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
       path( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
       
     end  

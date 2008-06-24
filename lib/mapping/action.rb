@@ -4,6 +4,13 @@ module Waves
     
     class Action
       
+      # TODO: Make this more generic and able to support Handler (or push add'l code into Handler).
+      # Should support anonymous blocks (i.e. that don't call a method on Resource), or cases where
+      # no path was provided. Should also always use :path rather than relying on target (this is
+      # actually code in patter), and add code for :scheme, :domain, etc. constraints (Constraints).
+      # 
+      # Can some o the resource determination related code be factored out of there or simplified?
+      
       attr_reader :name, :resource, :pattern, :constraints, :descriptors
       
       def initialize( options, &block )
