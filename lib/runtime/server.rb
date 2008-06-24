@@ -38,6 +38,11 @@ module Waves
       Dir.chdir(pwd)
     end
 
+    def trap(signal)
+      Kernel::trap(signal) { yield }
+      Thread.new { loop {sleep 1} } #for the stupid Windows
+    end
+
     # Start and / or access the Waves::Logger instance.
     def log
       @log ||= Waves::Logger.start
@@ -51,7 +56,7 @@ module Waves
       handler, options = config.handler
       handler.run( config.application.to_app, options ) do |server|
         @server = server
-        trap('INT') { puts; stop } if @server.respond_to? :stop
+        self.trap('INT') { puts; stop } if @server.respond_to? :stop
       end
     end
 
