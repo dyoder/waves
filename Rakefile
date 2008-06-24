@@ -14,11 +14,12 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis RedCloth autocode
+  %w( mongrel rack markaby erubis RedCloth
       extensions live_console choice daemons rakegen).each do |dep|
     gem.add_dependency dep
   end
   gem.add_dependency('sequel', '>= 2.0.0')
+  gem.add_dependency('autocode', '>= 1.0.0')
   gem.files = Dir['lib/**/*.rb','lib/**/*.erb','app/**/*', 'app/**/.gitignore']
   gem.has_rdoc = true
   gem.bindir = 'bin'
