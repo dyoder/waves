@@ -1,3 +1,6 @@
+0.7.6
+- Special handling in Windows for interrupts ('cause Windows has trouble with those)
+- Fixed query param destructuring to work for 3+ levels
 0.7.5
 - Foundations and Layers
 - Sequel ORM is now a Layer, instead of being baked in
