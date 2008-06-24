@@ -40,7 +40,7 @@ module Waves
 
     def trap(signal)
       Kernel::trap(signal) { yield }
-      Thread.new { loop {sleep 1} } #for the stupid Windows
+      Thread.new { loop {sleep 1} } if RUBY_PLATFORM =~ /mswin32/
     end
 
     # Start and / or access the Waves::Logger instance.
