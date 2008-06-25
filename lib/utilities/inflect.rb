@@ -129,8 +129,6 @@ module Inflect # :nodoc:
     word 'Swiss'     , 'Swiss'
     word 'life'      , 'lives'
     word 'wife'      , 'wives'
-    word 'virus'     , 'viri'
-    word 'octopus'   , 'octopi'
     word 'cactus'    , 'cacti'
     word 'goose'     , 'geese'
     word 'criterion' , 'criteria'
