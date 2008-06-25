@@ -1,4 +1,5 @@
 0.7.6
+- added metaid as gem dependency
 - Special handling in Windows for interrupts ('cause Windows has trouble with those)
 - Fixed query param destructuring to work for 3+ levels
 0.7.5
