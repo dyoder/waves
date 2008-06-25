@@ -33,9 +33,9 @@ module Waves
     # Run the server as a daemon. Corresponds to the -d switch on +waves-server+.
     def daemonize
       pwd = Dir.pwd
-      File.write( :log / "#{port}.pid", $$ )
       Daemonize.daemonize( Waves::Logger.output )
       Dir.chdir(pwd)
+      File.write( :log / "#{port}.pid", $$ )
     end
 
     def trap(signal)
