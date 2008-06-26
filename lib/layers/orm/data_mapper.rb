@@ -15,27 +15,23 @@ module Waves
             @adapter ||= ::DataMapper.setup(:main_repository, config.database[:database])
           end
           
-          app.instance_eval do
+          app.auto_eval :Models do
+            auto_load true, :directories => [:models]
+          end
 
-            auto_eval :Models do
-              auto_load true, :directories => [:models]
-            end
-
-            auto_eval :Configurations do
-              auto_eval :Mapping do
-                before true do
-                  app.database #force adapter init if not already done
-                  ::DataMapper::Repository.context.push(::DataMapper::Repository.new(:main_repository))
-                end
-                always true do
-                  ::DataMapper::Repository.context.pop
-                end
+          app.auto_eval :Configurations do
+            auto_eval :Mapping do
+              before true do
+                app.database #force adapter init if not already done
+                ::DataMapper::Repository.context.push(::DataMapper::Repository.new(:main_repository))
+              end
+              always true do
+                ::DataMapper::Repository.context.pop
               end
             end
-            
           end
+            
         end
-        
       end
     end
   end
