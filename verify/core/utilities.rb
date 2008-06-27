@@ -43,6 +43,29 @@ describe "Waves::Utilities::Symbol" do
   
 end
 
+describe "Waves::Utilities::Integer" do
+  # pedantic, no?
+  1.kilobytes.should == "1,024".to_i
+  1.megabytes.should == "1,048,576".to_i
+  1.gigabytes.should == "1,073,741,824".to_i
+  1.terabytes.should == "1,099,511,627,776".to_i
+  1.petabytes.should == "1,125,899,906,842,624".to_i
+  1.exabytes.should == "1,152,921,504,606,846,976".to_i
+  1.zettabytes.should == "1,180,591,620,717,411,303,424".to_i
+  1.yottabytes.should == "1,208,925,819,614,629,174,706,176".to_i
+end
+
+describe "Waves::Utilities::Proc" do
+  
+   it "defines | as syntactic sugar for passing the result of a proc to a lambda" do
+     p = Proc.new { "smurf" }
+     l = lambda { |data| data.reverse }
+     result = p | l
+     result.call.should == "frums"
+   end
+   
+end
+
 describe "Waves::Utilities::Hash" do
   
   it "adds a non-destructive method for converting all hash keys to strings" do
