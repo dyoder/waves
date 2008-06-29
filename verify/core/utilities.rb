@@ -5,6 +5,7 @@ UTILITIES = "#{File.dirname(__FILE__)}/../../lib/utilities"
 
 require "#{UTILITIES}/module"
 require "#{UTILITIES}/inflect"
+require "#{UTILITIES}/inflect/english"
 require "#{UTILITIES}/string"
 require "#{UTILITIES}/symbol"
 require "#{UTILITIES}/kernel"
@@ -31,15 +32,50 @@ describe "Waves::Utilities::Module" do
   
 end
 
-describe "Waves::Utilities::Inflect" do
+describe "a language extended with Waves::Utilities::Inflect" do
+  
+  before do
+    # Nominative only, of course.
+    module Latin
+      extend Waves::Inflect::InflectorMethods
+      rule 'us', 'i'
+      rule 'u', 'ua'
+      rule 'x', 'gis'
+      
+      word 'deus', 'di'
+      word 'cultus'
+      
+      singular_rule 'inuum', 'inua'
+      plural_rule 'ix', 'ices'
+    end
+  end
+  
+  it "can define general pluralization rules" do
+    Latin.plural('servus').should == 'servi'
+  end
+  
+  it "can register two-way exceptions for specific words" do
+    Latin.plural('deus').should == 'di'
+    Latin.plural('cultus').should == 'cultus'
+  end
+  
+  it "can register rules for singularization exceptions" do
+    Latin.singular('cornua').should == 'cornu'
+    Latin.singular('continua').should == 'continuum'
+  end
+  
+  it "can register rules for pluralization exceptions" do
+    Latin.plural('phoenix').should == 'phoenices'
+  end
+  
   
 end
 
 describe "Waves::Utilities::String" do
   
-  it "defines singular and plural inflection methods" do
-    Inflect::English.should.receive(:singular).and_return("still boring")
-    Inflect::English.should.receive(:plural).and_return("still boring")
+  it "delegates singular and plural inflection methods" do
+    Waves::Inflect::English.should.receive(:singular).and_return("boring")
+    Waves::Inflect::English.should.receive(:plural).and_return("still boring")
     "boring".singular.plural
   end
   
@@ -73,7 +109,7 @@ describe "Waves::Utilities::String" do
   
 end
 
-describe "Waves::Utilities::Symbol" do
+describe "A monkeypatch to Symbol" do
   
   it "defines / as syntactic sugar for File.join" do
     ( :lib / :utilities ).should == File.join( "lib", "utilities")

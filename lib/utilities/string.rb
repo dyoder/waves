@@ -18,13 +18,13 @@ module Waves
       end
 
       def singular
-        Inflect::English.singular(self)
+        Waves::Inflect::English.singular(self)
       end
 
       alias_method(:singularize, :singular)
 
       def plural
-        Inflect::English.plural(self)
+        Waves::Inflect::English.plural(self)
       end
 
       alias_method(:pluralize, :plural)

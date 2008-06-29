@@ -30,6 +30,7 @@ require 'utilities/kernel'
 require 'utilities/object'
 require 'utilities/integer'
 require 'utilities/inflect'
+require 'utilities/inflect/english'
 require 'utilities/proc'
 require 'utilities/hash'
 # waves Runtime
