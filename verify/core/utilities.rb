@@ -35,10 +35,69 @@ describe "Waves::Utilities::Inflect" do
   
 end
 
+describe "Waves::Utilities::String" do
+  
+  it "defines singular and plural inflection methods" do
+    Inflect::English.should.receive(:singular).and_return("still boring")
+    Inflect::English.should.receive(:plural).and_return("still boring")
+    "boring".singular.plural
+  end
+  
+  it "defines / as syntactic sugar for File.join" do
+    ( "lib" / "utilities" ).should == File.join( "lib", "utilities" )
+    ( "lib" / :utilities ).should == File.join( "lib", "utilities" )
+    ( "lib" / 3 ).should == File.join( "lib", "3" )
+  end
+  
+  it "defines a snake_case method" do
+    "MilchCow".snake_case.should == "milch_cow"
+    "Milch Cow".snake_case.should == "milch_cow"
+    "milchCow".snake_case.should == "milch_cow"
+    "StrangeFaceMilchCow".snake_case.should == "strange_face_milch_cow"
+  end
+  
+  it "defines a camel_case method" do
+    "siege_engine".camel_case.should == "SiegeEngine"
+    "ineffective_siege_engine".camel_case.should == "IneffectiveSiegeEngine"
+  end
+  
+  it "defines a lower_camel_case method" do
+    "siege_engine".lower_camel_case.should == "siegeEngine"
+    "ineffective_siege_engine".lower_camel_case.should == "ineffectiveSiegeEngine"
+  end
+  
+  it "defines a title_case method" do
+    # Yes, we know that this is naive title casing.
+    "sing ho! for the life of a bear".title_case.should == "Sing Ho! For The Life Of A Bear"
+  end
+  
+end
+
 describe "Waves::Utilities::Symbol" do
   
   it "defines / as syntactic sugar for File.join" do
     ( :lib / :utilities ).should == File.join( "lib", "utilities")
+  end
+  
+end
+
+
+describe "Waves::Utilities::Object" do
+  
+  before do |variable|
+    @foo = [ :a, :b, :c ]
+  end
+  
+  it "defines instance_exec, to allow instance_eval-ing a block with parameters" do
+    result = @foo.instance_exec(2)  do |i|
+      self[i]
+    end
+    result.should == :c
+    
+    result = @foo.instance_exec(0,2) do |*args|
+      self.slice(*args)
+    end
+    result.should == [:a, :b]
   end
   
 end
@@ -78,44 +137,6 @@ describe "Waves::Utilities::Hash" do
     h = { "two" => 2, :three => 3}
     h.symbolize_keys!
     h.should == { :two => 2, :three => 3 }
-  end
-  
-end
-
-describe "Waves::Utilities::String" do
-  
-  it "defines singular and plural inflection methods" do
-    Inflect::English.should.receive(:singular).and_return("still boring")
-    Inflect::English.should.receive(:plural).and_return("still boring")
-    "boring".singular.plural
-  end
-  
-  it "defines / as syntactic sugar for File.join" do
-    ( "lib" / "utilities" ).should == File.join( "lib", "utilities" )
-    ( "lib" / :utilities ).should == File.join( "lib", "utilities" )
-    ( "lib" / 3 ).should == File.join( "lib", "3" )
-  end
-  
-  it "defines a snake_case method" do
-    "MilchCow".snake_case.should == "milch_cow"
-    "Milch Cow".snake_case.should == "milch_cow"
-    "milchCow".snake_case.should == "milch_cow"
-    "StrangeFaceMilchCow".snake_case.should == "strange_face_milch_cow"
-  end
-  
-  it "defines a camel_case method" do
-    "siege_engine".camel_case.should == "SiegeEngine"
-    "ineffective_siege_engine".camel_case.should == "IneffectiveSiegeEngine"
-  end
-  
-  it "defines a lower_camel_case method" do
-    "siege_engine".lower_camel_case.should == "siegeEngine"
-    "ineffective_siege_engine".lower_camel_case.should == "ineffectiveSiegeEngine"
-  end
-  
-  it "defines a title_case method" do
-    # Yes, we know that this is naive title casing.
-    "sing ho! for the life of a bear".title_case.should == "Sing Ho! For The Life Of A Bear"
   end
   
 end
