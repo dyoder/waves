@@ -11,6 +11,6 @@ module Waves
   end
 end
 
-class Proc
+class Proc # :nodoc:
   include Waves::Utilities::Proc
 end

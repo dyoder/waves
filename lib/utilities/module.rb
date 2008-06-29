@@ -16,6 +16,6 @@ module Waves
   end  
 end
 
-class Module
+class Module # :nodoc:
   include Waves::Utilities::Module
 end

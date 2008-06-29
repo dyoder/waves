@@ -10,6 +10,6 @@ module Waves
   end
 end
 
-class Symbol
+class Symbol # :nodoc:
   include Waves::Utilities::Symbol
 end
