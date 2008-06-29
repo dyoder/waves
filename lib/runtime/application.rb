@@ -7,10 +7,8 @@ module Waves
     attr_reader :application
 
     # Register a module as a Waves application.
-    # Also, initialize the database connection if necessary.
     def << ( app )
       @application = app if Module === app
-      # app.database if app.respond_to? 'database'
     end
 
     def instance ; Waves::Application.instance ; end
