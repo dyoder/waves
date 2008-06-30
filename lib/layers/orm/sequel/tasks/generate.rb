@@ -1,6 +1,6 @@
 namespace :generate do
   
-    desc 'Generate a new Sequel model, with name=<name>'
+    desc 'Generate a Sequel model, with name=<name>'
     task :model do |task|
       name = ENV['name']
       model_name = name.camel_case
