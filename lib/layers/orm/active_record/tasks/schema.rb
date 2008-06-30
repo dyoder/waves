@@ -1,28 +1,20 @@
-require File.dirname(__FILE__) / ".." / ".." / :migration
-include Waves::Orm
+require "#{File.dirname(__FILE__)}/../../migration"
+
 namespace :schema do
 
-  desc "Create a new ActiveRecord Migration using ENV['name']."
+  desc "Create ActiveRecord migration with name=<name>"
   task :migration do |task|
-
-    source          = Migration.template(:active_record, ENV['template'])
-    destination     = Migration.destination(ENV['name'])
-    migration_name  = Migration.migration_name(ENV['name'])
-
-    context = {:class_name => migration_name.camel_case}
-
-    Migration.write_erb(context, source, destination)
-
+    Waves::Layers::ORM.create_migration_for(ActiveRecord)
   end
 
-  desc 'Performs migration from version, to version.'
+  desc "Performs ActiveRecord migrations to version=<version>"
   task :migrate => :connect do |task|
     version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
-    ActiveRecord::Migrator.migrate(Migration.directory, version)
+    ActiveRecord::Migrator.migrate(Waves::Layers::ORM.migration_directory, version)
   end
 
   task :connect do
-    Application.database
+    Waves.application.database
     ActiveRecord::Base.logger = Logger.new($stdout)
   end
 
