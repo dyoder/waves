@@ -5,37 +5,86 @@ class Symbol
   remove_method :to_proc
 end
 require 'active_record'
+require "#{File.dirname(__FILE__)}/active_record/tasks/schema"    if defined?(Rake)
+require "#{File.dirname(__FILE__)}/active_record/tasks/generate"  if defined?(Rake)
 
-if defined?(Rake)
-  require File.dirname(__FILE__) / :active_record / :tasks / :schema
-end
 
 module Waves
-  module Orm
+  module Layers
+    module ORM
 
-    Model = ::ActiveRecord::Base
+      module ActiveRecord
 
-    module ActiveRecord
+        # def active_record
+        #   unless @active_record
+        #     ::ActiveRecord::Base.establish_connection(config.database)
+        #     @active_record = ::ActiveRecord::Base.connection
+        #   end
+        #   @active_record
+        # end
 
-      def active_record
-        unless @active_record
-          ::ActiveRecord::Base.establish_connection(config.database)
-          @active_record = ::ActiveRecord::Base.connection
+        # def database
+        #   @database ||= active_record
+        # end
+
+        def model_config(context, name)
+          active_record
+          context.set_table_name(name)
         end
-        @active_record
-      end
+        
+        
+        def self.included(app)
+          
+          def app.database
+            unless @database
+              ::ActiveRecord::Base.establish_connection(config.database)
+              @database = ::ActiveRecord::Base.connection
+            end
+            @database
+          end
+                      
+          app.auto_create_module( :Models ) do
+            include AutoCode
+            auto_create_class :Default, ::ActiveRecord::Base
+            auto_load :Default, :directories => [ :models ]
+          end
+          
+          app.auto_eval :Models do
+            auto_create_class true, app::Models::Default
+            auto_load true, :directories => [ :models ]
 
-      def database
-        @database ||= active_record
+            auto_eval true do
+              app.database
+              set_table_name basename.snake_case.pluralize.intern
+            end
+          end
+            
+          Waves::Controllers::Base.module_eval do
+            def all #:nodoc:
+              model.all
+            end
+            
+            def find( name ) #:nodoc:
+              model[ :name => name ] or not_found
+            end
+            
+            def create #:nodoc:
+              model.create( attributes )
+            end
+            
+            def delete( name ) #:nodoc:
+              find( name ).destroy
+            end
+            
+            def update( name ) #:nodoc:
+              instance = find( name )
+              instance.update_with_params( attributes )
+              instance
+            end
+          end
+        end
       end
-
-      def model_config(context, name)
-        active_record
-        context.set_table_name(name)
-      end
-
     end
   end
 end
 
-::Application.extend(Waves::Orm::ActiveRecord)
