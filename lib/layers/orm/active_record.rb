@@ -61,27 +61,28 @@ module Waves
             
           Waves::Controllers::Base.module_eval do
             def all #:nodoc:
-              model.all
+              model.find(:all)
             end
             
-            def find( name ) #:nodoc:
-              model[ :name => name ] or not_found
+            def find( id ) #:nodoc:
+              model.find(id) or not_found
             end
             
             def create #:nodoc:
               model.create( attributes )
             end
             
-            def delete( name ) #:nodoc:
-              find( name ).destroy
+            def delete( id ) #:nodoc:
+              find( id ).destroy
             end
             
-            def update( name ) #:nodoc:
-              instance = find( name )
-              instance.update_with_params( attributes )
+            def update( id ) #:nodoc:
+              instance = find( id )
+              instance.update_attributes( attributes )
               instance
             end
           end
+          
         end
       end
     end
