@@ -11,7 +11,7 @@ module Waves
       def initialize( options ) ; @pattern = options[ :path ] ; end
       
       functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
-      functor( :match, nil, String ) { |patern, path| {} }
+      functor( :match, nil, String ) { |pattern, path| {} }
       functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
       functor( :match, Array, Array ) do | wants, gots |
         r = {}; matches = wants.all? { | want | match( r, want, gots.shift ) }
