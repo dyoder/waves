@@ -43,11 +43,11 @@ module Waves
     functor( :map, exception, Hash ) { | e, options | Handler.new( e, options ) }
         
     def []( request )
-      returning Hash.new { |h,k| h[k] = [] } do | results |
-        RULES.each do | rule |
-          mappings[ rule ].each { | action | ( binding = action.bind( request ) ) and results[ rule ].push( binding ) }
-        end
+      results = Hash.new { |h,k| h[k] = [] }
+      RULES.each do | rule |
+        mappings[ rule ].each { | action | ( binding = action.bind( request ) ) and results[ rule ].push( binding ) }
       end
+      return results
     end  
 
     private :map
