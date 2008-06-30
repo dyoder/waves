@@ -1,21 +1,30 @@
 module Waves
-  module Orm # :nodoc:
-    # Helper methods to establish an inter-ORM standard for migrations
-    module Migration
-
-      # stuff in this file largely lifted from Sequel.  Thanks, bro.
+  module Layers
+    
+    # Helper methods to establish inter-ORM standards
+    module ORM
 
       # Glob pattern
       MIGRATION_FILE_PATTERN = '[0-9][0-9][0-9]_*.rb'.freeze
 
+      def self.create_migration_for(orm)
+        source          = migration_template(orm.to_s.snake_case, ENV['template'])
+        destination     = migration_destination(ENV['name'])
+        migration_name  = migration_name(ENV['name'])
+
+        context = {:class_name => migration_name.camel_case}
+
+        write_migration(context, source, destination)
+      end
+
       # Where Waves keeps its migration files
-      def self.directory
+      def self.migration_directory
         :schema / :migrations
       end
 
       # Returns any found migration files in the supplied directory.
       def self.migration_files(range = nil)
-        pattern = directory / MIGRATION_FILE_PATTERN
+        pattern = migration_directory / MIGRATION_FILE_PATTERN
         files = Dir[pattern].inject([]) do |m, path|
           m[File.basename(path).to_i] = path
           m
@@ -45,20 +54,20 @@ module Waves
 
       # Returns the path to the migration template file for the given ORM.
       # <em>orm</em> can be a symbol or string
-      def self.template(orm, name=nil)
+      def self.migration_template(orm, name=nil)
         file = ( name || 'empty' ) + '.rb.erb'
         source = File.dirname(__FILE__) / orm / :migrations / file
       end
 
       # Given a migration name, returns the path of the file that would be created.
-      def self.destination(name)
+      def self.migration_destination(name)
         version = next_migration_version
-        directory / "#{'%03d' % version}_#{migration_name(name)}.rb"
+        migration_directory / "#{'%03d' % version}_#{migration_name(name)}.rb"
       end
 
       # Takes an assigns hash as the Erubis context.  Keys in the hash become
       # instance variable names.
-      def self.write_erb(context, source, destination)
+      def self.write_migration(context, source, destination)
         code = Erubis::Eruby.new( File.read( source ) ).evaluate( context )
         puts "Creating #{destination}"
         File.write( destination, code )
