@@ -49,32 +49,38 @@ module Waves
             end
           end
             
-          Waves::Controllers::Base.module_eval do
-            def all #:nodoc:
-              model.all
-            end
-            
-            def find( name ) #:nodoc:
-              model[ :name => name ] or not_found
-            end
-            
-            def create #:nodoc:
-              model.create( attributes )
-            end
-            
-            def delete( name ) #:nodoc:
-              find( name ).destroy
-            end
-            
-            def update( name ) #:nodoc:
-              instance = find( name )
-              instance.update_with_params( attributes )
-              instance
-            end
+          Waves::Controllers::Base.instance_eval do
+            include Waves::Layers::ORM::Sequel::ControllerMethods
           end
             
         end
-      end
+
+        # Mixed into Waves::Controllers::Base.  Provides ORM-specific helper methods for model access.
+        module ControllerMethods
+          def all
+            model.all
+          end
+          
+          def find( name )
+            model[ :name => name ] or not_found
+          end
+          
+          def create
+            model.create( attributes )
+          end
+          
+          def delete( name )
+            find( name ).destroy
+          end
+          
+          def update( name )
+            instance = find( name )
+            instance.update_with_params( attributes )
+            instance
+          end
+        end
+        
+      end    
     end
   end
 end

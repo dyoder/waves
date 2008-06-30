@@ -13,25 +13,21 @@ module Waves
   module Layers
     module ORM
 
+      # Sets up the ActiveRecord connection and configures AutoCode on Models, so that constants in that
+      # namespace get loaded from file or created as subclasses of Models::Default
       module ActiveRecord
-
-        # def active_record
-        #   unless @active_record
-        #     ::ActiveRecord::Base.establish_connection(config.database)
-        #     @active_record = ::ActiveRecord::Base.connection
-        #   end
-        #   @active_record
-        # end
-
-        # def database
-        #   @database ||= active_record
-        # end
-
-        def model_config(context, name)
-          active_record
-          context.set_table_name(name)
-        end
         
+        # On inclusion, this module:
+        # - creates on the application module a database method that establishes and returns the ActiveRecord connection
+        # - arranges for autoloading/autocreation of missing constants in the Models namespace
+        # - defines ActiveRecord-specific helper methods on Waves::Controllers::Base
+        # 
+        # The controller helper methdods are:
+        # - all
+        # - find(name)
+        # - create
+        # - delete(name)
+        # - update(name)
         
         def self.included(app)
           
@@ -58,32 +54,38 @@ module Waves
               set_table_name basename.snake_case.pluralize.intern
             end
           end
-            
-          Waves::Controllers::Base.module_eval do
-            def all #:nodoc:
-              model.find(:all)
-            end
-            
-            def find( id ) #:nodoc:
-              model.find(id) or not_found
-            end
-            
-            def create #:nodoc:
-              model.create( attributes )
-            end
-            
-            def delete( id ) #:nodoc:
-              find( id ).destroy
-            end
-            
-            def update( id ) #:nodoc:
-              instance = find( id )
-              instance.update_attributes( attributes )
-              instance
-            end
+          
+          Waves::Controllers::Base.instance_eval do
+            include Waves::Layers::ORM::ActiveRecord::ControllerMethods
           end
           
         end
+        
+        # Mixed into Waves::Controllers::Base.  Provides ORM-specific helper methods for model access.
+        module ControllerMethods
+          def all
+            model.find(:all)
+          end
+          
+          def find( id )
+            model.find(id) or not_found
+          end
+          
+          def create
+            model.create( attributes )
+          end
+          
+          def delete( id )
+            find( id ).destroy
+          end
+          
+          def update( id )
+            instance = find( id )
+            instance.update_attributes( attributes )
+            instance
+          end
+        end
+        
       end
     end
   end
