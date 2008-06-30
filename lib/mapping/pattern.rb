@@ -8,17 +8,13 @@ module Waves
       
       include Functor::Method
       
-      def initialize( options )
-        @target = options[ :target ]
-        @pattern = options[ :pattern ]
-      end
+      def initialize( options ) ; @pattern = options[ :path ] ; end
       
-      functor( :match, Waves::Request ) { | request | match( @pattern, request.send( @target ) ) }
+      functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
+      functor( :match, nil, String ) { |patern, path| {} }
       functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
       functor( :match, Array, Array ) do | wants, gots |
-        r = {}; matches = wants.all? do | want |
-          match( r, want, gots.shift )
-        end
+        r = {}; matches = wants.all? { | want | match( r, want, gots.shift ) }
         r if matches and gots.empty?
       end
       functor( :match, Hash, String, String ) { | r, want, got | got if want == got }

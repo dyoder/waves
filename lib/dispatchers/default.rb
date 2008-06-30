@@ -37,22 +37,20 @@ module Waves
 
         begin
 
-          request.not_found unless mapping[ :action ]
+          request.not_found if mapping[ :action ].empty?
           mapping[ :before ].each { | action | action.call( request ) }
-          
-          begin
-            response.write( mapping[ :action ].first.call( request ) )
-          ensure
-            mapping[ :after ].each { | action | action.call( request ) }
-          end
+          response.write( mapping[ :action ].first.call( request ) )
+          mapping[ :after ].each { | action | action.call( request ) }
           
         rescue Exception => e
 
-          raise e unless Waves.mapping.handle( e )
+          Waves::Logger.info e.to_s
+          handler = mapping[ :handle ].find { | action | action.exception === e } 
+          ( handler.call( request ) if handler ) or raise e
 
         ensure
 
-          mapping[:always].each do | action |
+          mapping[ :always ].each do | action |
             begin
               action.call( request ) 
             rescue Exception => e

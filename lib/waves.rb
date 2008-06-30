@@ -9,6 +9,7 @@ require 'daemons'
 require 'live_console'
 
 require 'autocode'
+gem 'dyoder-functor'
 require 'functor'
 
 # for mimetypes only or when using as default handler
@@ -23,8 +24,6 @@ require 'date'
 require 'benchmark'
 # require 'memcache'
 require 'base64'
-
-require 'functor'
 
 # selected project-specific extensions
 require 'utilities/module'
@@ -56,9 +55,10 @@ require 'runtime/configuration'
 # waves URI mapping
 require 'mapping/mapping'
 require 'mapping/action'
+require 'mapping/handler'
+require 'mapping/pattern'
 require 'mapping/constraints'
 require 'mapping/descriptors'
-require 'mapping/pattern'
 require 'mapping/paths'
 require 'resources/mixin'
 require 'resources/proxy'

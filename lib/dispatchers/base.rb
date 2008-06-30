@@ -16,6 +16,9 @@ module Waves
         @path = path
         @status = status
       end
+      def message
+        "location: #{@path} status: #{@status}"
+      end
     end
 
     # Waves::Dispatchers::Base provides the basic request processing structure.

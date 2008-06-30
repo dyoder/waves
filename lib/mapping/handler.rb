@@ -7,9 +7,11 @@ module Waves
       attr_reader :exception
       
       def initialize( e, options )
-        @exception = e
-        super
+        @exception = e ; options[:resource] ||= 'error'
+        super( options )
       end
+      
+    end
     
   end
 
