@@ -20,22 +20,8 @@ module Waves
       module GetRules
 
         def self.included(target)
-
-          target.module_eval do
-
-            extend Waves::Mapping
-
-            path '/{resource}', :named => :all, :method => :get,
-              :action => lambda { | resource | with( resource ).all and render( :list ) }
-              
-            path '/{resource}/{name}', :named => :get, :method => :get,
-              :action => lambda { | resource, name | with( resource ).find( name ) and render( :show ) }
-              
-            path '/{resource}/{name}/editor', :named => :editor, :method => :get,
-              :action => lambda { | resource, name | with( resource ).find( name ) and render( :editor ) }
-
-          end
-
+          target.action( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
+          target.action( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
         end
 
       end
@@ -50,24 +36,9 @@ module Waves
       module RestRules
 
         def self.included(target)
-
-          target.module_eval do
-
-            extend Waves::Mapping
-
-            path '/{resource}', :named => :create, :method => :post do | resource |
-              with( resource ).create and redirect( :editor, :resource => resource, :name => instance.name )
-            end
-
-            path '/{resource}/{name}', :named => :update, :method => :put do | resource, name |
-              with(resource).update( name ) and redirect( :show, :resource => resource, :name => name )
-            end
-
-            path '/{resource}/{name}', :named => :delete, :method => :delete,
-              :action => lambda { | resource, name | with( resource ).delete( name ) }
-
-          end
-
+          target.action( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
+          target.action( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
+          target.action( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
         end
 
       end

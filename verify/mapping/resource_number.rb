@@ -10,8 +10,8 @@ describe "The plural form of a resource" do
   end
   
   it "can be specified with a grabby-thingy in the Pattern" do
-    mapping.with :accepts => 'text/<format>' do
-      path :list, :get => '/<resources>'
+    mapping.with :accepts => [ /(\w+)/ ] do
+      path :list, :get => [ :resources ]
     end
   end
   
