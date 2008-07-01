@@ -7,7 +7,7 @@ module Waves
       # no path was provided. Should also always use :path rather than relying on target (this is
       # actually code in patter), and add code for :scheme, :domain, etc. constraints (Constraints).
       # 
-      # Can some o' the resource determination related code be factored out of there or simplified?
+      # Can some of the resource determination related code be factored out of there or simplified?
       
       def initialize( options )
         @name = name = options[:name] ; @pattern = pattern = Pattern.new( options )
