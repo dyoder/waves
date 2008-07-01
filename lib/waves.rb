@@ -79,6 +79,7 @@ require 'helpers/number_helper'
 require 'renderers/mixin'
 require 'renderers/erubis'
 require 'renderers/markaby'
+require 'renderers/haml'
 
 
 # waves foundations / layers
