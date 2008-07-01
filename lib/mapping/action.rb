@@ -12,6 +12,7 @@ module Waves
       def initialize( options )
         @name = name = options[:name] ; @pattern = pattern = Pattern.new( options )
         @constraints = Constraints.new( options ) ; @descriptors = Descriptors.new( options )
+        @block = options[:block]
         if rname = options[ :resource ]
           @resource = resource = Waves.application[:resources][ rname ]
         else
@@ -19,8 +20,7 @@ module Waves
           @resource = Waves::Resources::Proxy
         end
         if name
-          block = options[:block]
-          resource.instance_eval { define_method( name, &block ) } if block
+          resource.instance_eval { define_method( name, &@block ) } if @block
           resource::Paths.instance_eval { define_method( name ) { |*args| generate( options[ :path ], args ) } }
         end
       end
