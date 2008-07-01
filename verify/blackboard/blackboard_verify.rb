@@ -1,3 +1,4 @@
+# require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__), "helpers")
 
 specification "Blackboard" do
@@ -85,7 +86,6 @@ specification "Blackboard included in other classes" do
     request = mock(:request)
     BlackBoardVerify::Controllers::Test.instance_methods.should.include "blackboard"
     Waves::Helpers::Default.instance_methods.should.include "blackboard"
-    Waves::ResponseProxy.instance_methods.should.include "blackboard"
     BlackBoardVerify::Views::Test.methods.should.include "blackboard"
   end
 

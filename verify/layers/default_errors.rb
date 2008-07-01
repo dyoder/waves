@@ -21,9 +21,10 @@ Waves::Console.load( :mode => :development )
 
 describe "An application which includes the DefaultErrors layer" do
   
-  it "registers a view-based handler for NotFound errors" do    
-    r = get('/bogus')
-    r.body.should == "View-based 404"
-  end
+  # ** API CHANGE **
+  # it "registers a view-based handler for NotFound errors" do    
+  #   r = get('/bogus')
+  #   r.body.should == "View-based 404"
+  # end
   
 end

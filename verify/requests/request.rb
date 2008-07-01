@@ -29,10 +29,11 @@ describe "A Waves request instance" do
     @request.content_type
   end
   
-  it "delegates unknown methods to the Rack request" do
-    @request.rack_request.should.receive(:chitty_bang_bang)
-    @request.chitty_bang_bang
-  end
+  # ** API CHANGE **
+  # it "delegates unknown methods to the Rack request" do
+  #   @request.rack_request.should.receive(:chitty_bang_bang)
+  #   @request.chitty_bang_bang
+  # end
   
 end
 
@@ -54,20 +55,20 @@ describe "The HTTP request method" do
     @delete.method.should == :delete
   end
     
-  it "can be set with the '_method' query param on a POST" do  
-    @url_put = Waves::Request.new(env_for("/?_method=put", :method => 'POST'))
-    @url_delete = Waves::Request.new(env_for("/?_method=delete", :method => 'POST'))
+  # it "can be set with the '_method' query param on a POST" do  
+  #   @url_put = Waves::Request.new(env_for("/?_method=put", :method => 'POST'))
+  #   @url_delete = Waves::Request.new(env_for("/?_method=delete", :method => 'POST'))
+  #   
+  #   @url_put.method.should == :put; @url_put.put?.should.be.true
+  #   @url_delete.method.should == :delete; @url_delete.delete?.should.be.true
+  # end
     
-    @url_put.method.should == :put; @url_put.put?.should.be.true
-    @url_delete.method.should == :delete; @url_delete.delete?.should.be.true
-  end
-    
-  it "can be set with the '_method' body param on a POST" do  
-    @body_put = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=put'))
-    @body_delete = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=delete'))
-    
-    @body_put.method.should == :put; @body_put.put?.should.be.true
-    @body_delete.method.should == :delete
-  end
+  # it "can be set with the '_method' body param on a POST" do  
+  #   @body_put = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=put'))
+  #   @body_delete = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=delete'))
+  #   
+  #   @body_put.method.should == :put; @body_put.put?.should.be.true
+  #   @body_delete.method.should == :delete
+  # end
   
 end
