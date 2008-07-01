@@ -21,6 +21,23 @@ Choice.options do
     desc 'Show this message'
   end
   
+  option :orm do
+    short '-o'
+    long '--orm=ORM'
+    desc "Select an ORM (e.g. active_record, sequel, none)"
+    default "sequel"
+  end
+  
+end
+
+orm = Choice.choices.orm.snake_case
+orm_require, orm_include = case orm
+when 'sequel'
+  ["require 'layers/orm/sequel'", "include Waves::Layers::ORM::Sequel"]
+when 'active_record'
+  ["require 'layers/orm/active_record'", "include Waves::Layers::ORM::ActiveRecord"]
+when 'none'
+  ['', '# This app was generated without an ORM layer']
 end
 
 app_path = ARGV[0]
@@ -37,7 +54,7 @@ template = "#{WAVES}/app"
 generator = Rakegen.new("waves:app") do |gen|
   gen.source = template
   gen.target = app_path
-  gen.template_assigns = {:name => app_name.camel_case}
+  gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
   gen.executables = %w{ bin/waves-console  bin/waves-server}
 end
 
