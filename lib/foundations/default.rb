@@ -13,7 +13,7 @@ module Waves
 
           include Waves::Layers::Simple
           include Waves::Layers::MVC          
-          # include Waves::Layers::DefaultErrors
+          include Waves::Layers::DefaultErrors
           
         end
         
