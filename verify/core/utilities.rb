@@ -5,7 +5,6 @@ UTILITIES = "#{File.dirname(__FILE__)}/../../lib/utilities"
 
 require "#{UTILITIES}/module"
 require "#{UTILITIES}/inflect"
-require "#{UTILITIES}/inflect/english"
 require "#{UTILITIES}/string"
 require "#{UTILITIES}/symbol"
 require "#{UTILITIES}/object"
@@ -71,12 +70,13 @@ describe "a language extended with Waves::Utilities::Inflect" do
 end
 
 describe "Waves::Utilities::String" do
-  
-  it "delegates singular and plural inflection methods" do
-    Waves::Inflect::English.should.receive(:singular).and_return("boring")
-    Waves::Inflect::English.should.receive(:plural).and_return("still boring")
-    "boring".singular.plural
-  end
+
+  # ** API Change **
+  # it "delegates singular and plural inflection methods" do
+  #   Waves::Inflect::English.should.receive(:singular).and_return("boring")
+  #   Waves::Inflect::English.should.receive(:plural).and_return("still boring")
+  #   "boring".singular.plural
+  # end
   
   it "defines / as syntactic sugar for File.join" do
     ( "lib" / "utilities" ).should == File.join( "lib", "utilities" )
