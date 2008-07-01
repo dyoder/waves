@@ -1,8 +1,3 @@
-gem 'sequel', '>= 2.0.0'
-require 'sequel'
-require "#{File.dirname(__FILE__)}/sequel/tasks/schema" if defined?(Rake)
-require "#{File.dirname(__FILE__)}/sequel/tasks/generate" if defined?(Rake)
-
 module Waves
   module Layers
     module ORM # :nodoc:
@@ -24,6 +19,11 @@ module Waves
         # - update(name)
         #
         def self.included(app)
+          
+          gem 'sequel', '>= 2.0.0'
+          require 'sequel'
+          require "#{File.dirname(__FILE__)}/sequel/tasks/schema" if defined?(Rake)
+          require "#{File.dirname(__FILE__)}/sequel/tasks/generate" if defined?(Rake)
           
           def app.database ; @sequel ||= ::Sequel.open( config.database ) ; end
                       
