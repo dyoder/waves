@@ -8,7 +8,7 @@ end
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
   gem.summary = "Open-source framework for building Ruby-based Web applications."
-  gem.version = '0.7.6'
+  gem.version = '0.7.7'
   gem.homepage = 'http://rubywaves.com'
   gem.author = 'Dan Yoder'
   gem.email = 'dan@zeraweb.com'
