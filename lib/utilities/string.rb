@@ -17,18 +17,6 @@ module Waves
         File.join(self,string.to_s)
       end
 
-      def singular
-        Waves::Inflect::English.singular(self)
-      end
-
-      alias_method(:singularize, :singular)
-
-      def plural
-        Waves::Inflect::English.plural(self)
-      end
-
-      alias_method(:pluralize, :plural)
-
       # produces stringsLikeThis
       def lower_camel_case
         gsub(/(_)(\w)/) { $2.upcase }
