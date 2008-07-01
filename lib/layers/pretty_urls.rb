@@ -15,7 +15,7 @@ module Waves
       #
       #   /resources            # => get a list of all instances of resource
       #   /resource/name        # => get a specific instance of resource with the given name
-      #   /resource/name/editor # => display an edit page for the given resource
+      #   /resource/name/view   # => display a specific view for the given resource
       #
       module GetRules
 
