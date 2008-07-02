@@ -1,14 +1,3 @@
-class Symbol
-  # Protect ActiveRecord from itself by undefining the to_proc method.
-  # Don't worry, AR will redefine it.
-  alias :extensions_to_proc :to_proc
-  remove_method :to_proc
-end
-require 'active_record'
-require "#{File.dirname(__FILE__)}/active_record/tasks/schema"    if defined?(Rake)
-require "#{File.dirname(__FILE__)}/active_record/tasks/generate"  if defined?(Rake)
-
-
 module Waves
   module Layers
     module ORM
@@ -30,6 +19,16 @@ module Waves
         # - update(name)
         
         def self.included(app)
+          
+          class Symbol
+            # Protect ActiveRecord from itself by undefining the to_proc method.
+            # Don't worry, AR will redefine it.
+            alias :extensions_to_proc :to_proc
+            remove_method :to_proc
+          end
+          require 'active_record'
+          require "#{File.dirname(__FILE__)}/active_record/tasks/schema"    if defined?(Rake)
+          require "#{File.dirname(__FILE__)}/active_record/tasks/generate"  if defined?(Rake)
           
           def app.database
             unless @database
