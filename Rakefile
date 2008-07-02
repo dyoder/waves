@@ -7,6 +7,7 @@ end
 
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
+  gem.rubyforge_project = "waves"
   gem.summary = "Open-source framework for building Ruby-based Web applications."
   gem.version = '0.7.7'
   gem.homepage = 'http://rubywaves.com'
@@ -20,7 +21,7 @@ gem = Gem::Specification.new do |gem|
   end
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.files = Dir['lib/**/*.rb','lib/**/*.erb','app/**/*', 'app/**/.gitignore']
+  gem.files = Dir[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
