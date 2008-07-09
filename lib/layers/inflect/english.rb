@@ -1,3 +1,5 @@
+require 'layers/inflect/english/rules'
+require 'layers/inflect/english/string'
 module Waves
   module Layers
     module Inflect
@@ -5,8 +7,7 @@ module Waves
         
         def self.included(app)
           
-          require 'layers/inflect/english/rules'
-          require 'layers/inflect/english/string'
+
           
           String.class_eval do
             include Waves::Layers::Inflect::English::StringMethods
