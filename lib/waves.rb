@@ -35,6 +35,7 @@ require 'utilities/inflect'
 require 'utilities/proc'
 require 'utilities/hash'
 require 'utilities/attributes'
+require 'utilities/tempfile'
 # waves Runtime
 require 'dispatchers/base'
 require 'dispatchers/default'
