@@ -2,7 +2,7 @@
 
 # = Generate or update a Waves application
 # 
-# The +waves+ script generates a new Waves application or updates an existing one.  The script uses RakeGen for file copies and template processing, and the current version of RakeGen requires you to affirm that you want to clobber each and every file when doing an update.
+# The +waves+ script generates a new Waves application or updates an existing app.  The script uses {RakeGen}[http://github.com/automatthew/rakegen] for file copies and template processing, and the current version of RakeGen requires you to affirm that you want to clobber each and every file when doing an update.
 #
 # == Usage
 # 
