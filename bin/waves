@@ -1,7 +1,25 @@
 #!/usr/bin/env ruby
+
+# = Generate or update a Waves application
+# 
+# The +waves+ script generates a new Waves application or updates an existing one.  The script uses RakeGen for file copies and template processing, and the current version of RakeGen requires you to affirm that you want to clobber each and every file when doing an update.
+#
+# == Usage
+# 
+#   # Generate a Waves app using the default ORM layer, which is currently Sequel
+#   waves /path/to/app  
+#
+#   # Generate an app using the default ORM layer, which is currently Sequel
+#   waves /path/to/app --orm=active_record
+#
+#   # Generate an app that does not include an ORM layer
+#   waves /path/to/app -o none 
+
 require 'rubygems'
 require 'choice'
 require 'rakegen'
+
+
 
 # if we're in the waves source, prepend it to the load path
 waves_lib = File.expand_path( "#{File.dirname(__FILE__)}/../../waves/lib" )

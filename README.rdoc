@@ -116,6 +116,19 @@ You can work in an irb-based console:
   waves-console # or bin/waves-console
 
 
+== Freeze it.  Freeze it real good.
+
+When deploying an application or when running off a copy of Waves source, you may need to freeze the app to a specific version of Waves.  Applications look for framework source in ./waves before falling back on the gem. You can freeze the framework to this location using the rake tasks <tt>waves:freeze</tt> and <tt>waves:freeze:current</tt>.
+
+  # copy the specified framework source to killer_app/waves
+  rake waves:freeze src=/path/to/waves
+  
+  # figure out whatever framework source your app happens to be using and copy it to killer_app/waves
+  rake waves:freeze:current
+
+Unfreeze using <tt>rake waves:unfreeze</tt>, or just delete the ./waves directory if you're feeling obvious.
+
+
 == Where the Wavy Things Are
 
 A Waves application consists of a Ruby module structured with internal namespaces.  Thus:
