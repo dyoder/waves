@@ -1,3 +1,15 @@
+0.7.7
+- ActiveRecord ORM layer
+- base controller helpers that rely on a particular ORM are now defined in the ORM layers
+- Sequel requires moved into the self.included block, to help with the mem footprint
+- rake generate:model reappeared
+- rake waves:freeze and waves:unfreeze
+- Rack::Static declared for /css, /javascript, and /images in generated applications
+- added Lawrence Pit's Haml renderer
+- English inflector pulled into its own layer, in the hope of allowing localization someday
+- utility monkeypatches pulled into modules where possible, for better troubleshooting
+- docs, samples, and verify now actually included in the gem
+- monkeypatch to Tempfile to work around problem with file uploading and Rack.
 0.7.6
 - added metaid as gem dependency
 - Special handling in Windows for interrupts ('cause Windows has trouble with those)
