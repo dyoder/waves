@@ -1,0 +1,11 @@
+layout :default, :title => 'Blog Entries' do
+  h1 'My Blog'
+  form :action => '/entries', :method => 'post' do
+    label 'Name'
+    input :type => :text, :name => 'entry.name'
+    input :type => :submit, :value => 'Add'
+  end
+  @entries.each do |entry|
+    view :entry, :summary, :entry => entry
+  end
+end
