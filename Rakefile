@@ -26,7 +26,7 @@ gem = Gem::Specification.new do |gem|
   end
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.files = Dir[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
+  gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
