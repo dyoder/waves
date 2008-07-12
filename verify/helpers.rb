@@ -1,4 +1,5 @@
-%w( rubygems bacon facon ).each { |f| require f }
+require 'rubygems'
+%w( bacon facon ).each { |f| require f }
 
 # Prepend the framework lib to the loadpath
 $:.unshift( File.join(File.dirname(__FILE__), "..", "lib") )
