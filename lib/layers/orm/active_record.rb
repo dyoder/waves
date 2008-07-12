@@ -20,12 +20,7 @@ module Waves
         
         def self.included(app)
           
-          class Symbol
-            # Protect ActiveRecord from itself by undefining the to_proc method.
-            # Don't worry, AR will redefine it.
-            alias :extensions_to_proc :to_proc
-            remove_method :to_proc
-          end
+
           require 'active_record'
           require "#{File.dirname(__FILE__)}/active_record/tasks/schema"    if defined?(Rake)
           require "#{File.dirname(__FILE__)}/active_record/tasks/generate"  if defined?(Rake)
@@ -66,20 +61,20 @@ module Waves
             model.find(:all)
           end
           
-          def find( id )
-            model.find(id) or not_found
+          def find( name )
+            model.find_by_name(name) or not_found
           end
           
           def create
             model.create( attributes )
           end
           
-          def delete( id )
-            find( id ).destroy
+          def delete( name )
+            find( name ).destroy
           end
           
-          def update( id )
-            instance = find( id )
+          def update( name )
+            instance = find( name )
             instance.update_attributes( attributes )
             instance
           end
