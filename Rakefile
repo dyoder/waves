@@ -1,8 +1,13 @@
 begin
   $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
     utilities/string utilities/symbol date).each { |dep| require dep }
-rescue
-  puts "Better do `rake setup` to get all the fancies you're missing"
+rescue LoadError => e
+  if e.message == 'no such file to load -- extensions/all'
+    puts "Better do `rake setup` to get all the fancies you're missing"
+    puts
+  else
+    raise e
+  end
 end
 
 gem = Gem::Specification.new do |gem|
@@ -21,7 +26,7 @@ gem = Gem::Specification.new do |gem|
   end
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.files = Dir[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
+  gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
