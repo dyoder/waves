@@ -1,111 +1,109 @@
 
-Here are the new style mappings for the generic CRUD-style resource that used to be in PrettyUrls and that have been serving as my canonical example:
-      
-      action( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
-      action( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
-      action( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
-      action( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
-      action( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
-      
-These five lines define #list, #create, etc., instance methods on a Resource class. 
+Examples:
+    
+    action( :list, :get => [ :resources ] ) do
+      action( :all ) and render( :list )
+    end
+    
+    action( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) do
+      action( :find, name ) and render( mode )
+    end
+    
+    action( :create, :post => [ :resources ] ) do
+      redirect( paths.read( action( :create ).name, 'edit' ) )
+    end
+    
+    action( :update, :put => [ :resource, :name ] ) do
+      action( :update, name ) and redirect( paths.read( name ) )
+    end
+    
+    action( :delete, :delete => [ :resource, :name ] ) do
+      action( :delete, name )
+    end
 
-If a resource is not specified, the application's default resource is used. 
+== Mappings
 
-When an application's resources derive from the default, they will all get these generic mappings as a baseline. 
-
-They can of course override them if they want, but the mapping methods work just like any other methods.
-
-In parallel, a corresponding path generator method is created on a "shadow" Paths object
-
-The shadow Paths object has a "shadow" class hierarchy that mirrors the resource hierarchy. 
-
-Path generating methods are also inherited automatically. 
-
-You can get to the Paths object via the #paths method (class and instance) from any Resource (see the #create mapping rule).
-
-Specification of a path is done using a simple Array. Each URL component maps to the corresponding item in the path array. 
-
-Symbols represent parameters and are matched against either a default Regexp, unless a custom Regexp is supplied.
-
-Strings are to be matched literally. 
-
-Regexps can also be included and are matched accordingly, but not saved as parameters. 
-
-Hashes represent optional arguments, stored as parameters (the key), and defaulting to the given value. (check out the #read mapping)
-
-In addition, path generators will honor the optional argument, defaulting it if you don't provide an argument. Obviously, this will only really work for optional arguments at the end of the path.
-
-Other constraints and "descriptors" can be specified, although some of these need to be fleshed out. (Support for the Accepts header is still not developed, for example, nor can you specify Regexps for path parameters, but the code is in place to handle them.) As before, these are just provided as additional hash arguments. They are all in a single hash (not separate hashes, as we had before in some cases), which is de-structured by the new Action class.
-
-The MVC Layer provides a handful of methods that allow you to very succinctly implement most most typical Resource methods. First there is 
-
-#action calls your controller for you with the given method and arguments.
-
-#render does the same thing for your view. 
-
-You can pass a string (typically generated using the Paths object) to #redirect. 
-
-Parameters can be accessed as if they were locals using #method_missing. 
-
-You can also call the view or controller directly using #view and #controller. 
-
-All the necessary parameter passing is handled for you
-
-Methods can also be defined directly on the resource class rather than "inline" in the mapping file.
-
-
-
-You can specify a resource:
-
-      # specific to comments - on create redirect to the entry, not the comment itself
-      path :create, :resource => :comment, :post => [ '/comments' ] do
-        redirect( Blog::Resources::Entries.paths.read( action( :create ).entry.name ) )
-      end
-
-Here the path component is a string and the resource is passed in as a hash option. 
-
-We access the Paths object for Entries, which is a bit clunky, but keep in mind two things. First, in many cases, we should be able to add helpers to clean things up. Second, we don't want to assume a single application namespace, since that makes it impossible to integrate multiple applications. This has nothing to do with the use of #paths instead of, say, #read_path - the same issue would come up.
-
-
-------
-
-
-
-Match on 
-  domain 
-  or scheme 
-  or whatever using the appropriate constraints, not using special mapping methods
-
-action( :list, :domain => 'foobar.com', :get => [ :resources ] ) { ... }
-
-We will also add regexp matching to constraints (like the domain) in the very near future.
-
-Exception handlers (defined using #handle) can now take any constraint that a filter or action can take, so you can customize your exception handling based on the 
-  path, 
-  request method,
-  domain
-  scheme
-  or whatever. 
-
-As with actions, the first match wins and gets to handle the exception. 
-
-By default, the resource used for exception handlers is the Error resource.
-
-Conversely, actions can be 
-  anonymous blocks 
-  or simply reference a Resource method. 
+A mapping declaration
+  may specify a resource in the options with a key of :resource or :resources
+  uses app::Resources::Default when a resource has not been otherwise specified
+  may be given a name, using a Symbol as its first argument
+  can be anonymous, in which case an action block is required
   
-So you can actually do something like:
+  specifies the path to match using the HTTP method as the key and an Array as the value
+    each item in the Array corresponds to a URL component
+    symbols are matched against a default Regexp
+      these matches become named parameters
+    unless a custom Regexp is supplied. ???
+      action( :show, :get => [ :resources, { :name => /\w+/ } ] ) { path( resource, name ) }
+    strings match exact strings
+    regexps can be substituted, but their matches are not saved as named parameters. 
+    hashes denote optional arguments, where the key is the parameter and the value is the default
+      Obviously, this will only really work for optional arguments at the end of the path. ???
+  
+  can match on the Accepts header (and others?) using additional hash pairs (:accepts => 'Nothing')
+  can match against the host name using a key of :domain with a String value
+  can match against the url scheme using a key of :scheme with a String value
+  
+  defines a path generator method on its resource's "shadow" Paths object
+  
+  may take a block, which is used as the mapping's action
+  defines a method on the Resource, using the mapping's name as the method name
+  will call the Resource method with the mapping's name if no block is given
 
-  action( :get => [ :resources ] ) { ... }
-
-You can omit the block and it will call the Resource method of that name. 
-
-Another cool feature is the way you can mix regexps in effortlessly:
-
-action( :show, :get => [ :resources, { :name => /\w+/ } ] ) { path( resource, name ) }
-
-seamless bi-directional inflection.  Given a path of "/foos/bar" this will return "/foo/bar" (notice the change in cardinality). 
 
 
+An exception handler
+  is defined using Mapping#handle
+  uses the Error resource by default
+  can take the same constraints as an action
+  ( can it take a name?  would that be useful in any way? )
+  
 
+:before, :after, :wrap, and :during filters
+  take the same constraints as actions
+  are defined using methods of the appropriate name
+
+
+Mapping#with(options, &block) 
+  specifies options to be used for mappings done in a block
+
+== Resources
+
+A Resource object
+  has a "shadow" Paths object
+  can access its Paths object using Resource#paths or Resource.paths (see the #create mapping rule)
+
+
+A Paths object 
+  has path generating methods created by mappings
+  has a class hierarchy mirroring its Resource's ancestry
+  has heritable generator methods
+  path generators honor the optional arguments supplied as a Hash, using defaults if not supplied
+
+
+The Default resource defines these methods
+
+  #action calls your controller for you with the given method and arguments.
+  #render does the same thing for your view. 
+  #redirect takes a string (probably generated by the Paths object) for the location
+  Parameters can be accessed as local methods using #method_missing.
+  #view and #controller take blocks to run in the view or controller scope
+    All the necessary parameter passing is handled for you (investigate)
+  #resources and #resource have seamless bi-directional inflection.
+  
+  
+
+== Misc
+
+RFE:  We will also add regexp matching to constraints (like the domain) in the very near future.
+
+In the dispatcher:
+
+actions
+  first match wins
+
+handlers
+  first match wins
+
+filters
+  all matches run
