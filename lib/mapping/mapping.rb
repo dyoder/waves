@@ -22,6 +22,9 @@ module Waves
     functor( :map, Symbol, Hash, Proc ) do | name, options, block |
       options[:name] = name ; options[:block] = block ; map( options )
     end
+    functor( :map, Hash, Proc ) do | options, block |
+      options[:block] = block; map( options )
+    end
     functor( :map, Symbol, Hash ) { | name, options | options[:name] = name ; map( options ) }
     functor( :map, Hash ) do | options |
       options = ( @options || {} ).merge( options )
