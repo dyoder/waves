@@ -19,6 +19,7 @@ module Waves
       def self.included( app )
 
         app.instance_eval do
+          include Waves::Layers::Inflect::English
           include Waves::Layers::Simple
         end
         

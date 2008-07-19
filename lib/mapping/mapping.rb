@@ -9,6 +9,10 @@ module Waves
     
     def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end
     
+    def clear
+      @mappings = Hash.new { |h,k| h[k] = [] }
+    end
+    
     def method_missing( name, *args, &block )
       return super unless RULES.include? name
       args << block if block_given?
@@ -27,6 +31,7 @@ module Waves
     end
     functor( :map, Symbol, Hash ) { | name, options | options[:name] = name ; map( options ) }
     functor( :map, Hash ) do | options |
+      raise ArgumentError, "A mapping must have a name or a block" if !options[:name] && !options[:block]
       options = ( @options || {} ).merge( options )
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
       options[ :path ] = options[ method ]

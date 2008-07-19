@@ -13,6 +13,8 @@ module Waves
       
       def resource
         params['resource'] || params['resources'].singular
+      rescue NoMethodError
+        :default
       end
       
       def resources
