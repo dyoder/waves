@@ -23,12 +23,14 @@ Examples:
 
 == Mappings
 
-A mapping declaration
+An action declaration
+  is defined using Mapping#action
   may specify a resource in the options with a key of :resource or :resources
   uses app::Resources::Default when a resource has not been otherwise specified
   may be given a name, using a Symbol as its first argument
-  can be anonymous, in which case an action block is required
+  a block is required when the mapping is anonymous
   
+  # path constraints
   specifies the path to match using the HTTP method as the key and an Array as the value
     each item in the Array corresponds to a URL component
     symbols are matched against a default Regexp
@@ -40,14 +42,16 @@ A mapping declaration
     hashes denote optional arguments, where the key is the parameter and the value is the default
       Obviously, this will only really work for optional arguments at the end of the path. ???
   
+  # other constraints
   can match on the Accepts header (and others?) using additional hash pairs (:accepts => 'Nothing')
   can match against the host name using a key of :domain with a String value
   can match against the url scheme using a key of :scheme with a String value
   
+  # operations on other objects
   defines a path generator method on its resource's "shadow" Paths object
   
-  may take a block, which is used as the mapping's action
-  defines a method on the Resource, using the mapping's name as the method name
+  may take a block, to be evaluated in the scope of a Resource object
+  defines a method on the Resource when a block is given
   will call the Resource method with the mapping's name if no block is given
 
 
