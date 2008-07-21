@@ -55,7 +55,8 @@ describe "In a mapping's path-matcher"  do
     end
     
     it "may use symbols as placeholders for a default regex" do
-      mapping.action( :get => [ :thing ]) do
+      mapping.action( :get => [ :critter ]) { params['thing']}
+      request.get('/smurf').body.should == 'smurf'
     end
     
   end
