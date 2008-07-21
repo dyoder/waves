@@ -67,6 +67,7 @@ An exception handler
 :before, :after, :wrap, and :during filters
   take the same constraints as actions
   are defined using methods of the appropriate name
+  apparently can be given names, which define methods on Resource and Paths???
 
 
 Mapping#with(options, &block) 

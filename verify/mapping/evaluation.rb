@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 # N.B.  All of these specs require that the dispatcher actually work.  Unit testing somewhere else
 # will help prevent mysterious spec failures or regressions.
 
-describe "An action mapping"  do
+describe "A mapping declaration"  do
   
   before do
     mapping.clear
@@ -13,20 +13,20 @@ describe "An action mapping"  do
     
   end
   
-  it "uses app::Resources::Default when a resource is not specified" do
-    mapping.action( :mapping_name, :get => [ "first", "second"] ) do
+  it "operates on app::Resources::Default when a resource is not specified" do
+    mapping.action( :mapping_name, :get => [ "somewhere"] ) do
       self.class.inspect
     end
     
-    request.get("/first/second").body.should == "ResourceMappingApp::Resources::Default"
+    request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Default"
   end
   
   it "may specify a resource in the options with a key of :resource" do
-    mapping.action( :mapping_name, :resource => :smurf, :get => [ "first", "second"] ) do
+    mapping.action( :mapping_name, :resource => :smurf, :get => [ "somewhere"] ) do
       self.class.inspect
     end
     
-    request.get("/first/second").body.should == "ResourceMappingApp::Resources::Smurf"
+    request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Smurf"
   end
   
   it "may determine the resource using a parameter match in the path pattern" do
@@ -39,7 +39,7 @@ describe "An action mapping"  do
   
 end
 
-describe "A named mapping" do
+describe "A mapping given a name as the first argument" do
   
   before do
     mapping.clear
@@ -69,7 +69,7 @@ describe "A named mapping" do
   
 end
 
-describe "An anonymous mapping" do
+describe "A mapping without a name" do
   
   before do
     mapping.clear
@@ -79,7 +79,7 @@ describe "An anonymous mapping" do
     lambda { mapping.action( :get => [ "one" ] ) }.should.raise ArgumentError
   end
   
-  it "uses the supplied block" do
+  it "evaluates the supplied block instead of calling a resource method" do
     mapping.action( :get => [ "two" ] ) { "Brainy" }
     
     request.get("/two").body.should == "Brainy"
