@@ -8,6 +8,7 @@ describe "A mapping declaration"  do
   
   before do
     mapping.clear
+    handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
     @resource = mock('resource')
     @default = ResourceMappingApp::Resources::Default
     
@@ -43,6 +44,7 @@ describe "A mapping given a name as the first argument" do
   
   before do
     mapping.clear
+    handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
     @resource = mock('resource')
     @default = ResourceMappingApp::Resources::Default
   end
@@ -73,6 +75,7 @@ describe "A mapping without a name" do
   
   before do
     mapping.clear
+    handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
   end
   
   it "raises an ArgumentError when no block is supplied" do
