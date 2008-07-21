@@ -20,7 +20,7 @@ module Waves
       functor( :match, Hash, String, String ) { | r, want, got | got if want == got }
       functor( :match, Hash, Regexp, String ) { | r, want, got | got if want === got }
       functor( :match, Hash, Symbol, String ) do | r, want, got | 
-        r[ want.to_s ] = got if match( r, /([\w\_\-\#]+)/, got )
+        r[ want.to_s ] = got if match( r, /^([\w\_\-\#]+)$/, got )
       end
       functor( :match, Hash, Hash, String ) do | r, want, got | 
         key = want.keys.first
