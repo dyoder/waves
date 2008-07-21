@@ -55,8 +55,40 @@ describe "In a mapping's path-matcher"  do
     end
     
     it "may use symbols as placeholders for a default regex" do
+      mapping.action( :get => [ :critter, :name ]) { "hi" }
+      
+      request.get('/smurf/papa_smurf').status.should == 200
+      
+      # The default regex accepts word characters, hyphens, and underscores only.
+      request.get('/smurf/moo+cow').status.should == 404
+    end
+    
+    it "may use hashes to specify placeholders with custom regexes" do
+      mapping.action( :get => [ :prisoner, { :prisoner_id => /9430|24601/ } ] ) { "I am Jean Valjean!" }
+      
+      request.get("/prisoner/9430").body.should == "I am Jean Valjean!"
+      request.get("/prisoner/9431").status.should == 404
+    end
+    
+    it "saves placeholder matches as params" do
       mapping.action( :get => [ :critter, :name ]) { "#{params['critter']}, #{params['name']}" }
-      request.get('/smurf/papa').body.should == 'smurf, papa'
+      
+      request.get('/dwarf/tyrion').body.should == "dwarf, tyrion"
+    end
+    
+    it "may use regexes instead of strings or placeholders, but the matches are not saved" do
+      # extremely bad example.  Don't ever really use this for authentication.  If somebody thinks up a
+      # better use case for pattern components that throw away the matches, please fix this spec.
+      mapping.action( :get => [ "user", /matthew|mark/, "password", /wehttam|kram/ ]) { "you were able to get logged in!!!!"}
+      
+      request.get('/user/matthew/password/wehttam').status.should == 200
+      request.get('/user/matthew/password/nimda').status.should == 404
+    end
+    
+    it "can apparently also use hashes to set default values" do
+      mapping.action( :get => [ "view", { :mode => 'show' } ] ) { "mode: #{params['mode']}" }
+      
+      request.get("/view").body.should == "mode: show"
     end
     
   end
