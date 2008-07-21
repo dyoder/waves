@@ -24,7 +24,7 @@ module Waves
       end
       functor( :match, Hash, Hash, String ) do | r, want, got | 
         key = want.keys.first
-        r[ key.to_s ] = match( r, key, got )
+        r[ key.to_s ] = match( r, want[key], got )
       end
       # hashes represent optional values with a default
       functor( :match, Hash, Hash, nil ) { | r, want, got | r[ want.keys.first.to_s ] = want.values.first }
