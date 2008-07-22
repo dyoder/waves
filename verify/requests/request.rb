@@ -5,7 +5,7 @@ describe "A Waves request instance" do
   
   before do
     Waves::Session.stub!(:base_path).and_return(BasePath)
-    @request = Waves::Request.new(env_for)
+    @request = Waves::Request.new(env_for("/", 'HTTP_ACCEPT' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5'))
   end
   
   it "has session, response, and blackboard objects" do
@@ -27,6 +27,11 @@ describe "A Waves request instance" do
 
     @request.rack_request.env.should.receive(:[]).with('CONTENT_TYPE')
     @request.content_type
+  end
+  
+  it "parses the Accept header for content-types" do
+    entries = ["text/xml", "application/xml", "application/xhtml+xml", "text/html", "text/plain", "image/png", "*/*"]
+    @request.accept.should == entries
   end
   
   # ** API CHANGE **

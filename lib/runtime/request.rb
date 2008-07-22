@@ -39,6 +39,10 @@ module Waves
     def content_type
       @request.env['CONTENT_TYPE']
     end
+    
+    def accept
+      @request.env['HTTP_ACCEPT'].split(',').map { |entry| entry.split( ';' ).first }
+    end
 
     # Request method predicates, defined in terms of #method.
     METHODS = %w{get post put delete head options trace}
