@@ -23,7 +23,18 @@ describe "A mapping"  do
   end
   
   it "can match the Accepts header" do
-    mapping.action( :accepts => 'text/plain' ) { "boooring."}
+    mapping.action( :accept => 'text/plain' ) { "boooring."}
+    
+    request.get("/foo", 'HTTP_ACCEPT' => 'text/plain').status.should == 200
+    request.get("/foo", 'HTTP_ACCEPT' => 'text/xml').status.should == 404
+  end
+  
+  it "can use a lambda on any of the above" do
+    mapping.action( :accept => lambda { |types| types.include? 'text/plain' } ) { "boooring."}
+    mapping.action( :accept => lambda { |types| types.include? /image/ } ) { "cool."}
+    
+    request.get("/foo", 'HTTP_ACCEPT' => 'text/plain').status.should == 200
+    request.get("/foo", 'HTTP_ACCEPT' => 'image/jpeg').status.should == 200
     request.get("/foo", 'HTTP_ACCEPT' => 'text/xml').status.should == 404
   end
   
