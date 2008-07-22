@@ -5,7 +5,11 @@ describe "A Waves request instance" do
   
   before do
     Waves::Session.stub!(:base_path).and_return(BasePath)
-    @request = Waves::Request.new(env_for("/", 'HTTP_ACCEPT' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5'))
+    @request = Waves::Request.new(env_for("/", 
+      'HTTP_ACCEPT' => 'text/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
+      'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+      'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5'
+      ))
   end
   
   it "has session, response, and blackboard objects" do
@@ -30,11 +34,35 @@ describe "A Waves request instance" do
   end
   
   it "parses the Accept header for content-types" do
-    entries = ["text/xml", "application/xml", "application/xhtml+xml", "text/html", "text/plain", "image/png", "*/*"]
+    entries = ["text/xml", "application/xhtml+xml", "text/html", "text/plain", "image/png", "*/*"]
+    
     @request.accept.should == entries
+    (@request.accept =~ "text/xml").should == true
+    (@request.accept === "text/xml").should == true
+    (@request.accept =~ "text/bogus").should == false
   end
   
-  # ** API CHANGE **
+  it "parses the Accept-Charset header for character sets" do
+    charsets = [ "ISO-8859-1", "utf-8", "*" ]
+    
+    @request.accept_charset.should == charsets
+    (@request.accept_charset =~ "utf-8").should == true
+    (@request.accept_charset === "utf-8").should == true
+    (@request.accept_charset =~ "utf-16").should == false
+  end
+  
+  it "parses the Accept-Language header for languages" do
+    languages = [ "en-us", "en" ]
+    
+    @request.accept_language.should == languages
+    (@request.accept_language =~ "en-us").should == true
+    (@request.accept_language =~ /en/ ).should == true
+    (@request.accept_language =~ /ru/ ).should == false
+    (@request.accept_language === "en-us").should == true
+    (@request.accept_language =~ "ru").should == false
+  end
+  
+  # ** API CHANGE.  figure out what changed and fix the tests **
   # it "delegates unknown methods to the Rack request" do
   #   @request.rack_request.should.receive(:chitty_bang_bang)
   #   @request.chitty_bang_bang
@@ -60,20 +88,20 @@ describe "The HTTP request method" do
     @delete.method.should == :delete
   end
     
-  # it "can be set with the '_method' query param on a POST" do  
-  #   @url_put = Waves::Request.new(env_for("/?_method=put", :method => 'POST'))
-  #   @url_delete = Waves::Request.new(env_for("/?_method=delete", :method => 'POST'))
-  #   
-  #   @url_put.method.should == :put; @url_put.put?.should.be.true
-  #   @url_delete.method.should == :delete; @url_delete.delete?.should.be.true
-  # end
+  it "can be set with the '_method' query param on a POST" do  
+    @url_put = Waves::Request.new(env_for("/?_method=put", :method => 'POST'))
+    @url_delete = Waves::Request.new(env_for("/?_method=delete", :method => 'POST'))
     
-  # it "can be set with the '_method' body param on a POST" do  
-  #   @body_put = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=put'))
-  #   @body_delete = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=delete'))
-  #   
-  #   @body_put.method.should == :put; @body_put.put?.should.be.true
-  #   @body_delete.method.should == :delete
-  # end
+    @url_put.method.should == :put
+    @url_delete.method.should == :delete
+  end
+    
+  it "can be set with the '_method' body param on a POST" do  
+    @body_put = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=put'))
+    @body_delete = Waves::Request.new(env_for("/", :method => 'POST', :input => '_method=delete'))
+    
+    @body_put.method.should == :put
+    @body_delete.method.should == :delete
+  end
   
 end
