@@ -33,10 +33,10 @@ describe "In a mapping's path-matcher"  do
   
     it "is an array given as the value of the HTTP method key" do
       mapping.action( :get => [ 'foo' ] )  { 'The Foo' }
-      mapping.action( :get => [ 'bar' ] )  { 'The Bar' }
+      mapping.action( :get => [ 'bar', 'baz' ] )  { 'The Bar' }
       
       request.get('/foo').body.should == 'The Foo'
-      request.get('/bar').body.should == 'The Bar'
+      request.get('/bar/baz').body.should == 'The Bar'
     end
     
     it "may be omitted to allow matching all paths" do
