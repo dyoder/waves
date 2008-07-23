@@ -1,3 +1,5 @@
-%w( rubygems bacon facon ).each { |f| require f }
-Bacon.extend Bacon::TestUnitOutput
-Bacon.summary_on_exit
+require File.join(File.dirname(__FILE__) , "..", "helpers")
+
+clear_all_apps
+module VerifyCore; include Waves::Foundations::Simple; end
+

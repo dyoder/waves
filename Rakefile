@@ -104,9 +104,10 @@ end
 desc "Run verification suite."
 Rake::TestTask.new(:verify) do |t|
   t.test_files = FileList["verify/**/*.rb"].exclude(
-  "**/helpers.rb",
-  "**/foundations/*_application/**/*", 
-  "**/app_generation/*.rb")
+    "**/track_*.rb",
+    "**/helpers.rb",
+    "**/foundations/*_application/**/*", 
+    "**/app_generation/*.rb")
   t.verbose = true
 end
 
@@ -116,10 +117,13 @@ namespace :verify do
   FileList["verify/*/"].each do |area|
     task = area.chomp("/").sub("verify/", '')
     Rake::TestTask.new(task) do |t|
-      t.test_files = FileList["#{area}**/*.rb"].exclude("**/helpers.rb")
+      t.test_files = FileList["#{area}**/*.rb"].exclude(
+        "**/track_*.rb",
+        "**/helpers.rb")
       t.verbose = true
     end
   end
+  
 
 end
 
