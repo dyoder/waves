@@ -5,11 +5,7 @@ describe "A Waves request instance" do
   
   before do
     Waves::Session.stub!(:base_path).and_return(BasePath)
-    @request = Waves::Request.new(env_for("/", 
-      'HTTP_ACCEPT' => 'text/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
-      'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-      'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5'
-      ))
+    @request = Waves::Request.new(env_for("/"))
   end
   
   it "has session, response, and blackboard objects" do
@@ -33,34 +29,6 @@ describe "A Waves request instance" do
     @request.content_type
   end
   
-  it "parses the Accept header for content-types" do
-    entries = ["text/xml", "application/xhtml+xml", "text/html", "text/plain", "image/png", "*/*"]
-    
-    @request.accept.should == entries
-    (@request.accept =~ "text/xml").should == true
-    (@request.accept === "text/xml").should == true
-    (@request.accept =~ "text/bogus").should == false
-  end
-  
-  it "parses the Accept-Charset header for character sets" do
-    charsets = [ "ISO-8859-1", "utf-8", "*" ]
-    
-    @request.accept_charset.should == charsets
-    (@request.accept_charset =~ "utf-8").should == true
-    (@request.accept_charset === "utf-8").should == true
-    (@request.accept_charset =~ "utf-16").should == false
-  end
-  
-  it "parses the Accept-Language header for languages" do
-    languages = [ "en-us", "en" ]
-    
-    @request.accept_language.should == languages
-    (@request.accept_language =~ "en-us").should == true
-    (@request.accept_language =~ /en/ ).should == true
-    (@request.accept_language =~ /ru/ ).should == false
-    (@request.accept_language === "en-us").should == true
-    (@request.accept_language =~ "ru").should == false
-  end
   
   # ** API CHANGE.  figure out what changed and fix the tests **
   # it "delegates unknown methods to the Rack request" do
