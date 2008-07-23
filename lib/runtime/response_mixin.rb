@@ -6,7 +6,7 @@ module Waves
   #
   # This mixin assumes that a @request@ accessor already exists.
   module ResponseMixin
-    include Functor::Methods
+    include Functor::Method
     
     # Access the response.
     def response; request.response; end
