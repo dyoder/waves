@@ -13,7 +13,7 @@ module Waves
         def app.controllers ; self::Controllers ; end
         def app.helpers ; self::Helpers ; end
         
-        unless ResponseMixin.public_instance_methods.include? 'model' do
+        unless ResponseMixin.public_instance_methods.include? 'model'
           Waves::ResponseMixin.module_eval do
             [ :model, :view, :controller ].each do | k |
               functor( k, Object ) { | name | Waves.application.send( k, name.to_s ) }

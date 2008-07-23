@@ -15,7 +15,7 @@ module Waves
     end
 
     def application
-      applications.first
+      applications.last
     end
     
     # Register a module as a Waves application.
