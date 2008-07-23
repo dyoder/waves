@@ -1,14 +1,26 @@
 # See the README for an overview.
 module Waves
-
+  
+  class Applications << Array
+    def []( name )
+      self.find { |app| app.name == name.to_s }
+    end
+  end
+  
   class << self
 
     # Access the principal Waves application.
-    attr_reader :application
+    def applications
+      @applications ||= Applications.new
+    end
 
+    def application
+      applications.first
+    end
+    
     # Register a module as a Waves application.
     def << ( app )
-      @application = app if Module === app
+      applications << app if Module === app
     end
 
     def instance ; Waves::Application.instance ; end
