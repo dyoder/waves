@@ -25,34 +25,35 @@ Examples:
 
 An action declaration
   is defined using Mapping#action
-  may specify a resource in the options with a key of :resource or :resources
+  evaluates in the scope of a Resource object
   uses app::Resources::Default when a resource has not been otherwise specified
+  may specify a resource in the options with a key of :resource
+  may specify a resource using pattern matching against the request path
   may be given a name, using a Symbol as its first argument
-  a block is required when the mapping is anonymous
+  calls the Resource method with the mapping's name when the mapping is triggered
+  requires a block when the mapping is anonymous
+  defines a method on the Resource when a block is given
+  defines a path generator method on its resource's "shadow" Paths object
   
-  # path constraints
+  # path pattern matching
   specifies the path to match using the HTTP method as the key and an Array as the value
     each item in the Array corresponds to a URL component
+    strings match exact strings
     symbols are matched against a default Regexp
       these matches become named parameters
-    unless a custom Regexp is supplied. ???
+    regexps can be used, but their matches are not saved as named parameters. 
+    a custom Regexp can be supplied as a hash
       action( :show, :get => [ :resources, { :name => /\w+/ } ] ) { path( resource, name ) }
-    strings match exact strings
-    regexps can be substituted, but their matches are not saved as named parameters. 
-    hashes denote optional arguments, where the key is the parameter and the value is the default
-      Obviously, this will only really work for optional arguments at the end of the path. ???
+    if the component hash value is a string, it is used as the default value when the url omits that component
+      Obviously, this will only really work for optional arguments at the end of the path.
   
   # other constraints
   can match on the Accepts header (and others?) using additional hash pairs (:accepts => 'Nothing')
   can match against the host name using a key of :domain with a String value
   can match against the url scheme using a key of :scheme with a String value
   
-  # operations on other objects
-  defines a path generator method on its resource's "shadow" Paths object
+
   
-  may take a block, to be evaluated in the scope of a Resource object
-  defines a method on the Resource when a block is given
-  will call the Resource method with the mapping's name if no block is given
 
 
 
@@ -66,6 +67,7 @@ An exception handler
 :before, :after, :wrap, and :during filters
   take the same constraints as actions
   are defined using methods of the appropriate name
+  apparently can be given names, which define methods on Resource and Paths???
 
 
 Mapping#with(options, &block) 

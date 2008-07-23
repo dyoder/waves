@@ -39,6 +39,7 @@ module Waves
     def content_type
       @request.env['CONTENT_TYPE']
     end
+    
 
     # Request method predicates, defined in terms of #method.
     METHODS = %w{get post put delete head options trace}
@@ -62,7 +63,42 @@ module Waves
     def redirect( path, status = '302' )
       raise Waves::Dispatchers::Redirect.new( path, status )
     end
+    
+    class Accept < Array
+      
+      def =~(arg)
+        self.include? arg
+      end
+      
+      def ===(other)
+        self =~ other || super
+      end
+      
+      # try the normal include?, then if the arg is a Regexp, see if anything matches
+      def include?(arg)
+        super || (self.any? { |item| item =~ arg } if arg.is_a? Regexp ) || false
+      end
+      
+      def self.parse(string)
+        string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first; a }
+      end
+      
+    end
+    
+    def accept
+      Accept.parse(@request.env['HTTP_ACCEPT'])
+    end
+    
+    def accept_charset
+      Accept.parse(@request.env['HTTP_ACCEPT_CHARSET'])
+    end
+    
+    def accept_language
+      Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE'])
+    end
 
   end
 
 end
+
+
