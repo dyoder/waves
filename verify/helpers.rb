@@ -13,9 +13,18 @@ module Kernel
   def specification(name, &block)  Bacon::Context.new(name, &block) end
 end
 
+def clear_all_apps
+  Waves.instance_variable_set(:@applications, nil)
+end
 
 Bacon::Context.module_eval do
   
+  def fake_out_runtime
+    runtime = mock( "runtime")
+    runtime.stub!(:config).and_return(Waves.application.configurations[:development])
+    Waves::Application.stub!(:instance).and_return(runtime)
+  end
+    
   # Mapping helpers
   def mapping
     ::Waves::Application.instance.mapping
@@ -56,7 +65,6 @@ Bacon::Context.module_eval do
   def post(uri, opts={})   request.post(uri, opts)   end
   def put(uri, opts={})    request.put(uri, opts)    end
   def delete(uri, opts={}) request.delete(uri, opts) end
-  
   
   # Testing helpers
   alias_method :specify, :it
