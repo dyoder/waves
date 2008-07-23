@@ -16,7 +16,7 @@ module Waves
         METHODS.all? do | method |
           wanted = instance_variable_get( "@#{method}")
           got = request.send( method ) if wanted
-          wanted === got
+          wanted.is_a? Proc ? wanted.call( got ) : wanted === got
         end
       end
             

@@ -45,10 +45,4 @@ module Attributes
 	
   alias_method :to_hash, :to_h
   
-  class Object
-    include Attributes
-  end
-  
 end
-	
-	

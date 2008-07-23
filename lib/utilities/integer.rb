@@ -15,6 +15,9 @@ module Waves
       def exabytes ; self * 1024.petabytes ; end
       def zettabytes ; self * 1024.exabytes ; end
       def yottabytes ; self * 1024.zettabytes ; end
+      def to_delimited(delim=',')
+        self.to_s.gsub(/(\d)(?=(\d\d\d)+$)/, "\\1#{delim}")
+      end
     end
   end
 end
