@@ -26,7 +26,7 @@ module Waves
     functor( :mapping ) { Waves.application.mapping }
     functor( :mapping, Object ) { | app | Waves.applications[ app.to_s ].mapping }
     functor( :resource, Object, Object ) { | app, name | Waves.applications[ app.to_s ].resources[ name.to_s ] }
-    functor( :resource, Object ) { | app, name | Waves.application.resources[ name.to_s ] }
+    functor( :resource, Object ) { | name | Waves.application.resources[ name.to_s ] }
     # Raise a "not found" exception.
     def not_found; request.not_found; end
     # Access the Waves::Logger.
