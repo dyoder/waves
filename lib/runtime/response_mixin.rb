@@ -6,6 +6,8 @@ module Waves
   #
   # This mixin assumes that a @request@ accessor already exists.
   module ResponseMixin
+    include Functor::Methods
+    
     # Access the response.
     def response; request.response; end
     # Access the request parameters.
@@ -19,14 +21,12 @@ module Waves
     # Access the request domain.
     def domain; request.domain; end
     # Issue a redirect for the given location.
-    def mapping; Waves.application.mapping ; end
     def redirect(location, status = '302'); request.redirect(location, status); end
-    # Access the primary application's models
-    def models; Waves.application.models; end
-    # Access the primary application's views
-    def views; Waves.application.views; end
-    # Access the primary application's controllers
-    def controllers; Waves.application.controllers; end
+    # access stuff from an app
+    functor( :mapping ) { Waves.application.mapping }
+    functor( :mapping, Object ) { | app | Waves.applications[ app.to_s ].mapping }
+    functor( :resource, Object, Object ) { | app, name | Waves.applications[ app.to_s ].resources[ name.to_s ] }
+    functor( :resource, Object ) { | app, name | Waves.application.resources[ name.to_s ] }
     # Raise a "not found" exception.
     def not_found; request.not_found; end
     # Access the Waves::Logger.

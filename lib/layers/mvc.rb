@@ -13,6 +13,15 @@ module Waves
         def app.controllers ; self::Controllers ; end
         def app.helpers ; self::Helpers ; end
         
+        unless ResponseMixin.public_instance_methods.include? 'model' do
+          Waves::ResponseMixin.module_eval do
+            [ :model, :view, :controller ].each do | k |
+              functor( k, Object ) { | name | Waves.application.send( k, name.to_s ) }
+              functor( k, Object, Object ) { | app, name | Waves.applications[ app.to_s ].send( k, name.to_s ) }
+            end
+          end
+        end
+        
         app.auto_create_module( :Models ) do
           include AutoCode
           auto_create_class :Default
