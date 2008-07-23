@@ -1,7 +1,7 @@
 # See the README for an overview.
 module Waves
   
-  class Applications << Array
+  class Applications < Array
     def []( name )
       self.find { |app| app.name == name.to_s }
     end
