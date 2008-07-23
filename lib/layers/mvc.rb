@@ -59,8 +59,8 @@ module Waves
 
         app.auto_eval :Resources do
           const_set( :Default, Class.new( Waves::Resources::Base ) ).module_eval do
-            def controller ; @controller ||= controllers[ singular ].process( @request ) { self } ; end
-            def view ; @view ||= views[ singular ].process( @request ) { self } ; end
+            def controller ; @controller ||= Waves.application.controllers[ singular ].process( @request ) { self } ; end
+            def view ; @view ||= Waves.application.views[ singular ].process( @request ) { self } ; end
             def action( method, *args ) ; @data = controller.send( method, *args ) ; end
             def render( method ) ; view.send( method, ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data ) ; end
             def method_missing( name, *args, &block) ; params[ name.to_s ] ; end

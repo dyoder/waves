@@ -24,9 +24,9 @@ module Waves
         app.auto_create_module( :Configurations ) do
           include AutoCode
           auto_create_class true, Waves::Configurations::Default
+          auto_create_module( :Mapping ) { extend Waves::Mapping }
           auto_load :Mapping, :directories => [:configurations]
           auto_load true, :directories => [:configurations]
-          auto_create_module( :Mapping ) { extend Waves::Mapping }
         end
           
         app.auto_create_module( :Resources ) do
