@@ -70,17 +70,26 @@ module Waves
         self.include? arg
       end
       
-      def ===(other)
-        self =~ other || super
+      def ===(arg)
+        self.include? arg
       end
       
       # try the normal include?, then if the arg is a Regexp, see if anything matches
       def include?(arg)
-        super || (self.any? { |item| item =~ arg } if arg.is_a? Regexp ) || false
+        super || self.any? do |entry|
+          return true if  entry == '*/*' || entry == '*' || arg === entry
+          if entry.match('\*') && arg.respond_to?(:split)
+            a, e = arg.split('/'), entry.split('/')
+            return true if e[0] == '*' && a[1] == e[1]
+            return true if e[1] == '*' && a[0] == e[0]
+          else
+            false
+          end
+        end
       end
       
       def self.parse(string)
-        string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first; a }
+        string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
       end
       
     end
