@@ -3,7 +3,7 @@ module Waves
   
   class Applications < Array
     def []( name )
-      self.find { |app| app.name == name.to_s }
+      self.find { |app| app.name == name.to_s.camel_case }
     end
   end
   
