@@ -44,7 +44,9 @@ module Waves
               if @dataset && @dataset.opts[:from] != [ default ]
                 # don't clobber dataset from autoloaded file
               else
-                set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                if respond_to? :set_dataset
+                  set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                end
               end
             end
           end
