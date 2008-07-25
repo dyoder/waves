@@ -12,7 +12,9 @@ module Waves
       
       functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
       functor( :match, nil, String ) { |pattern, path| {} }
+      functor( :match, [], '/' ) { | pattern, path | {} }
       functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
+      functor( :match, Array, nil ) { | pattern, path | nil }
       functor( :match, Array, Array ) do | wants, gots |
         r = {}; matches = wants.all? { | want | match( r, want, gots.shift ) }
         r if matches and gots.empty?

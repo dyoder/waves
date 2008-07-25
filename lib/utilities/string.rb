@@ -16,7 +16,7 @@ module Waves
       def / ( string )
         File.join(self,string.to_s)
       end
-
+      
       # produces stringsLikeThis
       def lower_camel_case
         gsub(/(_)(\w)/) { $2.upcase }

@@ -10,7 +10,7 @@ module Waves
 
       # Just a convenience method for accessing a const within a Module
       def []( cname )
-        const_get( cname.to_s.camel_case )
+        eval( "self::#{cname.to_s.camel_case}" )
       end
     end
   end  
