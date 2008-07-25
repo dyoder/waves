@@ -7,8 +7,8 @@ module Waves
     class Scope
       include Waves::Helpers::Common
       include Waves::Helpers::Model
-      include Waves::Helpers::TagHelper
-      include Waves::Helpers::UrlHelper
+      # include Waves::Helpers::TagHelper
+      # include Waves::Helpers::UrlHelper
       include Waves::Helpers::View
 
       def <<(s)
