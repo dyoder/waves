@@ -61,8 +61,7 @@ module Waves
       # Valid options are defined in the +DOCTYPES+ constant.
       def doctype(type) ; self << DOCTYPES[type||:html4_strict] ; end
       
-      # interesting hack ...
-      def app_name ; Dir.pwd.split('/').last ; end
+      def app_name ; Waves.application.name ; end
 
     end
   end
