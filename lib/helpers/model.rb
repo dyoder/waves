@@ -17,9 +17,11 @@ module Waves
     # then be called from the template instead of the model helper.
     #
     module Model
-
+      
+      include ResponseMixin
+      
       def model( name )
-        Waves.application.models[ name ]
+        models[ name ]
       end
       
       # Just like model.all. Returns all the instances of that model.

@@ -20,7 +20,7 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis haml RedCloth metaid
+  %w( mongrel rack markaby erubis haml RedCloth metaid filebase
       extensions live_console choice daemons rakegen).each do |dep|
     gem.add_dependency dep
   end

@@ -4,6 +4,8 @@ namespace :generate do
   task :controller do |task|
     name = ENV['name']
     controller_name = name.camel_case
+    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
+    
     raise "Cannot generate Default yet" if controller_name == 'Default'
     
     filename = File.expand_path "controllers/#{name}.rb"
@@ -13,7 +15,7 @@ namespace :generate do
     end
 
     controller = <<TEXT
-module #{Waves.application.name}
+module #{app_name}
   module Controllers
     class #{controller_name} < Default
 
@@ -29,6 +31,8 @@ TEXT
   task :view do |task|
     name = ENV['name']
     view_name = name.camel_case
+    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
+    
     raise "Cannot generate Default yet" if view_name == 'Default'
     
     filename = File.expand_path "views/#{name}.rb"
@@ -38,7 +42,7 @@ TEXT
     end
 
     view = <<TEXT
-module #{Waves.application.name}
+module #{app_name}
   module Views
     class #{view_name} < Default
 
@@ -54,6 +58,8 @@ TEXT
   task :helper do |task|
     name = ENV['name']
     helper_name = name.camel_case
+    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
+    
     raise "Cannot generate Default yet" if helper_name == 'Default'
     
     filename = File.expand_path "helpers/#{name}.rb"
@@ -63,7 +69,7 @@ TEXT
     end
     
     helper = <<TEXT
-module #{Waves.application.name}
+module #{app_name}
   module Helpers
     module #{helper_name}
       include Waves::Helpers::Default

@@ -16,7 +16,6 @@ module Waves
 
         def app.config ; Waves.config ; end
         def app.configurations ; self::Configurations ; end
-        def app.paths ; configurations::Mapping.named; end
         def app.resources ; self::Resources ; end
         
         app.instance_eval { include AutoCode }

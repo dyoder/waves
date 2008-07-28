@@ -11,9 +11,11 @@ module Waves
     # template.
     module View
 
+      include ResponseMixin
+      
       # Invokes the view for the given model, passing the assigns as instance variables.
       def view( model, view, assigns = {} )
-        self << Waves.application.views[ model ].process( request ) do
+        self << views[ model ].process( request ) do
           send( view, assigns )
         end
       end

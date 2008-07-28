@@ -8,24 +8,10 @@ module Waves
 
       def self.included( app )
         
-        def app.models ; self::Models ; end
-        def app.views ; self::Views ; end
-        def app.controllers ; self::Controllers ; end
-        def app.helpers ; self::Helpers ; end
-        
-        unless ResponseMixin.public_instance_methods.include? 'model'
-          Waves::ResponseMixin.module_eval do
-            [ :model, :view, :controller ].each do | k |
-              functor( k, Object ) { | name | Waves.application.send( k, name.to_s ) }
-              functor( k, Object, Object ) { | app, name | Waves.applications[ app.to_s ].send( k, name.to_s ) }
-            end
-          end
-        end
-        
         app.auto_create_module( :Models ) do
           include AutoCode
           auto_create_class :Default
-          auto_load :Default, :directories => [:models]
+          auto_load :Default, :directories => [ :models ]
         end
         
         app.auto_eval( :Models ) do
@@ -33,41 +19,60 @@ module Waves
           auto_load true, :directories => [ :models ]
         end
 
-        app.auto_create_module( :Views ) { include AutoCode }
+        app.auto_create_module( :Views ) do
+          include AutoCode
+          auto_create_class :Default, Waves::Views::Base
+          auto_load :Default, :directories => [ :views ]
+        end
         
         app.auto_eval( :Views ) do
-          auto_create_class :Default, Waves::Views::Base
-          auto_load :Default, :directories => [:views]
           auto_create_class true, app::Views::Default
           auto_load true, :directories => [ :views ]
         end
 
-        app.auto_create_module( :Controllers ) { include AutoCode }
+        app.auto_create_module( :Controllers ) do
+          include AutoCode
+          auto_create_class :Default, Waves::Controllers::Base
+          auto_load :Default, :directories => [ :controllers ]
+        end
         
         app.auto_eval( :Controllers ) do
-          auto_create_class :Default, Waves::Controllers::Base
-          auto_load :Default, :directories => [:controllers]
           auto_create_class true, app::Controllers::Default
           auto_load true, :directories => [ :controllers ]          
         end
 
         app.auto_create_module( :Helpers ) do
           include AutoCode
-          auto_create_module { include Waves::Helpers::Default }
+          auto_create_module( :Default ) { include Waves::Helpers::Default }
+          auto_load :Default, :directories => [ :helpers ]
+          auto_create_module( true ) { include app::Helpers::Default }
           auto_load true, :directories => [ :helpers ]
-        end          
-
+        end
+        
         app.auto_eval :Resources do
-          const_set( :Default, Class.new( Waves::Resources::Base ) ).module_eval do
-            def controller ; @controller ||= Waves.application.controllers[ singular ].process( @request ) { self } ; end
-            def view ; @view ||= Waves.application.views[ singular ].process( @request ) { self } ; end
+          auto_create_class :Default, Waves::Resources::Base
+          auto_load :Default, :directories => [ :resources ]
+          auto_eval :Default do
+            def controller ; @controller ||= controllers[ singular ].process( @request ) { self } ; end
+            def view ; @view ||= views[ singular ].process( @request ) { self } ; end
             def action( method, *args ) ; @data = controller.send( method, *args ) ; end
             def render( method ) ; view.send( method, ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data ) ; end
             def method_missing( name, *args, &block) ; params[ name.to_s ] ; end
           end
-          auto_create_class true, self::Default
+          auto_create_class true, app::Resources::Default
+          auto_load true, :directories => [ :resources ]          
         end
-          
+        
+        lambda {
+          string_or_symbol = lambda { |arg| arg.kind_of?(String) || arg.kind_of?(Symbol) }
+          Waves::ResponseMixin.module_eval do
+            [ :models, :controllers, :views, :helpers ].each do |k|
+              functor( k ) { app[ k ] }
+              functor( k, string_or_symbol ) { |name| app( name )[ k ] }
+            end
+          end
+        }.call
+                  
       end
     end
   end

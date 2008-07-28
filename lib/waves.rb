@@ -9,7 +9,6 @@ require 'daemons'
 require 'live_console'
 
 require 'autocode'
-gem 'dyoder-functor'
 require 'functor'
 
 # for mimetypes only or when using as default handler
@@ -25,6 +24,9 @@ require 'benchmark'
 # require 'memcache'
 require 'base64'
 
+require 'filebase'
+require 'filebase/model'
+
 # selected project-specific extensions
 require 'utilities/module'
 require 'utilities/string'
@@ -34,7 +36,6 @@ require 'utilities/integer'
 require 'utilities/inflect'
 require 'utilities/proc'
 require 'utilities/hash'
-require 'utilities/attributes'
 require 'utilities/tempfile'
 # waves Runtime
 require 'dispatchers/base'

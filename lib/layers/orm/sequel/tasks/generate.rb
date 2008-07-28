@@ -2,8 +2,10 @@ namespace :generate do
   
     desc 'Generate a Sequel model, with name=<name>'
     task :model do |task|
-      name = ENV['name']
-      model_name = name.camel_case
+
+      model_name = ENV['name'].camel_case
+      app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
+
       raise "Cannot generate Default yet" if model_name == 'Default'
 
       filename = File.expand_path "models/#{name}.rb"
@@ -13,7 +15,7 @@ namespace :generate do
       end
 
       model = <<TEXT
-module #{Waves.application.name}
+module #{app_name}
   module Models
     class #{model_name} < Default
 

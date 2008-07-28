@@ -7,6 +7,7 @@ module Waves
       attr_reader :request
 
       include ResponseMixin
+      include Functor::Method
       
       def self.included( target )
         parent = target.superclass
@@ -23,7 +24,7 @@ module Waves
       def singular ; self.class.singular ; end
       def plural ; self.class.plural ; end
       def redirect( path ) ; request.redirect( path ) ; end
-      def paths ; self.class.paths ; end
+      functor( :paths ) { self.class.paths }
       
     end
       

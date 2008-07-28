@@ -36,8 +36,7 @@ module Waves
           end
 
           def helper( path )
-            Waves.application.helpers[
-              File.basename( File.dirname( path ) ).camel_case ]
+            Waves.application[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
           end
         end
       end
