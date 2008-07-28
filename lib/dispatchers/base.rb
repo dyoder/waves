@@ -33,7 +33,7 @@ module Waves
       # that takes an +env+ parameter.
       def call( env )
         if Waves.config.synchronize?
-          Waves::Application.instance.synchronize { _call( env ) }
+          Waves::Runtime.instance.synchronize { _call( env ) }
         else
           _call( env )
         end
@@ -43,7 +43,7 @@ module Waves
       # the server should run the request in a separate thread, as determined by
       # Configurations::Mapping#threaded?
       def deferred?( env )
-        Waves::Application.instance.mapping.threaded?( env )
+        Waves::Runtime.instance.mapping.threaded?( env )
       end
       
       private

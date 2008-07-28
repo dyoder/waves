@@ -1,6 +1,6 @@
 module Waves
 
-  class Console < Application
+  class Console < Runtime
 
     class << self
 

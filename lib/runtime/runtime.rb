@@ -1,33 +1,29 @@
 # See the README for an overview.
 module Waves
   
+  # this is temporay until the applications "array" becomes a hash
   class Applications < Array
-    def []( name )
-      self.find { |app| app.name == name.to_s.camel_case }
-    end
+    def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
   end
   
   class << self
 
     # Access the principal Waves application.
-    def applications
-      @applications ||= Applications.new
-    end
+    def applications ; @applications ||= Applications.new ; end
 
-    def application
-      applications.last
-    end
+    # This is being deprecated. Do not write new code against this.
+    def application ; applications.last ; end
+    
+    def main ; applications.first ; end
     
     # Register a module as a Waves application.
     def << ( app )
       applications << app if Module === app
     end
 
-    def instance ; Waves::Application.instance ; end
+    def instance ; Waves::Runtime.instance ; end
 
-    def method_missing(name,*args,&block)
-      instance.send(name,*args,&block)
-    end
+    def method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
   end
 
@@ -36,7 +32,7 @@ module Waves
   # Waves::Server and Waves::Console. Waves::Application is *not* the actual
   # application module(s) registered as Waves applications. To access the
   # main Waves application, you can use +Waves+.+application+.
-  class Application
+  class Runtime
 
     class << self; attr_accessor :instance; end
 
@@ -47,7 +43,7 @@ module Waves
     def initialize( options={} )
       @options = options
       Dir.chdir options[:directory] if options[:directory]
-      Application.instance = self
+      Runtime.instance = self
       Kernel.load( :lib / 'application.rb' ) if Waves.application.nil?
     end
 
@@ -65,11 +61,11 @@ module Waves
 
     # Access the current configuration. *Example:* +Waves::Server.config+
     def config
-      Waves.application.configurations[ mode ]
+      Waves.main::Configurations[ mode ]
     end
 
     # Access the mappings for the application.
-    def mapping ; Waves.application.configurations[ :mapping ] ; end
+    def mapping ; Waves.main::Configurations[ :mapping ] ; end
 
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end

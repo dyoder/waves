@@ -30,8 +30,8 @@ module Waves
 
         response = request.response
 
-        Waves::Application.instance.reload if Waves::Application.instance.debug?
-        response.content_type = Waves::Application.instance.config.mime_types[ request.path ] || 'text/html'
+        Waves.reload if Waves.debug?
+        response.content_type = Waves.config.mime_types[ request.path ] || 'text/html'
 
         mapping = Waves.mapping[ request ]
 

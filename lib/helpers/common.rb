@@ -60,6 +60,9 @@ module Waves
       # The doctype method simply generates a valid DOCTYPE declaration for your page.
       # Valid options are defined in the +DOCTYPES+ constant.
       def doctype(type) ; self << DOCTYPES[type||:html4_strict] ; end
+      
+      # interesting hack ...
+      def app_name ; Dir.pwd.split('/').last ; end
 
     end
   end

@@ -127,7 +127,7 @@ module Waves
       #
       # to find an instance of a given model. Again, the plurality of the controller and
       # model must be the same for this to work.
-      def model; models[ model_name.intern ]; end
+      def model; app::Models[ model_name.intern ]; end
       
       def attributes; params[model_name.singular.intern]; end
       

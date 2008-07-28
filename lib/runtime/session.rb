@@ -27,7 +27,7 @@ module Waves
     end
     
     def self.base_path
-      Waves.application.config.session[:path]
+      Waves.config.session[:path]
     end
 
     # Save the session data. You shouldn't typically have to call this directly, since it

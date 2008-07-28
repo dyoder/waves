@@ -53,8 +53,8 @@ module Waves
           auto_create_class :Default, Waves::Resources::Base
           auto_load :Default, :directories => [ :resources ]
           auto_eval :Default do
-            def controller ; @controller ||= controllers[ singular ].process( @request ) { self } ; end
-            def view ; @view ||= views[ singular ].process( @request ) { self } ; end
+            def controller ; @controller ||= app::Controllers[ singular ].process( @request ) { self } ; end
+            def view ; @view ||= app::Views[ singular ].process( @request ) { self } ; end
             def action( method, *args ) ; @data = controller.send( method, *args ) ; end
             def render( method, assigns = nil )
               assigns ||= { ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data }
@@ -65,17 +65,7 @@ module Waves
           auto_create_class true, app::Resources::Default
           auto_load true, :directories => [ :resources ]          
         end
-        
-        lambda {
-          string_or_symbol = lambda { |arg| arg.kind_of?(String) || arg.kind_of?(Symbol) }
-          Waves::ResponseMixin.module_eval do
-            [ :models, :controllers, :views, :helpers ].each do |k|
-              functor( k ) { app[ k ] }
-              functor( k, string_or_symbol ) { |name| app( name )[ k ] }
-            end
-          end
-        }.call
-                  
+                          
       end
     end
   end

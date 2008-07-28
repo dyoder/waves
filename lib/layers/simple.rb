@@ -14,9 +14,7 @@ module Waves
     module Simple
       def self.included( app )
 
-        def app.config ; Waves.config ; end
-        def app.configurations ; self::Configurations ; end
-        def app.resources ; self::Resources ; end
+        def app.paths( r ) ; self::Resources[ r ]::Paths ; end
         
         app.instance_eval { include AutoCode }
         

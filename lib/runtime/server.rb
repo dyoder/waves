@@ -19,7 +19,7 @@ module Waves
   #
   # The +cluster:stop+ task stops all of the instances.
   #
-  class Server < Application
+  class Server < Runtime
 
     # Access the server thread.
     attr_reader :thread
