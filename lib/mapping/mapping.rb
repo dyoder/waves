@@ -5,13 +5,11 @@ module Waves
     include Functor::Method
     
     METHODS = %w( get put post delete ).map( &:intern )
-    RULES = %w( before action after always handle ).map( &:intern )
+    RULES = %w( before response after always handle ).map( &:intern )
     
     def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end
-    
-    def clear
-      @mappings = Hash.new { |h,k| h[k] = [] }
-    end
+
+    def clear ; @mappings = Hash.new { |h,k| h[k] = [] } ; end
     
     def method_missing( name, *args, &block )
       return super unless RULES.include? name
@@ -34,7 +32,7 @@ module Waves
       raise ArgumentError, "A mapping must have a name or a block" if !options[:name] && !options[:block]
       options = ( @options || {} ).merge( options )
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
-      options[ :path ] = options[ method ]
+      options[ :path ] = options[ method ] if method
       Action.new( options )
     end
 

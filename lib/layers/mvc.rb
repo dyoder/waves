@@ -56,7 +56,10 @@ module Waves
             def controller ; @controller ||= controllers[ singular ].process( @request ) { self } ; end
             def view ; @view ||= views[ singular ].process( @request ) { self } ; end
             def action( method, *args ) ; @data = controller.send( method, *args ) ; end
-            def render( method ) ; view.send( method, ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data ) ; end
+            def render( method, assigns = nil )
+              assigns ||= { ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data }
+              view.send( method, assigns)
+            end
             def method_missing( name, *args, &block) ; params[ name.to_s ] ; end
           end
           auto_create_class true, app::Resources::Default

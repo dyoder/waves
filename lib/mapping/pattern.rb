@@ -16,7 +16,13 @@ module Waves
       functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
       functor( :match, Array, nil ) { | pattern, path | nil }
       functor( :match, Array, Array ) do | wants, gots |
-        r = {}; matches = wants.all? { | want | match( r, want, gots.shift ) }
+        r = {}; matches = wants.all? do | want | 
+          if r[true] || want == true
+            r[true] ||= []; r[true] << gots.shift
+          else
+            match( r, want, gots.shift )
+          end
+        end
         r if matches and gots.empty?
       end
       functor( :match, Hash, String, String ) { | r, want, got | got if want == got }
