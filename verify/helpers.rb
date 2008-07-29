@@ -21,7 +21,7 @@ Bacon::Context.module_eval do
   
   def fake_out_runtime
     runtime = mock( "runtime")
-    runtime.stub!(:config).and_return(Waves.application.configurations[:development])
+    runtime.stub!(:config).and_return( Waves.main[:configurations][:development] )
     Waves::Runtime.stub!(:instance).and_return(runtime)
   end
     
