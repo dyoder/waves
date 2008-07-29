@@ -10,9 +10,11 @@ module TestApplication
 				  :database => "#{File.dirname(__FILE__)}test.db")
     end
   end
-  stub!(:config).and_return(Configurations::Development)
+  
   include Waves::Layers::ORM::Sequel
 end
+
+Waves.stub!(:config).and_return(TestApplication::Configurations::Development)
 
 Waves << TestApplication
 # Waves::Console.load( :mode => :development )
