@@ -6,12 +6,18 @@ require File.join(File.dirname(__FILE__) , "helpers")
 # all now rely on Functor and that establishes the multi-app pattern. technically the one argument versions should access the app they are defined within, but that can be incorporated later.
 # http://gist.github.com/1464
 
-class Thingy
-  include Waves::ResponseMixin
-  attr_reader :request
-  
-  def initialize
-    @request = Waves::Request.new(Rack::MockRequest.env_for("/"))
+module Thingy
+  module Controllers
+    class Default
+
+      include Waves::ResponseMixin
+      attr_reader :request
+
+      def initialize
+        @request = Waves::Request.new(Rack::MockRequest.env_for("/"))
+      end
+      
+    end
   end
 end
 
@@ -19,12 +25,17 @@ describe "The ResponseMixin module" do
   
   before do
     fake_out_runtime
-    @thingy = Thingy.new
+    @thingy = Thingy::Controllers::Default.new
   end
   
-  it "defines a helper for accessing named resources" do
-    @thingy.resource(:mookie).should == VerifyCore::Resources::Mookie
-    @thingy.resource(:verify_core, :mookie).should == VerifyCore::Resources::Mookie
+  # it "defines a helper for accessing named resources" do
+  #   @thingy.resource(:mookie).should == VerifyCore::Resources::Mookie
+  #   @thingy.resource(:verify_core, :mookie).should == VerifyCore::Resources::Mookie
+  # end
+  
+  it "defines helpers for reaching the application" do
+    @thingy.app.should == Thingy
+    @thingy.app_name.should == :thingy
   end
   
   it "defines delegators for request methods" do
