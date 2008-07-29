@@ -11,7 +11,9 @@ module Waves
       def initialize( options ) ; @pattern = options[ :path ] ; end
       
       functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
-      functor( :match, nil, String ) { |pattern, path| nil }
+      # when the pattern array is omitted, match on any path
+      functor( :match, nil, String ) { |pattern, path| {} }
+      # an empty pattern array matches root, i.e. "/"
       functor( :match, [], '/' ) { | pattern, path | {} }
       functor( :match, Array, String ) { | pattern, path | match( pattern, path.split('/')[1..-1] ) }
       functor( :match, Array, nil ) { | pattern, path | nil }
@@ -27,6 +29,7 @@ module Waves
       end
       functor( :match, Hash, String, String ) { | r, want, got | got if want == got }
       functor( :match, Hash, Regexp, String ) { | r, want, got | got if want === got }
+      # placeholder Symbols use a default regex for matching
       functor( :match, Hash, Symbol, String ) do | r, want, got | 
         r[ want.to_s ] = got if match( r, /^([\w\_\-\#]+)$/, got )
       end
