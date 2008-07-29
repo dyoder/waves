@@ -9,7 +9,7 @@ module Blog
       
       # specific to comments - on create redirect to the entry, not the comment itself
       response :create, :resource => :comment, :post => [ 'comments' ] do
-        redirect( paths( :blog ).read( action( :create ).entry.name ) )
+        redirect( Blog.paths( :entry ).read( action( :create ).entry.name ) )
       end
       
       # defaults for generic resources

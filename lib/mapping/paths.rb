@@ -15,7 +15,7 @@ module Waves
       functor( :generate, Symbol, Array ) { | key, vals | generate( vals.shift ) }
       functor( :generate, Regexp, Array ) { | key, vals | generate( vals.shift ) }
 
-      functor( :generate, Object ) { | key, val | val.to_s }
+      functor( :generate, Object ) { | val | val.to_s }
 
       functor( :generate, Hash, Array ) { | h, vals | vals.shift or h.values.first }
       
