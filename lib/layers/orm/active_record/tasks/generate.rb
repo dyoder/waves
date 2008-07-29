@@ -13,7 +13,7 @@ namespace :generate do
       end
 
       model = <<TEXT
-module #{Waves.application.name}
+module #{Waves.main.name}
   module Models
     class #{model_name} < Default
 

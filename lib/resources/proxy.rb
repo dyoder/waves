@@ -8,7 +8,7 @@ module Waves
       
       def initialize( request ) 
         @request = request
-        @resource = Waves.application[:resources][ resource ].new( request )
+        @resource = Waves.main[:resources][ resource ].new( request )
       end
       
       def resource

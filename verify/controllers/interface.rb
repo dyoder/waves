@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "A Waves controller" do
     
   before do
-    Waves.application.stub!(:models).and_return(VerifyControllers::Models)
+    Waves.main.stub!(:models).and_return(VerifyControllers::Models)
     @request = mock('request')
     @dc = VerifyControllers::Controllers::Default.new(@request)
   end
@@ -30,7 +30,6 @@ describe "A Waves controller" do
 
   
   it "has reflective model helpers to allow generalizing" do
-    # Waves.application handwaving done in ./helpers
     
     @dc.model_name.should == 'default'
     @dc.model.should == VerifyControllers::Models::Default

@@ -45,7 +45,7 @@ module Waves
                 # don't clobber dataset from autoloaded file
               else
                 if respond_to? :set_dataset
-                  set_dataset Waves.application.database[ basename.snake_case.pluralize.intern ]
+                  set_dataset Waves.main.database[ basename.snake_case.pluralize.intern ]
                 end
               end
             end

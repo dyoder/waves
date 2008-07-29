@@ -2,6 +2,7 @@
 require File.join(File.dirname(__FILE__) , "..", "helpers")
 require 'layers/orm/sequel'
 
+clear_all_apps
 module TestApplication
   include AutoCode
   module Configurations

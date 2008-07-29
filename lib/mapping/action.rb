@@ -9,9 +9,9 @@ module Waves
         @constraints = Constraints.new( options ) ; @descriptors = Descriptors.new( options )
         @block = block = options[:block]
         if rname = options[ :resource ]
-          @resource = resource = Waves.application[:resources][ rname ]
+          @resource = resource = Waves.main[:resources][ rname ]
         else
-          resource = Waves.application[:resources][ :default ]
+          resource = Waves.main[:resources][ :default ]
           @resource = Waves::Resources::Proxy
         end
         if name

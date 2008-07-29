@@ -14,7 +14,7 @@ namespace :schema do
   end
 
   task :connect do
-    Waves.application.database
+    Waves.main.database
     ActiveRecord::Base.logger = Logger.new($stdout)
   end
 
