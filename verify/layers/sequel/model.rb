@@ -17,7 +17,7 @@ end
 Waves.stub!(:config).and_return(TestApplication::Configurations::Development)
 
 Waves << TestApplication
-# Waves::Console.load( :mode => :development )
+
 TA = TestApplication
 
 describe "An application module which includes the Sequel ORM layer" do
@@ -39,5 +39,3 @@ describe "An application module which includes the Sequel ORM layer" do
   
 end
 
-# Waves.instance_variable_set(:@application, nil)
-# raise Waves.application.inspect
