@@ -4,6 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 # also moved model, view, controller methods for ResponseMixin to mvc layer 
 # 
 # all now rely on Functor and that establishes the multi-app pattern. technically the one argument versions should access the app they are defined within, but that can be incorporated later.
+# http://gist.github.com/1464
 
 class Thingy
   include Waves::ResponseMixin
