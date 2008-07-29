@@ -12,14 +12,4 @@ describe "An application module which includes the Simple foundation" do
     end.should.not.raise
   end
 
-  it "should have accessors defined" do
-    [ :config, :configurations ].each do |method|
-      SimpleApplication.should.respond_to method
-    end
-  end
-
-  it "should define [] method for appropriate submodules" do
-    SimpleApplication::Configurations.should.respond_to :[]
-  end
-
 end
