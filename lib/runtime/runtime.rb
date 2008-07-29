@@ -29,7 +29,7 @@ module Waves
 
   # An application in Waves is anything that provides access to the Waves
   # runtime and the registered Waves applications. This includes both
-  # Waves::Server and Waves::Console. Waves::Application is *not* the actual
+  # Waves::Server and Waves::Console. Waves::Runtime is *not* the actual
   # application module(s) registered as Waves applications. To access the
   # main Waves application, you can use +Waves+.+application+.
   class Runtime

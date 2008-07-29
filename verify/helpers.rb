@@ -22,12 +22,12 @@ Bacon::Context.module_eval do
   def fake_out_runtime
     runtime = mock( "runtime")
     runtime.stub!(:config).and_return(Waves.application.configurations[:development])
-    Waves::Application.stub!(:instance).and_return(runtime)
+    Waves::Runtime.stub!(:instance).and_return(runtime)
   end
     
   # Mapping helpers
   def mapping
-    ::Waves::Application.instance.mapping
+    ::Waves::Runtime.instance.mapping
   end
   
   %w{ path url always handle threaded generator}.each do |method|
