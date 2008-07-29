@@ -28,7 +28,7 @@ module Waves
     def blackboard; request.blackboard; end
     # access stuff from an app
     def app_name ; self.class.rootname.snake_case.to_sym ; end
-    def app ; self.class.root_constant ; end
+    def app ; eval(  "::#{app_name.to_s.camel_case}" ) ; end
     def paths( r ) ; app.paths( r ) ; end
   end
 
