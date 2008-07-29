@@ -25,7 +25,7 @@ module Waves
           require "#{File.dirname(__FILE__)}/sequel/tasks/schema" if defined?(Rake)
           require "#{File.dirname(__FILE__)}/sequel/tasks/generate" if defined?(Rake)
           
-          def app.database ; @sequel ||= ::Sequel.open( config.database ) ; end
+          def app.database ; @sequel ||= ::Sequel.open( Waves.config.database ) ; end
                       
           app.auto_create_module( :Models ) do
             include AutoCode

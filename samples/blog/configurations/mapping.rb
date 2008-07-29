@@ -8,16 +8,16 @@ module Blog
       
       
       # specific to comments - on create redirect to the entry, not the comment itself
-      action :create, :resource => :comment, :post => [ '/comments' ] do
-        redirect( Blog::Resources::Entry.paths.read( action( :create ).entry.name ) )
+      response :create, :resource => :comment, :post => [ 'comments' ] do
+        redirect( paths( :blog ).read( action( :create ).entry.name ) )
       end
       
       # defaults for generic resources
-      action( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
-      action( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
-      action( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
-      action( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
-      action( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
+      response( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
+      response( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
+      response( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
+      response( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
+      response( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
       
     end  
 
