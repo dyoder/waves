@@ -26,10 +26,15 @@ describe "Waves::Utilities::Module" do
     Eenie::Meenie::Miney.basename.should == "Miney"
   end
   
+  it "defines methods for reaching the root constant" do
+    Eenie::Meenie::Miney.rootname.should == "Eenie"
+    Eenie::Meenie::Miney.root_constant.should == Eenie
+  end
+  
   it "defines [] for easy access to namespaced constants" do
     Eenie[:Meenie].should == Eenie::Meenie
   end
-  
+    
 end
 
 describe "a language extended with Waves::Utilities::Inflect" do

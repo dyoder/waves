@@ -7,6 +7,14 @@ module Waves
       def basename
         self.name.split('::').last || ''
       end
+      
+      def rootname
+        self.name.split('::').first
+      end
+      
+      def root_constant
+        eval(  "::#{self.rootname}" )
+      end
 
       # Just a convenience method for accessing a const within a Module
       def []( cname )
