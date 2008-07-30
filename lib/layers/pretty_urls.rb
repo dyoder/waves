@@ -20,8 +20,8 @@ module Waves
       module GetRules
 
         def self.included(target)
-          target.action( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
-          target.action( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
+          target.response( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
+          target.response( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
         end
 
       end
@@ -36,9 +36,9 @@ module Waves
       module RestRules
 
         def self.included(target)
-          target.action( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
-          target.action( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
-          target.action( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
+          target.response( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
+          target.response( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
+          target.response( :delete, :delete => [ :resource, :name ] ) { action( :delete, name ) }
         end
 
       end
