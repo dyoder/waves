@@ -8,12 +8,12 @@ module Waves
     module Default
 
       def self.included( app )
-
+        require 'layers/pretty_urls'
         app.instance_eval do
 
           include Waves::Layers::Inflect::English
           include Waves::Layers::Simple
-          include Waves::Layers::MVC          
+          include Waves::Layers::MVC
           include Waves::Layers::DefaultErrors
           
         end

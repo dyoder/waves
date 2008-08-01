@@ -13,7 +13,7 @@ module Waves
       end
       
       def root_constant
-        eval(  "::#{self.rootname}" )
+        eval( "::#{self.rootname}" )
       end
 
       # Just a convenience method for accessing a const within a Module

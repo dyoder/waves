@@ -49,6 +49,11 @@ describe "The ResponseMixin module" do
     end
   end
   
+  it "defines a delegator for the application's paths" do
+    Thingy.should.receive(:paths).with(:meek)
+    @thingy.paths(:meek)
+  end
+  
   it "defines a redirect method with default status code" do
     @thingy.request.should.receive(:redirect).with('/elsewhere', 301)
     @thingy.redirect("/elsewhere", 301)
