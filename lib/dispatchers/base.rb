@@ -59,7 +59,7 @@ module Waves
             response.location = redirect.path
           end
         end
-        Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
+        Waves::Logger.info "#{request.method}: #{request.url} handled in #{t*1000} ms."
         response.finish
       end
 
