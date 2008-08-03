@@ -11,7 +11,7 @@ module Waves
 
         app.auto_eval :Configurations do
           auto_eval :Mapping do
-            handle(Waves::Dispatchers::NotFoundError) do
+            handle( Waves::Dispatchers::NotFoundError ) do
                response.status = 404; response.body = "404 Not Found"
             end
           end
