@@ -19,7 +19,7 @@ describe "A mapping declaration"  do
       self.class.inspect
     end
     
-    request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Default"
+    mock_request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Default"
   end
   
   it "may specify a resource in the options with a key of :resource" do
@@ -27,15 +27,15 @@ describe "A mapping declaration"  do
       self.class.inspect
     end
     
-    request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Smurf"
+    mock_request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Smurf"
   end
   
   it "may determine the resource using a parameter match in the path pattern" do
     mapping.response( :mapping_name, :get => [ :resources ]) { self.class.inspect }
     mapping.response( :mapping_name, :get => [ :resource ]) { self.class.inspect }
     
-    request.get("/blankets").body.should == "ResourceMappingApp::Resources::Blanket"
-    request.get("/blanket").body.should == "ResourceMappingApp::Resources::Blanket"
+    mock_request.get("/blankets").body.should == "ResourceMappingApp::Resources::Blanket"
+    mock_request.get("/blanket").body.should == "ResourceMappingApp::Resources::Blanket"
   end
   
 end
@@ -54,7 +54,7 @@ describe "A mapping given a name as the first argument" do
     @resource.should.receive(:smurf)
     mapping.response( :smurf, :get => [ "blue_critter" ] )
     
-    request.get("/blue_critter").status.should == 200
+    mock_request.get("/blue_critter").status.should == 200
   end
   
   it "defines a method on the Resource when a block is given" do
@@ -85,7 +85,7 @@ describe "A mapping without a name" do
   it "evaluates the supplied block instead of calling a resource method" do
     mapping.response( :get => [ "two" ] ) { "Brainy" }
     
-    request.get("/two").body.should == "Brainy"
+    mock_request.get("/two").body.should == "Brainy"
   end
   
 end

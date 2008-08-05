@@ -8,77 +8,111 @@ require 'waves'
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
-module Kernel
-  private
-  def specification(name, &block)  Bacon::Context.new(name, &block) end
+
+
+module Waves
+  module Verify
+    module Helpers
+      
+      def ugly_warning(why)
+        if defined?(FIND_UGLY)
+          warn "\n#{why} in:"
+          warn Kernel.caller(2).join("\n") 
+        end
+      end
+      
+      def clear_all_apps
+        Waves.instance_variable_set(:@applications, nil)
+      end
+      
+      # Stubs the configuration, to allow waves_request to work
+      def fake_out_runtime
+        ugly_warning "Faking out runtime"
+        runtime = mock( "runtime")
+        runtime.stub!(:config).and_return( Waves.main[:configurations][:development] )
+        Waves::Runtime.stub!(:instance).and_return(runtime)
+      end
+
+      def mapping
+        ::Waves::Runtime.instance.mapping
+      end
+      
+      # mapping helper methods (of dubious utility?)
+      %w{ path url always handle threaded generator}.each do |method|
+        module_eval "def #{method}(*args,&block); mapping.#{method}(*args,&block);end"
+      end
+      
+      # generate a mock Rack request against the default dispatcher.
+      # this must change if we ever do different dispatchers
+      def mock_request
+        ugly_warning "Hard-coded use of Waves::Dispatchers::Default"
+        @request ||= ::Rack::MockRequest.new( ::Waves::Dispatchers::Default.new )
+      end
+
+      def waves_request
+        Waves::Request.new(Rack::MockRequest.env_for("/"))
+      end
+
+      def env_for(uri="/", options={})
+        Rack::MockRequest.env_for(uri,options)
+      end
+
+      def get(uri, opts={})    mock_request.get(uri, opts)    end
+      def post(uri, opts={})   mock_request.post(uri, opts)   end
+      def put(uri, opts={})    mock_request.put(uri, opts)    end
+      def delete(uri, opts={}) mock_request.delete(uri, opts) end
+
+      def wrap(&block)
+        @before << block
+        @after << block
+      end
+
+      def rm_if_exist(name)
+        FileUtils.rm name if File.exist? name
+      end
+      
+      # example rack environment
+      def rack_env
+        {
+          'REMOTE_ADDR' => '127.0.0.1',
+          'REMOTE_HOST' => 'localhost',
+          'SERVER_NAME' => 'localhost',
+          'SERVER_PORT' => '3000',
+          'SERVER_PORT_SECURE' => '0',
+          'SERVER_PROTOCOL' => 'HTTP/1.1',
+          'SERVER_SOFTWARE' => 'Waves 1.0',
+          'HTTP_HOST' => 'localhost',
+          'HTTP_VERSION' => 'HTTP/1.1',
+          'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14',
+          'HTTP_CACHE_CONTROL' => 'max-age=0',
+          'HTTP_ACCEPT' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
+          'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5',
+          'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+          'HTTP_ACCEPT_ENCODING' => 'gzip,compress;q=0.5,*;q=0.0,',
+          'HTTP_CONNECTION' => 'keep-alive',
+          'HTTP_KEEP_ALIVE' => '300',
+          'HTTP_REFERER' => 'http://localhost/',
+          'GATEWAY_INTERFACE' => 'CGI/1.1'
+        }
+      end
+      
+    end
+  end
 end
 
-def clear_all_apps
-  Waves.instance_variable_set(:@applications, nil)
-end
+extend Waves::Verify::Helpers
 
 Bacon::Context.module_eval do
-  
-  def fake_out_runtime
-    runtime = mock( "runtime")
-    runtime.stub!(:config).and_return( Waves.main[:configurations][:development] )
-    Waves::Runtime.stub!(:instance).and_return(runtime)
-  end
-    
-  # Mapping helpers
-  def mapping
-    ::Waves::Runtime.instance.mapping
-  end
-  
-  %w{ path url always handle threaded generator}.each do |method|
-    module_eval "def #{method}(*args,&block); mapping.#{method}(*args,&block);end"
-  end
-  
-  # # Rack request helpers
-  # ::Rack::MockRequest::DEFAULT_ENV.merge!(
-  #   'REMOTE_ADDR' => '127.0.0.1',
-  #   'REMOTE_HOST' => 'localhost',
-  #   'SERVER_NAME' => 'localhost',
-  #   'SERVER_PORT' => '3000',
-  #   'SERVER_PORT_SECURE' => '0',
-  #   'SERVER_PROTOCOL' => 'HTTP/1.1',
-  #   'SERVER_SOFTWARE' => 'Waves 1.0',
-  #   'HTTP_HOST' => 'localhost',
-  #   'HTTP_VERSION' => 'HTTP/1.1',
-  #   'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14',
-  #   'HTTP_CACHE_CONTROL' => 'max-age=0',
-  #   'HTTP_ACCEPT' => 'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
-  #   'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5',
-  #   'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-  #   'HTTP_ACCEPT_ENCODING' => 'gzip,compress;q=0.5,*;q=0.0,',
-  #   'HTTP_CONNECTION' => 'keep-alive',
-  #   'HTTP_KEEP_ALIVE' => '300',
-  #   'HTTP_REFERER' => 'http://localhost/',
-  #   'GATEWAY_INTERFACE' => 'CGI/1.1'
-  # )
+  include Waves::Verify::Helpers
 
-  def request
-    @request ||= ::Rack::MockRequest.new( ::Waves::Dispatchers::Default.new )
-  end
-
-  def get(uri, opts={})    request.get(uri, opts)    end
-  def post(uri, opts={})   request.post(uri, opts)   end
-  def put(uri, opts={})    request.put(uri, opts)    end
-  def delete(uri, opts={}) request.delete(uri, opts) end
-  
-  # Testing helpers
+  # some people like to use "specify" instead of "it"
   alias_method :specify, :it
-  
-  def wrap(&block)
-    @before << block
-    @after << block
-  end
-  
-  def rm_if_exist(name)
-    FileUtils.rm name if File.exist? name
-  end
-  
 end
 
+module Kernel
+  private
+  # some people like to use "specification" instead of "describe"
+  def specification(name, &block)  Bacon::Context.new(name, &block) end
+end
 
 
