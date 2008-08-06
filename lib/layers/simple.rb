@@ -9,8 +9,8 @@ module Waves
   #   end
   module Layers
     
-    # Creates the Configurations namespace and establishes the standard autoload-or-autocreate
-    # rules.
+    # Creates the Configurations and Resources namespaces and establishes the standard autoload-or-autocreate
+    # rules.  Configurations::Mapping is a module, not a class, so its auto_create declaration is handled separately.
     module Simple
       def self.included( app )
 

@@ -24,6 +24,7 @@ module Waves
       def plural ; self.class.plural ; end
       def redirect( path ) ; request.redirect( path ) ; end
       
+      # Matthew thinks this method is getting obscured by the Simple layer
       def paths ; self.class.paths ; end
     end
       
