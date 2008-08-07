@@ -58,15 +58,16 @@ describe "A mapping given a name as the first argument" do
   end
   
   it "defines a method on the Resource when a block is given" do
-    mapping.response( :gargamel, :get => [ "wizard" ] ) { "Kill Smurfs!" }
+    mapping.response( :wizard, :get => [ :wizard ] ) { "Kill Smurfs!" }
     
-    @default.new( mock('request') ).should.respond_to :gargamel
+    @default.new( mock('request') ).should.respond_to :wizard
   end
   
   it "defines a path generator on the Resource's Paths object" do
-    mapping.response( :gargamel, :get => [ "wizard" ] ) { "Kill Smurfs!" }
+    mapping.response( :wizard, :get => [ :wizard ] ) { "Kill Smurfs!" }
     
-    @default.new( mock('request') ).paths.should.respond_to :gargamel
+    paths = @default.new( mock('request') ).paths
+    paths.should.respond_to :wizard
   end
   
 end

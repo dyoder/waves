@@ -17,7 +17,7 @@ module Waves
       functor( :generate, :resources, Array ) { | key, vals | @resource.plural }
 
       functor( :generate, Symbol, Array ) { | key, vals | generate( vals.shift ) }
-      functor( :generate, String, [] ) { | key, vals | key }
+      functor( :generate, String, Array ) { | key, vals | key }
       functor( :generate, Regexp, Array ) { | key, vals | generate( vals.shift ) }
 
       functor( :generate, Object ) { | val | val.to_s }
