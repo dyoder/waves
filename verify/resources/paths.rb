@@ -36,3 +36,18 @@ describe "A Paths class" do
   end
   
 end
+
+describe "A path generating method" do
+  
+  before do
+    class TestPaths < Waves::Mapping::Paths; end
+    @resource = mock(:resource)
+    TestPaths.define_path(:list, [:things])
+  end
+  
+  it "can take a hash to supply query params" do
+    paths = TestPaths.new(@resource)
+    paths.list(:curtains, :mode => "sort").should == "/curtains?mode=sort"
+  end
+  
+end
