@@ -10,16 +10,16 @@ describe "A Paths class" do
   end
   
   it "can define named paths using strings" do
-    TestPaths.path_method(:foo, ["foo"])
-    TestPaths.path_method(:bar, ["bar", "baz"])
+    TestPaths.define_path(:foo, ["foo"])
+    TestPaths.define_path(:bar, ["bar", "baz"])
     
     TestPaths.new(@resource).foo.should == "/foo"
     TestPaths.new(@resource).bar.should == "/bar/baz"
   end
   
   it "can define named paths using symbols as placeholders" do
-    TestPaths.path_method(:list, [:things])
-    TestPaths.path_method(:show, [:things, :item])
+    TestPaths.define_path(:list, [:things])
+    TestPaths.define_path(:show, [:things, :item])
     
     paths = TestPaths.new(@resource)
     paths.list("curtains").should == "/curtains"
@@ -27,8 +27,8 @@ describe "A Paths class" do
   end
   
   it "can mix it up" do
-    TestPaths.path_method(:show_curtain, ["curtains", :item])
-    TestPaths.path_method(:show_curtain_rings, ["curtains", :item, "rings" ])
+    TestPaths.define_path(:show_curtain, ["curtains", :item])
+    TestPaths.define_path(:show_curtain_rings, ["curtains", :item, "rings" ])
     
     paths = TestPaths.new(@resource)
     paths.show_curtain("blue1").should == "/curtains/blue1"

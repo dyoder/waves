@@ -16,6 +16,10 @@ module Waves
           def self.paths ; @object ||= self::Paths.new( self ) ; end
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
+          
+          def self.define_action(name, &block)
+            define_method( name, &block )
+          end
         end
       end
       

@@ -6,7 +6,7 @@ module Waves
       
       include Functor::Method
       
-      def self.path_method(name, path_array)
+      def self.define_path(name, path_array)
         define_method( name ) { |*args| generate( path_array, args ) }
       end
 
