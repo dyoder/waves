@@ -15,8 +15,9 @@ module Waves
           @resource = Waves::Resources::Proxy
         end
         if name
+          # Law of Demeter! Law of Demeter!
           resource.instance_eval { define_method( name, &block ) } if block
-          resource::Paths.instance_eval { define_method( name ) { |*args| generate( options[ :path ], args ) } }
+          resource::Paths.path_method( name, options[ :path ] )
         end
       end
       

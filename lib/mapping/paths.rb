@@ -5,6 +5,10 @@ module Waves
     class Paths
       
       include Functor::Method
+      
+      def self.path_method(name, path_array)
+        define_method( name ) { |*args| generate( path_array, args ) }
+      end
 
       def initialize( resource ) ; @resource = resource ; end
 
@@ -13,6 +17,7 @@ module Waves
       functor( :generate, :resources, Array ) { | key, vals | @resource.plural }
 
       functor( :generate, Symbol, Array ) { | key, vals | generate( vals.shift ) }
+      functor( :generate, String, [] ) { | key, vals | key }
       functor( :generate, Regexp, Array ) { | key, vals | generate( vals.shift ) }
 
       functor( :generate, Object ) { | val | val.to_s }
