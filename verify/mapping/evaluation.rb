@@ -10,7 +10,7 @@ describe "A mapping declaration"  do
     mapping.clear
     handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
     @resource = mock('resource')
-    @default = ResourceMappingApp::Resources::Default
+    @default = MappingApp::Resources::Default
     
   end
   
@@ -19,7 +19,7 @@ describe "A mapping declaration"  do
       self.class.inspect
     end
     
-    mock_request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Default"
+    mock_request.get("/somewhere").body.should == "MappingApp::Resources::Default"
   end
   
   it "may specify a resource in the options with a key of :resource" do
@@ -27,15 +27,15 @@ describe "A mapping declaration"  do
       self.class.inspect
     end
     
-    mock_request.get("/somewhere").body.should == "ResourceMappingApp::Resources::Smurf"
+    mock_request.get("/somewhere").body.should == "MappingApp::Resources::Smurf"
   end
   
   it "may determine the resource using a parameter match in the path pattern" do
     mapping.response( :mapping_name, :get => [ :resources ]) { self.class.inspect }
     mapping.response( :mapping_name, :get => [ :resource ]) { self.class.inspect }
     
-    mock_request.get("/blankets").body.should == "ResourceMappingApp::Resources::Blanket"
-    mock_request.get("/blanket").body.should == "ResourceMappingApp::Resources::Blanket"
+    mock_request.get("/blankets").body.should == "MappingApp::Resources::Blanket"
+    mock_request.get("/blanket").body.should == "MappingApp::Resources::Blanket"
   end
   
 end
@@ -46,7 +46,7 @@ describe "A mapping given a name as the first argument" do
     mapping.clear
     handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
     @resource = mock('resource')
-    @default = ResourceMappingApp::Resources::Default
+    @default = MappingApp::Resources::Default
   end
   
   it "calls the method with the action name on the Resource" do

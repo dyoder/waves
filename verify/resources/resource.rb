@@ -14,7 +14,6 @@ describe "A Resource class" do
   
   it "has a Paths object" do
     Dog.paths.should.be.a.kind_of Waves::Mapping::Paths
-    Dog.paths.class.should == Waves::Resources::Base::Paths
   end
   
   it "knows singular and plural names for itself" do

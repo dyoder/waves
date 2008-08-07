@@ -26,6 +26,9 @@ module Waves
       end
       
       # Stubs the configuration, to allow waves_request to work
+      # One reason this is needed is that a Waves::Request's session uses
+      # the current configuration to determine the file store directory and
+      # the session expiration time.
       def fake_out_runtime
         ugly_warning "Faking out runtime"
         runtime = mock( "runtime")

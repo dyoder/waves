@@ -84,7 +84,7 @@ A Paths object
   has path generating methods created by mappings
   has a class hierarchy mirroring its Resource's ancestry
   has heritable generator methods
-  path generators honor the optional arguments supplied as a Hash, using defaults if not supplied
+  * path generators honor the optional arguments supplied as a Hash, using defaults if not supplied
 
 
 The Default resource defines these methods
