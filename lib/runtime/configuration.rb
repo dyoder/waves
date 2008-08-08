@@ -164,13 +164,12 @@ module Waves
         Waves::MimeTypes
       end
 
-      # Defines the application for use with Rack.  Treat this method like an
-      # instance of Rack::Builder
-      def self.application( &block )
+      # Define a block for use with Rack::Builder.    
+      def self.rack_builder( &block )
         if block_given?
-          self['application'] = Rack::Builder.new( &block )
+          self['rack_builder'] = block
         else
-          self['application']
+          self['rack_builder']
         end
       end
 

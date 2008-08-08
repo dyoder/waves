@@ -54,7 +54,8 @@ module Waves
       start_debugger if options[:debugger]
       log.info "** Waves Server v0.7.7 starting  on #{host}:#{port}"
       handler, options = config.handler
-      handler.run( config.application.to_app, options ) do |server|
+      application = Rack::Builder.new(&config.rack_builder).to_app
+      handler.run( application, options ) do |server|
         @server = server
         self.trap('INT') { puts; stop } if @server.respond_to? :stop
       end

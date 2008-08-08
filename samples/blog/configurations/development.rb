@@ -17,8 +17,8 @@ module Blog
       handler ::Rack::Handler::Mongrel, :Host => host, :Port => port
       # handler ::Rack::Handler::WEBrick, :BindAddress => host, :Port => port
       # handler ::Rack::Handler::Thin, :Host => host, :Port => port
-
-      application do
+      
+      rack_builder do
         use ::Rack::ShowExceptions
         use ::Rack::Static, :urls => [ '/css', '/javascript' ], :root => 'public'
         run ::Waves::Dispatchers::Default.new
