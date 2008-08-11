@@ -1,0 +1,8 @@
+The Simple layer
+  creates the Resources namespace
+    auto_creates resource classes with superclass of Waves::Resources::Base
+  creates the Configurations namespace
+    auto_loads a mapping file if it exists
+    auto_creates the mappings module otherwise
+    auto_loads any other constant if files exist
+    auto_creates these constants otherwise
