@@ -21,7 +21,7 @@ gem = Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
   %w( mongrel rack markaby erubis haml RedCloth metaid filebase
-      extensions live_console choice daemons rakegen).each do |dep|
+      extensions live_console choice daemons rakegen functor ).each do |dep|
     gem.add_dependency dep
   end
   gem.add_dependency('sequel', '>= 2.0.0')
