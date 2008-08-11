@@ -3,12 +3,12 @@ require File.join(File.dirname(__FILE__) , "helpers")
 
 describe "In a mapping's path-matcher"  do
   
-  before do
-    mapping.clear
-    handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
-  end
-  
   describe "the HTTP method" do
+    
+    before do
+      mapping.clear
+      handle( Waves::Dispatchers::NotFoundError ) { response.status = 404 }
+    end
   
     it "is specified with a hash key" do
       mapping.response( :get => [ 'somewhere' ] )     { "GET method" }
