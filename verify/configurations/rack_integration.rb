@@ -19,11 +19,10 @@ describe "A Waves Configuration" do
   
   it "must define the application for use with Rack" do
     app = Rack::Builder.new() {}
-    Rack::Builder.should.receive(:new).with().and_return(app)
-    Default.application do
+    Default.rack_builder do
       "stuff"
     end
-    Default.application.should.be.a.kind_of Rack::Builder
+    Default.rack_builder.should.be.a.kind_of Proc
   end
   
 end
