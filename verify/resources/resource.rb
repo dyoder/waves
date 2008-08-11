@@ -5,20 +5,13 @@ fake_out_runtime
 
 describe "A Resource class" do
 
-  before do
-    class Dog < Waves::Resources::Base
-      
-    end
-    
-  end
-  
   it "has a Paths object" do
-    Dog.paths.should.be.a.kind_of Waves::Mapping::Paths
+    VerifyResources::Resources::Dog.paths.should.be.a.kind_of Waves::Resources::Base::Paths
   end
   
   it "knows singular and plural names for itself" do
-    Dog.singular.should == "dog"
-    Dog.plural.should == "dogs"
+    VerifyResources::Resources::Dog.singular.should == "dog"
+    VerifyResources::Resources::Dog.plural.should == "dogs"
   end
   
 end

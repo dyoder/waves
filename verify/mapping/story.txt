@@ -64,7 +64,7 @@ An exception handler
   ( can it take a name?  would that be useful in any way? )
   
 
-:before, :after, :wrap, and :during filters
+:before, :after, :always  filters
   take the same constraints as actions
   are defined using methods of the appropriate name
   apparently can be given names, which define methods on Resource and Paths???
