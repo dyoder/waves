@@ -8,14 +8,6 @@ module Waves
 
       def self.included( app )
         
-        app.auto_create_module( :Helpers ) do
-          include AutoCode
-          auto_create_module( :Default ) { include Waves::Helpers::Default }
-          auto_load :Default, :directories => [ :helpers ]
-          auto_create_module( true ) { include app::Helpers::Default }
-          auto_load true, :directories => [ :helpers ]
-        end
-        
         app.auto_create_module( :Models ) do
           include AutoCode
           auto_create_class :Default
@@ -49,6 +41,14 @@ module Waves
           auto_load true, :directories => [ :controllers ]          
         end
 
+        app.auto_create_module( :Helpers ) do
+          include AutoCode
+          auto_create_module( :Default ) { include Waves::Helpers::BuiltIn }
+          auto_load :Default, :directories => [ :helpers ]
+          auto_create_module( true ) { include app::Helpers::Default }
+          auto_load true, :directories => [ :helpers ]
+        end
+        
         app.auto_eval :Resources do
           auto_create_class :Default, Waves::Resources::Base
           auto_load :Default, :directories => [ :resources ]

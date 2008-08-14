@@ -1,6 +1,6 @@
 module Waves
   module Helpers
-    module Default
+    module BuiltIn
       attr_reader :request, :content
       include Waves::ResponseMixin
       include Waves::Helpers::Common
