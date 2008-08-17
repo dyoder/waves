@@ -20,13 +20,15 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis haml metaid filebase
+  %w( mongrel rack markaby erubis haml metaid
       extensions live_console choice daemons rakegen functor ).each do |dep|
     gem.add_dependency dep
   end
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
   gem.add_dependency('RedCloth', '>= 3.0.0')
+  gem.add_dependency('filebase', '>= 0.3.0')
+  gem.add_dependency('functor', '>= 0.4.2')
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'

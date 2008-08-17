@@ -25,12 +25,9 @@ require 'benchmark'
 # require 'memcache'
 require 'base64'
 
-# gem 'dyoder-filebase'
-# require 'filebase'
-# require 'filebase/model'
-$: << '../filebase/lib'
-require 'filebase.rb'
-require 'filebase/model.rb'
+gem 'dyoder-filebase'
+require 'filebase'
+require 'filebase/model'
 
 # selected project-specific extensions
 require 'utilities/module'

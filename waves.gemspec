@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<erubis>, [">= 0"])
       s.add_runtime_dependency(%q<haml>, [">= 0"])
       s.add_runtime_dependency(%q<metaid>, [">= 0"])
-      s.add_runtime_dependency(%q<filebase>, [">= 0"])
       s.add_runtime_dependency(%q<extensions>, [">= 0"])
       s.add_runtime_dependency(%q<live_console>, [">= 0"])
       s.add_runtime_dependency(%q<choice>, [">= 0"])
@@ -37,6 +36,8 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sequel>, [">= 2.0.0"])
       s.add_runtime_dependency(%q<autocode>, [">= 1.0.0"])
       s.add_runtime_dependency(%q<RedCloth>, [">= 3.0.0"])
+      s.add_runtime_dependency(%q<filebase>, [">= 0.3.0"])
+      s.add_runtime_dependency(%q<functor>, [">= 0.4.2"])
     else
       s.add_dependency(%q<mongrel>, [">= 0"])
       s.add_dependency(%q<rack>, [">= 0"])
@@ -44,7 +45,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<erubis>, [">= 0"])
       s.add_dependency(%q<haml>, [">= 0"])
       s.add_dependency(%q<metaid>, [">= 0"])
-      s.add_dependency(%q<filebase>, [">= 0"])
       s.add_dependency(%q<extensions>, [">= 0"])
       s.add_dependency(%q<live_console>, [">= 0"])
       s.add_dependency(%q<choice>, [">= 0"])
@@ -54,6 +54,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<sequel>, [">= 2.0.0"])
       s.add_dependency(%q<autocode>, [">= 1.0.0"])
       s.add_dependency(%q<RedCloth>, [">= 3.0.0"])
+      s.add_dependency(%q<filebase>, [">= 0.3.0"])
+      s.add_dependency(%q<functor>, [">= 0.4.2"])
     end
   else
     s.add_dependency(%q<mongrel>, [">= 0"])
@@ -62,7 +64,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<erubis>, [">= 0"])
     s.add_dependency(%q<haml>, [">= 0"])
     s.add_dependency(%q<metaid>, [">= 0"])
-    s.add_dependency(%q<filebase>, [">= 0"])
     s.add_dependency(%q<extensions>, [">= 0"])
     s.add_dependency(%q<live_console>, [">= 0"])
     s.add_dependency(%q<choice>, [">= 0"])
@@ -72,5 +73,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<sequel>, [">= 2.0.0"])
     s.add_dependency(%q<autocode>, [">= 1.0.0"])
     s.add_dependency(%q<RedCloth>, [">= 3.0.0"])
+    s.add_dependency(%q<filebase>, [">= 0.3.0"])
+    s.add_dependency(%q<functor>, [">= 0.4.2"])
   end
 end
