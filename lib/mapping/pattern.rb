@@ -26,15 +26,8 @@ module Waves
           # pad gots with nils so they are the same length
           gots = ( gots + ( [nil] * ( wants.length - gots.length ) ) )
         elsif wants.length < gots.length
-          
           # true is a wildcard matcher ...
-          return false unless wants.last == true
-          # # special case where true is the entire pattern
-          # return { true => gots } if wants.size == 1
-          # # collapse last n elements down to an array to match true
-          # r[ true ] = gots[ wants.size-2..-1 ]
-          # gots = gots[ 0..wants.size-2 ]
-          
+          return false unless wants.last == true or ( wants.last.respond_to? :values and wants.last.values.first == true )
           # pad wants with last so they are the same length
           wants = ( wants + ( [ wants.last ] * ( gots.length - wants.length ) ) )
         end
