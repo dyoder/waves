@@ -26,7 +26,7 @@ module Waves
 
       functor( :generate, Object ) { | val | val.to_s }
 
-      functor( :generate, Hash, Array ) { | h, vals | k, v = h.first ; generate( k, v, vals ) }
+      functor( :generate, Hash, Array ) { | h, vals | k, v = h.to_a.first ; generate( k, v, vals ) }
       functor( :generate, :resource, Object, Array ) { | key, val, args | @resource.singular }
       functor( :generate, :resources, Object, Array ) { | key, val, args | @resource.plural }
       functor( :generate, Symbol, Object, Array ) { | key, val, args | args.shift or val.to_s }
