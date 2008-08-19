@@ -61,7 +61,7 @@ end
 module BlackBoardVerify
   module Helpers
     module Test
-      extend Waves::Helpers::Default
+      extend Waves::Helpers::BuiltIn
     end
   end
 end
@@ -85,7 +85,7 @@ specification "Blackboard included in other classes" do
   it 'should be included in other classes' do
     request = mock(:request)
     BlackBoardVerify::Controllers::Test.instance_methods.should.include "blackboard"
-    Waves::Helpers::Default.instance_methods.should.include "blackboard"
+    Waves::Helpers::BuiltIn.instance_methods.should.include "blackboard"
     BlackBoardVerify::Views::Test.methods.should.include "blackboard"
   end
 
