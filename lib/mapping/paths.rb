@@ -12,7 +12,7 @@ module Waves
 
       def initialize( resource ) ; @resource = resource ; end
 
-      functor( :generate, Array, Array ) do | keys, vals | 
+      functor( :generate, Array, Array ) do | keys, vals |
         path = '/' << keys.map { |key| generate( key, vals ) }.compact.join('/')
         path << "?" << vals.first.map { |k,v| "#{k}=#{v}" }.join("&") if vals.first.respond_to?( :keys )
         path
@@ -26,7 +26,11 @@ module Waves
 
       functor( :generate, Object ) { | val | val.to_s }
 
-      functor( :generate, Hash, Array ) { | h, vals | vals.shift or h.values.first }
+      functor( :generate, Hash, Array ) { | h, vals | k, v = h.first ; generate( k, v, vals ) }
+      functor( :generate, :resource, Object, Array ) { | key, val, args | @resource.singular }
+      functor( :generate, :resources, Object, Array ) { | key, val, args | @resource.plural }
+      functor( :generate, Symbol, Object, Array ) { | key, val, args | args.shift or val.to_s }
+      
     end
     
   end

@@ -56,6 +56,10 @@ module Waves
           send( name, assigns )
         end
       end
+      
+      def layout_content
+        self << @layout_content
+      end
 
       # The doctype method simply generates a valid DOCTYPE declaration for your page.
       # Valid options are defined in the +DOCTYPES+ constant.

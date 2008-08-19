@@ -39,7 +39,7 @@ module Waves
       # Starts the logger, using the active configuration to initialize it.
       def start
         @log = config[:rotation] ?
-          ::Logger.new( output, config[:rotation].intern ) :
+          ::Logger.new( output, config[:rotation].to_sym ) :
           ::Logger.new( output )
         @log.level = level
         @log.datetime_format = "%Y-%m-%d %H:%M:%S "
