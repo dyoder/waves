@@ -10,6 +10,13 @@ module Waves
       
       def initialize( options ) ; @pattern = options[ :path ] ; end
       
+      # A pattern-matching method provided by the power of Functor.  Most external calls to +match+
+      # will start with an instance of Waves::Request.
+      def match(request)
+        # stub for RDoc
+        # gets overwritten by Functor
+      end
+      
       functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
       # when the pattern array is omitted, match on any path
       functor( :match, nil, String ) { |pattern, path| {} }

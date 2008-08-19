@@ -23,9 +23,11 @@ module Waves
 
     class Default < Base
 
-      # All dispatchers using the Dispatchers::Base to provide thread-safety, logging, etc.
-      # must provide a +safe+ method to handle creating a response from a request.
-      # Takes a Waves::Request and returns a Waves::Reponse
+      # Takes a Waves::Request and returns a Waves::Response, reloading the reloadable application constants
+      # if Waves.debug? is true.  +safe+ processes the request by searching the application mappings for an action,
+      # as well as any matching :before and :after filters.  If an exception is raised during the processing, 
+      # +safe+ looks for an  exception handler in the mappings.  After processing the filters, action, and any 
+      # exception handlers, the method evaluates any :always filters that matched the request. 
       def safe( request  )
 
         response = request.response

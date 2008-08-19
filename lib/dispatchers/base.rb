@@ -1,6 +1,6 @@
 module Waves
 
-  module Dispatchers
+  module Dispatchers #:nodoc:
 
     # A NotFoundError means what you think it means.  The dispatchers included with Waves do not
     # natively intercept this exception.  Instead an exception handler must be registered in the application

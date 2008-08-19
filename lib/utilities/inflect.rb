@@ -1,10 +1,10 @@
-# Much love to Facets (more specifically English) for this module
-# http://english.rubyforge.org/
-# changed slightly in the hopes of one day implementing a different set
-# of rules for different languages
-# NOTE: this is NOT implemented yet.
-# plural and singular work directly with the English class
 module Waves
+  # Much love to Facets (more specifically English) for this module
+  # http://english.rubyforge.org/
+  # changed slightly in the hopes of one day implementing a different set
+  # of rules for different languages
+  # NOTE: this is NOT implemented yet.
+  # plural and singular work directly with the English class
   module Inflect # :nodoc:
     module InflectorMethods
       
