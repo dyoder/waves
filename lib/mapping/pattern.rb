@@ -51,7 +51,7 @@ module Waves
       end
       # a hash is either a param with a custom regexp or a default value ...
       functor( :match, Hash, Hash, Object ) do | r, want, got |
-        key, want = want.first ; match( r, key, want, got )
+        key, want = want.to_a.first ; match( r, key, want, got )
       end
       functor( :match, Hash, Symbol, String, String ) do | r, key, want, got |
         r[ key.to_s ] = got
