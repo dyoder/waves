@@ -15,7 +15,7 @@ module Blog
       end
       
       # defaults for generic resources
-      response( :list, :get => [ :resources ] ) { debugger ; action( :all ) and render( :list ) }
+      response( :list, :get => [ :resources ] ) { action( :all ) and render( :list ) }
       response( :create, :post => [ :resources ] ) { redirect( paths.read( action( :create ).name, 'edit' ) ) }
       response( :read, :get => [ :resource, :name, { :mode => 'show' } ] ) { action( :find, name ) and render( mode ) }
       response( :update, :put => [ :resource, :name ] ) { action( :update, name ) and redirect( paths.read( name ) ) }
