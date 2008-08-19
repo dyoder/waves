@@ -68,7 +68,7 @@ module Waves
       functor( :match, Hash, Symbol, Regexp, nil ) do | r, key, want, got |
         false
       end
-      
+      functor( :match, Hash, Object, nil ) { | r, want, got | false }      
     end
 
   end
