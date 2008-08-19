@@ -1,0 +1,85 @@
+doctype :html4_strict
+
+html do
+
+  head do
+    title "Welcome to Waves"
+    script :src => 'http://jqueryjs.googlecode.com/files/jquery-1.2.5.min.js',
+      :type => 'text/javascript'
+    script :src => '/javascript/site.js', :type => 'text/javascript'
+    style <<-STYLE
+      h1 { margin: 0px; padding: 0px;}
+      h1 a {  color: navy; font-family: Optima, serif; font-size: 144px; text-decoration: none;}
+      p { margin: 0px;}
+      h4 { margin-bottom: 6px; padding: 3px 5px;background: #eee; border: 1px solid #aac; font-family: monospace}
+      pre { margin: 0px 10px}
+      a { color: navy }
+    STYLE
+  end
+
+  body do
+    h1  do
+      a "Waves", :href => 'http://rubywaves.com'
+    end
+    
+    div.status! :style => "position: absolute; margin: 0px 25px; width: 450px; left: 550px" do
+      h3 "Running in #{Waves.mode} mode"
+      
+      h3 "Host: #{Waves.config.host}"
+      h3 "Port(s): #{Waves.config.ports || Waves.config.port}"
+      h3 "Using #{Waves.config.handler.first.name}" if Waves.config.handler
+
+      h3 "Loaded applications:"
+      ol do
+        Waves.applications.each do |app|
+          li app.name
+        end
+      end
+
+      h3.collapse "Loaded gems:"
+      span do 
+        Gem.loaded_specs.to_a.sort.map do |name, spec|
+          a( name, :href => spec.homepage, :target => '_blank').chomp
+        end.join(", ")
+      end
+      h3 "RUBY_PLATFORM # => '#{RUBY_PLATFORM}' "
+    end
+    
+
+    
+    div.how :style => "margin: 0px 25px; width: 500px" do
+      h3 "It's running.  Now what do I do?" 
+      p "Profit, we hope.  But if the nature of phase two isn't completely clear, you can start by looking at these files in your application:"
+      
+      h4 "configurations/#{Waves.mode}.rb"
+      p "Configure the host, port, database, and other settings for the current configuration."
+      
+      h4 "configurations/mapping.rb"
+      p <<-TEXT
+      Map actions to HTTP requests with fancy constraint matching.  This is the loose equivalent to routes in Waves.
+      A newly generated application has a route that redirects to this page.
+      TEXT
+      
+      h4 "resources/*.rb, models/*.rb, controllers/*.rb, views/*.rb, helpers/*.rb"
+      p do
+        "Resources, models, controllers, views, and helpers live in their respective directories.  You can generate new wild things using rake tasks:"
+      end
+      pre do
+        code do
+          "$ rake generate:model name=entry"
+        end
+        code do
+          "$ rake generate:controller name=entry"""
+        end
+      end
+
+      
+      h4 "templates/**/*"
+      p "View templates live here, in directories named after the resource."
+      
+    end
+    
+  end
+
+
+end
