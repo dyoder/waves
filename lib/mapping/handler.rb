@@ -11,6 +11,13 @@ module Waves
         super( options )
       end
       
+      def call( args )
+        request, exception = args
+        if @block
+          @resource.new( request ).instance_exec( exception, &@block )
+        end
+      end
+      
     end
     
   end

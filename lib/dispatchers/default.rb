@@ -48,7 +48,7 @@ module Waves
 
           Waves::Logger.info e.to_s
           handler = mapping[ :handle ].find { | action | action.exception === e } 
-          ( handler.call( request ) if handler ) or raise e
+          ( handler.call( request, e ) if handler ) or raise e
 
         ensure
 
