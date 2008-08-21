@@ -7,7 +7,7 @@ module Blog
       extend Waves::Mapping
       
       response( :get => [] ) { redirect "/waves/status"}
-      response( :get => [ "waves", "status" ], :resource => :waves) { render( :index ) }
+      response( :get => [ "waves", "status" ], :resource => :waves) { render( :status ) }
       
       # specific to comments - on create redirect to the entry, not the comment itself
       response :create, :resource => :comment, :post => [ 'comments' ] do
