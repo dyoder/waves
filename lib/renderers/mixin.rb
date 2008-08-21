@@ -6,7 +6,7 @@ module Waves
     # Just include this in your Renderer class and write your render method.
     module Mixin
 
-      # Adds the following methods to the target class:
+      # Adds the following methods to the mod class:
       #
       # - extension: allows you to set or get the extension used by this renderer.
       #
@@ -16,31 +16,31 @@ module Waves
       # - template: read the template from the file corresponding to the given logical path.
       # - helper: return a helper module that corresponds to the given logical path.
       #
-      def self.included(target)
-        class << target
+      def self.included(mod)
+        
+        # Register the renderer with the Views module
+        Views.renderers << mod
 
-          def extension(*args)
-            return @extension if args.length == 0
-            @extension = args.first
-          end
+        def mod.extension(*args)
+          return @extension if args.length == 0
+          @extension = args.first
+        end
 
-          def filename(path)
-            :templates / "#{path}.#{self.extension}"
-          end
+        def mod.filename(path)
+          :templates / "#{path}.#{self.extension}"
+        end
 
-          def render(path,args=nil)
-          end
+        def mod.render(path,args=nil)
+        end
 
-          def template( path )
-            File.read( filename( path ) )
-          end
+        def mod.template( path )
+          File.read( filename( path ) )
+        end
 
-          def helper( path )
-            Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
-          end
+        def mod.helper( path )
+          Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
         end
       end
-
 
     end
 

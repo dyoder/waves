@@ -55,18 +55,27 @@ module Waves
 
   module Views
 
-    class NoTemplateError < Exception ; end
-
     # A class method that returns the known Renderers, which is any module that is defined within Waves::Renderers and includes the Renderers::Mixin. You can define new Renderers simply be reopening Waves::Renderers and defining a module that mixes in Renderers::Mixin.
-    def Views.renderers
-      return [] if Renderers.constants.nil?
-      Renderers.constants.sort.inject([]) do |rx,cname|
-        ( Module === (c=Renderers.const_get(cname)) &&
-          c < Renderers::Mixin ) ? ( rx << c ) : rx
+    def self.renderers
+      @renderers ||= []
+    end
+    
+    def self.renderer_for(path)
+      @renderers.find do |renderer|
+        File.exists?( renderer.filename( path ) )
       end
     end
+    
+    def self.render( path, assigns = {} )
+      template = Views.renderer_for(path) || Views.renderer_for( :generic / File.basename(path) )
+      raise NoTemplateError.new( path ) if template.nil?
+      template.render( path, assigns )
+    end
 
-    # The View mixin simply sets up the machinery for invoking a template, along with methods for accessing the request context and the standard interface for invoking a view method.
+    class NoTemplateError < Exception # :nodoc:
+    end
+
+    # The View mixin simply sets up the machinery for invoking a template, along with methods for accessing the request assigns and the standard interface for invoking a view method.
     module Mixin
 
       attr_reader :request
@@ -87,25 +96,24 @@ module Waves
       # Return the first renderer for which a template file can be found.
       # Uses Renderers::Mixin.filename to construct the filename for each renderer.
       def renderer(path)
-        Views.renderers.find do |renderer|
-          File.exists?( renderer.filename( path ) )
-        end
+        Views.renderer_for(path)
       end
 
-      def render( path, context = {} )
-        context.merge!( :request => request )
-        template = renderer( path ) || renderer( :generic / File.basename(path) )
-        raise NoTemplateError.new( path ) if template.nil?
-        template.render( path, context )
+      # Render the template found in the directory named after this view (snake cased, of course)
+      # E.g. App::Views::Gnome.new.render( "stink" ) would look for templates/gnome/stink.<ext>
+      def render( path, assigns = {} )
+        Views.render("#{self.class.basename.snake_case}/#{path}", assigns.merge!( :request => request ))
       end
 
+      # Render the template with the name of the missing method.
       def method_missing(name,*args)
-        render( "/#{self.class.basename.snake_case}/#{name}", *args )
+        render( name, *args )
       end
 
     end
 
     # :)
+    # An emoticon means never having to say you're sorry.
     const_set( :Base, Class.new ).module_eval { include Mixin }  
 
   end
