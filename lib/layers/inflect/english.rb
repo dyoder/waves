@@ -1,6 +1,8 @@
 module Waves
   module Layers
     module Inflect
+      
+      # Adds plural/singular methods for English to String
       module English
         
         def self.included(app)

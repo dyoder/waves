@@ -3,7 +3,7 @@ module Waves
     module Inflect
       module English
         # Extends Waves::Inflect::InflectorMethods
-        module Rules
+        module Rules 
         
           extend Waves::Inflect::InflectorMethods
 

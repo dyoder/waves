@@ -4,10 +4,15 @@ module Waves
 
   module Mapping
     
+    # In a Waves mapping, the Pattern is the structure used to match the path of the request URI.
+    # 
+    # A Pattern consists of an array where each element corresponds to a path component in a request URI.
+    
     class Pattern
       
       include Functor::Method
       
+      # Takes an options hash.  Currently uses options[:path] only.
       def initialize( options ) ; @pattern = options[ :path ] ; end
       
       # A pattern-matching method provided by the power of Functor.  Most external calls to +match+
