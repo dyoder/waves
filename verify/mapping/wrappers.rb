@@ -6,7 +6,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 
 STATE = []
 
-describe "A before filter"  do
+describe "A mapping declared in a before block"  do
   
   before do
     mappings.clear
@@ -26,7 +26,7 @@ describe "A before filter"  do
   
 end
 
-describe "An after filter"  do
+describe "A mapping declared in an after block"  do
   
   before do
     mappings.clear    
@@ -60,7 +60,7 @@ describe "An after filter"  do
   
 end
 
-describe "An always filter"  do
+describe "A mapping declared in an always block"  do
   
   before do
     STATE[0] = "foo"
@@ -79,6 +79,25 @@ describe "An always filter"  do
     
     mock_request.get("/somewhere")
     STATE.should == ["bar"]
+  end
+  
+end
+
+describe "A mapping declared in a with(options) block"  do
+  
+  before do
+    mappings.clear
+    handle( ArgumentError ) { response.status = 404 }
+  end
+  
+  it "uses the #with options as a baseline" do
+    mappings do
+      with :resource => :monkey, :scheme => 'https' do
+        on( :get => [ 'angry' ]) { "#{singular} throws poop" }
+      end
+    end
+    
+    mock_request.get( "https://example.com/angry").body.should == "monkey throws poop"
   end
   
 end
