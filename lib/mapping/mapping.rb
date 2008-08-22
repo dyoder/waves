@@ -45,48 +45,50 @@ module Waves
     include Functor::Method
     
     METHODS = %w( get put post delete ).map( &:intern )
-    RULES = %w( before response after always handle ).map( &:intern )
+    RULES = %w( before after always ).map( &:intern )
     
     def mappings ; @mappings ||= Hash.new { |h,k| h[k] = [] } ; end
 
     def clear ; @mappings = Hash.new { |h,k| h[k] = [] } ; end
     
-    def method_missing( name, *args, &block )
-      return super unless RULES.include? name
-      args << block if block_given?
-      mappings[ name ] << map( *args )
-    end
-    
     def on( options, &block )
+      @type ||= :main
       args = [options, block].compact
-      mappings[ :response ] << map( *args )
+      mappings[ @type ] << map( *args )
+    end
+        
+    def before(&block)
+      @type = :before; yield if block; @type = nil
     end
     
+    def after(&block)
+      @type = :after; yield if block; @type = nil
+    end
     
+    def always(&block)
+      @type = :always; yield if block; @type = nil
+    end
+    
+    def handle(exception, options={}, &block)
+      args = [ exception, options, block].compact
+      mappings[ :handle ] << map( *args )
+    end
     
     def with( options, &block )
       @options = options; yield if block_given? ; @options = nil
     end
 
-    # primary input like: response( :klump, :get => [ "foo" ] ) { bar }
-    functor( :map, Symbol, Hash, Proc ) do | name, options, block |
-      options[:as] = name ; options[:block] = block ; map( options )
-    end # no longer needed?
-    
     # primary input like: on( :get => [ "foo" ], :as => :klump ) { bar }
     functor( :map, Hash, Proc ) do | options, block |
       options[:block] = block; map( options )
     end
-    
-    # primary input like response( :klump, :get => [ "foo" ] ); missing a block
-    functor( :map, Symbol, Hash ) { | name, options | options[:as] = name ; map( options ) } # no longer needed?
     
     # secondary input where &block has already been slurped into the options hash
     functor( :map, Hash ) do | options |
       raise ArgumentError, "A mapping must have a block or an :as param" if !options[:as] && !options[:block]
       options = ( @options || {} ).merge( options )
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
-      options[ :path ] = options[ method ] if method
+      options[ :path ] = options[ method || :any ] 
       Action.new( options )
     end
 
@@ -106,11 +108,11 @@ module Waves
     
     def []( request )
       results = Hash.new { |h,k| h[k] = [] }
-      RULES.each do | rule |
+      (RULES + [ :handle, :main] ).each do | rule |
         mappings[ rule ].each { | action | ( binding = action.bind( request ) ) and results[ rule ].push( binding ) }
       end
       return results
-    end  
+    end
 
     private :map
     

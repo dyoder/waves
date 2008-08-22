@@ -47,9 +47,9 @@ module Waves
 
         begin
 
-          request.not_found if mapping[ :response ].empty?
+          request.not_found if mapping[ :main ].empty?
           mapping[ :before ].each { | action | action.call( request ) }
-          response.write( mapping[ :response ].first.call( request ) )
+          response.write( mapping[ :main ].first.call( request ) )
           mapping[ :after ].each { | action | action.call( request ) }
           
         rescue Exception => e

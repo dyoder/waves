@@ -9,16 +9,19 @@ STATE = []
 describe "A before filter"  do
   
   before do
-    mapping.clear    
-    mapping.response( :get => [ "somewhere" ] ) { "main" }
+    mappings.clear
   end
   
   it "is evaluated before the action" do
-    mapping.before( :mapping_name, :get => [ "somewhere"] ) do
-      response.body << "before, "
+    mappings do      
+      before do
+        on( :get => [ "somewhere"] ) { response.body << "before, " }
+        on( :get => [ true ] ) { response.body << "later, " }
+      end
+      on( :get => [ "somewhere" ] ) { "main" }
     end
     
-    mock_request.get("/somewhere").body.should == "before, main"
+    mock_request.get("/somewhere").body.should == "before, later, main"
   end
   
 end
@@ -26,24 +29,29 @@ end
 describe "An after filter"  do
   
   before do
-    STATE[0] = "foo"
-    mapping.clear    
+    mappings.clear    
     handle( ArgumentError ) { response.status = 404 }
-    mapping.response( :get => [ "somewhere" ] ) { "main" }
   end
   
   it "is evaluated after the action" do
-    mapping.after( :mapping_name, :get => [ "somewhere"] ) do
-      response.body << ", after"
+    mappings do
+      on( :get => [ "somewhere" ] ) { "main" }
+      after do
+        on(:get => [ "somewhere"] ) { response.body << ", after" }
+      end
     end
     
     mock_request.get("/somewhere").body.should == "main, after"
   end
   
+  # this is testing Dispatcher behavior.  Needs a rethink
   it "is not evaluated if the action raises an exception" do
-    mapping.response( :get => [ "elsewhere" ] ) { raise ArgumentError }
-    mapping.after( :mapping_name, :get => [ "elsewhere"] ) do
-      STATE[0] = "bar"
+    STATE[0] = "foo"
+    mappings do
+      on( :get => [ "elsewhere" ] ) { raise ArgumentError }
+      after do
+        on(:get => [ "elsewhere"] ) { STATE[0] = "bar" }
+      end
     end
     
     mock_request.get("/elsewhere")
@@ -56,15 +64,17 @@ describe "An always filter"  do
   
   before do
     STATE[0] = "foo"
-    mapping.clear
+    mappings.clear
     handle( ArgumentError ) { response.status = 404 }
-    
-    mapping.response( :get => [ "somewhere" ] ) { raise ArgumentError }
   end
   
+  # this is also testing Dispatcher behavior.
   it "is evaluated no matter what horrible things may happen in the action" do
-    mapping.always( :mapping_name, :get => [ "somewhere"] ) do
-      STATE[0] = "bar"
+    mappings do
+      on( :get => [ "somewhere" ] ) { raise ArgumentError }
+      always do
+        on(:get => [ "somewhere"] ) { STATE[0] = "bar" }
+      end
     end
     
     mock_request.get("/somewhere")

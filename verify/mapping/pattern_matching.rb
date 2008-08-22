@@ -16,6 +16,7 @@ describe "In a mapping's path-matcher"  do
         on( :put => [ 'somewhere' ] )     { "PUT method" }
         on( :post => [ 'somewhere' ] )    { "POST method" }
         on( :delete => [ 'somewhere' ] )  { "DELETE method" }
+        on( :any => [ 'anywhere' ] )  { "Whatever" }
       end
 
     
@@ -23,6 +24,9 @@ describe "In a mapping's path-matcher"  do
       mock_request.put("/somewhere").body.should == "PUT method"
       mock_request.post("/somewhere").body.should == "POST method"
       mock_request.delete("/somewhere").body.should == "DELETE method"
+      
+      mock_request.get("/anywhere").body.should == "Whatever"
+      mock_request.post("/anywhere").body.should == "Whatever"
     end
     
   end
