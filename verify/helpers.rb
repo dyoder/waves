@@ -36,13 +36,17 @@ module Waves
         Waves::Runtime.stub!(:instance).and_return(runtime)
       end
 
-      def mapping
-        ::Waves::Runtime.instance.mapping
+      def mappings(&block)
+        m = ::Waves::Runtime.instance.mapping
+        if block
+          m.instance_eval(&block)
+        end
+        m
       end
       
       # mapping helper methods (of dubious utility?)
       %w{ path url always handle threaded generator}.each do |method|
-        module_eval "def #{method}(*args,&block); mapping.#{method}(*args,&block);end"
+        module_eval "def #{method}(*args,&block); mappings.#{method}(*args,&block);end"
       end
       
       # generate a mock Rack request against the default dispatcher.

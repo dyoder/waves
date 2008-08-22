@@ -57,29 +57,44 @@ module Waves
       mappings[ name ] << map( *args )
     end
     
+    def on( options, &block )
+      args = [options, block].compact
+      mappings[ :response ] << map( *args )
+    end
+    
+    
+    
     def with( options, &block )
       @options = options; yield if block_given? ; @options = nil
     end
 
+    # primary input like: response( :klump, :get => [ "foo" ] ) { bar }
     functor( :map, Symbol, Hash, Proc ) do | name, options, block |
-      options[:name] = name ; options[:block] = block ; map( options )
-    end
+      options[:as] = name ; options[:block] = block ; map( options )
+    end # no longer needed?
+    
+    # primary input like: on( :get => [ "foo" ], :as => :klump ) { bar }
     functor( :map, Hash, Proc ) do | options, block |
       options[:block] = block; map( options )
     end
-    functor( :map, Symbol, Hash ) { | name, options | options[:name] = name ; map( options ) }
+    
+    # primary input like response( :klump, :get => [ "foo" ] ); missing a block
+    functor( :map, Symbol, Hash ) { | name, options | options[:as] = name ; map( options ) } # no longer needed?
+    
+    # secondary input where &block has already been slurped into the options hash
     functor( :map, Hash ) do | options |
-      raise ArgumentError, "A mapping must have a name or a block" if !options[:name] && !options[:block]
+      raise ArgumentError, "A mapping must have a block or an :as param" if !options[:as] && !options[:block]
       options = ( @options || {} ).merge( options )
       options[ :method ] = method = METHODS.find { |method| options[ method ] }
       options[ :path ] = options[ method ] if method
       Action.new( options )
     end
 
+    # section for Exception Handlers
     exception = lambda { | klass | klass.ancestors.include?( Exception ) if klass.is_a?( Class ) }
     
     functor( :map, exception, String, Hash, Proc ) do | e, name, options, block |
-      options[ :name ] = name ; map( e, options, block )
+      options[ :as ] = name ; map( e, options, block )
     end
     
     functor( :map, exception, Hash, Proc ) do | e, options, block |
@@ -87,7 +102,8 @@ module Waves
     end
     functor( :map, exception, Proc ) { | e, block | map( e, { :block => block } ) }
     functor( :map, exception, Hash ) { | e, options | Handler.new( e, options ) }
-        
+    
+    
     def []( request )
       results = Hash.new { |h,k| h[k] = [] }
       RULES.each do | rule |

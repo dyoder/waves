@@ -21,6 +21,9 @@ module Waves
         params['resources'] || params['resource'].plural
       end
       
+      alias_method :singular, :resource
+      alias_method :plural, :resources
+      
       def method_missing( name, *args, &block )
         @resource.send( name, *args, &block )
       end

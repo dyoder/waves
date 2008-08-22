@@ -23,6 +23,7 @@ module Waves
         end
       end
       
+      # Resources are initialized with a Waves::Request
       def initialize(request); @request = request ; end
       def singular ; self.class.singular ; end
       def plural ; self.class.plural ; end

@@ -5,7 +5,7 @@ module Waves
     class Action
       
       def initialize( options )
-        @name = name = options[:name] ; @pattern = pattern = Pattern.new( options )
+        @name = name = options[:as] ; @pattern = pattern = Pattern.new( options )
         @constraints = Constraints.new( options ) ; @descriptors = Descriptors.new( options )
         @block = block = options[:block]
         if rname = options[ :resource ]
@@ -27,10 +27,10 @@ module Waves
       
       def call( args )
         request = args.first
-        if @name
-          @resource.new( request ).send( @name )
-        elsif @block
+        if @block
           @resource.new( request ).instance_eval( &@block )
+        elsif @name
+          @resource.new( request ).send( @name )
         end
       end
 
