@@ -71,12 +71,12 @@ describe "In a mapping's path-matcher"  do
       
       it "may match string literals" do
         mappings do
-          on( :get => [ 'kilroy', 'was', 'here'] )  { 'Hello from Kilroy' }
+          on( :get =>  %w{ kilroy was here } )  { 'Hello from Kilroy' }
         end
         
         mock_request.get('/kilroy/was/here').body.should == 'Hello from Kilroy'
         
-        # doesn't work for partial matches.
+        # prove it doesn't work for partial matches.
         mock_request.get('/kilroy/was').status.should == 404
       end
       
@@ -89,12 +89,24 @@ describe "In a mapping's path-matcher"  do
         
       end
       
-      # it "may use hashes to specify placeholders with custom regexes" do
-      #   mapping.on( :get => [ :prisoner, { :prisoner_id => /9430|24601/ } ] ) { "I am Jean Valjean!" }
-      #   
-      #   mock_request.get("/prisoner/9430").body.should == "I am Jean Valjean!"
-      #   mock_request.get("/prisoner/9431").status.should == 404
-      # end
+      it "may use hashes to specify placeholders with custom regexes" do
+        mappings do
+          on( :get => [ "prisoner", { :prisoner_id => /9430|24601/ } ] ) { "I am Jean Valjean!" }
+        end
+        
+        mock_request.get("/prisoner/9430").body.should == "I am Jean Valjean!"
+        mock_request.get("/prisoner/9431").status.should == 404
+      end
+      
+      it "may use hash placeholder with value of true, to glom up all remaining components" do
+        mappings do
+          on( :get => [ :first, { :rest => true } ] ) do
+            [ params['first'], params['rest'].join('-') ].join(', ')
+          end
+        end
+        
+        mock_request.get("/one/two/three/four").body.should == "one, two-three-four"
+      end
       
       it "saves placeholder matches as params" do
         mappings do
