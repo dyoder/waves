@@ -20,7 +20,7 @@ module Blog
 
       application do
         use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => [ '/css', '/javascript' ], :root => 'public'
+        use ::Rack::Static, :urls => [ '/css', '/javascript', '/favicon.ico' ], :root => 'public'
         run ::Waves::Dispatchers::Default.new
       end
 

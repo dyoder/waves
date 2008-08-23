@@ -2,8 +2,9 @@ module Waves
   module Layers
     module ORM # :nodoc:
       
-      # Sets up the Sequel connection and configures AutoCode on Models, so that constants in that
-      # namespace get loaded from file or created as subclasses of Models::Default
+      # The Sequel ORM layer sets up the Sequel connection and configures AutoCode on Models, so that constants in that
+      # namespace get loaded from file or created as subclasses of Models::Default.  The dataset for models is set to the
+      # snakecased version of the model's class name.
       module Sequel
 
         # On inclusion, this module:

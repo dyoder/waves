@@ -25,7 +25,8 @@ module Waves
           ( params = @pattern.match( request ) ) and Binding.new( self, params ) )
       end
       
-      def call( request )
+      def call( args )
+        request = args.first
         if @name
           @resource.new( request ).send( @name )
         elsif @block
@@ -45,9 +46,10 @@ module Waves
         @action = action ; @params = params
       end
       
-      def call( request )
+      def call( *args )
+        request = args.first
         request.params.merge!( @params )
-        @action.call( request )
+        @action.call( args )
       end
     
       def method_missing(name,*args,&block)

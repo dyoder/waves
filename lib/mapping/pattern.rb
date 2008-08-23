@@ -4,11 +4,23 @@ module Waves
 
   module Mapping
     
+    # In a Waves mapping, the Pattern is the structure used to match the path of the request URI.
+    # 
+    # A Pattern consists of an array where each element corresponds to a path component in a request URI.
+    
     class Pattern
       
       include Functor::Method
       
+      # Takes an options hash.  Currently uses options[:path] only.
       def initialize( options ) ; @pattern = options[ :path ] ; end
+      
+      # A pattern-matching method provided by the power of Functor.  Most external calls to +match+
+      # will start with an instance of Waves::Request.
+      def match(request)
+        # stub for RDoc
+        # gets overwritten by Functor
+      end
       
       functor( :match, Waves::Request ) { | request | match( @pattern, request.path ) }
       # when the pattern array is omitted, match on any path
@@ -26,6 +38,8 @@ module Waves
           # pad gots with nils so they are the same length
           gots = ( gots + ( [nil] * ( wants.length - gots.length ) ) )
         elsif wants.length < gots.length
+          # true is a wildcard matcher ...
+          return false unless wants.last == true or ( wants.last.respond_to? :values and wants.last.values.first == true )
           # pad wants with last so they are the same length
           wants = ( wants + ( [ wants.last ] * ( gots.length - wants.length ) ) )
         end
@@ -43,7 +57,7 @@ module Waves
       
       # a hash is either a param with a custom regexp or a default value ...
       functor( :match, Hash, Hash, Object ) do | r, want, got |
-        key, want = want.first ; match( r, key, want, got )
+        key, want = want.to_a.first ; match( r, key, want, got )
       end
       functor( :match, Hash, Symbol, String, String ) do | r, key, want, got |
         r[ key.to_s ] = got
@@ -60,7 +74,7 @@ module Waves
       functor( :match, Hash, Symbol, Regexp, nil ) do | r, key, want, got |
         false
       end
-      
+      functor( :match, Hash, Object, nil ) { | r, want, got | false }      
     end
 
   end

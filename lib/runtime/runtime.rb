@@ -1,37 +1,33 @@
 # See the README for an overview.
 module Waves
   
-  # this is temporay until the applications "array" becomes a hash
+  # A temporary measure until the applications "array" becomes a hash.
+  # Currently used to keep track of all loaded Waves applications.
   class Applications < Array
     def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
   end
+
+  # The list of all loaded applications
+  def self.applications ; @applications ||= Applications.new ; end
+
+  # Deprecated. Do not write new code against this.
+  def self.application ; warn "Waves.application is deprecated"; applications.last ; end
   
-  class << self
-
-    # Access the principal Waves application.
-    def applications ; @applications ||= Applications.new ; end
-
-    # This is being deprecated. Do not write new code against this.
-    def application ; applications.last ; end
-    
-    def main ; applications.first ; end
-    
-    # Register a module as a Waves application.
-    def << ( app )
-      applications << app if Module === app
-    end
-
-    def instance ; Waves::Runtime.instance ; end
-
-    def method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
-
+  # Access the principal Waves application.
+  def self.main ; applications.first ; end
+  
+  # Register a module as a Waves application.
+  def self.<< ( app )
+    applications << app if Module === app
   end
 
-  # An application in Waves is anything that provides access to the Waves
-  # runtime and the registered Waves applications. This includes both
-  # Waves::Server and Waves::Console. Waves::Runtime is *not* the actual
-  # application module(s) registered as Waves applications. To access the
-  # main Waves application, you can use +Waves+.+application+.
+  # Returns the most recently created instance of Waves::Runtime.
+  def self.instance ; Waves::Runtime.instance ; end
+
+  def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
+
+  # A Waves::Runtime takes an inert application module and gives it concrete, pokeable form.
+  # Waves::Server and Waves::Console are types of runtime.  
   class Runtime
 
     class << self; attr_accessor :instance; end
@@ -56,15 +52,15 @@ module Waves
       @mode ||= @options[:mode]||:development
     end
     
-    # Debug is true if debug is set to true in the current configuration.
+    # Returns true if debug was set to true in the current configuration.
     def debug? ; config.debug ; end
 
-    # Access the current configuration. *Example:* +Waves::Server.config+
+    # Returns the current configuration.
     def config
       Waves.main::Configurations[ mode ]
     end
 
-    # Access the mappings for the application.
+    # Returns the mappings for the application.
     def mapping ; Waves.main::Configurations[ :mapping ] ; end
 
     # Reload the modules specified in the current configuration.
