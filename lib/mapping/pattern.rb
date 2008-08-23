@@ -40,6 +40,7 @@ module Waves
       functor( :match, Hash, true, Object ) do | r, key, got | 
         r[ true ] ||= []; r[ true ] << got
       end
+      
       # a hash is either a param with a custom regexp or a default value ...
       functor( :match, Hash, Hash, Object ) do | r, want, got |
         key, want = want.first ; match( r, key, want, got )
