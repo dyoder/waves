@@ -106,64 +106,10 @@ module Waves
         @request = request
       end
 
-      # The params variable is taken from the request object and "destructured", so that
-      # a parameter named 'blog.title' becomes:
-      #
-      #   params['blog']['title']
-      #
-      # If you want to access the original parameters object, you can still do so using
-      # +request.params+ instead of simply +params+.
-      def params; @params ||= destructure(request.params); end
-
-      # Returns the name of the model corresponding to this controller by taking the basename
-      # of the module and converting it to snake case. If the model plurality is different than
-      # the controller, this will not, in fact, be the model name.
-      def model_name; self.class.basename.snake_case; end
-
-      # Returns the model corresponding to this controller by naively assuming that 
-      # +model_name+ must be correct. This allows you to write generic controller methods such as:
-      #
-      #   model.find( name )
-      #
-      # to find an instance of a given model. Again, the plurality of the controller and
-      # model must be the same for this to work.
-      def model; app::Models[ model_name.intern ]; end
-      
-      def attributes; params[model_name.singular.intern]; end
-      
-      private
-
-      def destructure( hash )
-        destructured = {}
-        hash.keys.map { |key| key.split('.') }.each do |keys|
-          destructure_with_array_keys(hash, '', keys, destructured)
-        end
-        destructured
-      end
-
-      def destructure_with_array_keys( hash, prefix, keys, destructured )
-        if keys.length == 1
-          key = "#{prefix}#{keys.first}"
-          val = hash[key]
-          destructured[keys.first.intern] = case val
-          when String
-            val.strip
-          when Hash
-            val
-          when nil
-            raise key.inspect
-          end
-        else
-          destructured = ( destructured[keys.first.intern] ||= {} )
-          new_prefix = "#{prefix}#{keys.shift}."
-          destructure_with_array_keys( hash, new_prefix, keys, destructured )
-        end
-      end
-
     end
 
     # :)
-    const_set( :Base, Class.new ).module_eval { include Mixin }  
+    class Base ; include Mixin ; end 
 
   end
 

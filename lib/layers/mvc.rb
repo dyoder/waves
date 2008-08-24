@@ -56,26 +56,12 @@ module Waves
             
             def controller( method = nil, *args, &block )
               @controller ||= app::Controllers[ singular ].process( @request ) { self }
-              @data = @controller.send( method, *args ) if method
-              @controller
             end
 
             def view( method = nil, assigns = nil)
               @view ||= app::Views[ singular ].process( @request ) { self }
-              if method
-                assigns ||= { ( @data.kind_of?( Enumerable ) ? plural : singular ) => @data }
-                @view.send( method, assigns)
-              else
-                @view
-              end
             end
             
-            def render( path, assigns = {} )
-              Views.render(path, assigns)
-            end
-            
-            # can't distinguish nil param values from NoMethodError.  need to super, or something
-            def method_missing( name, *args, &block) ; params[ name.to_s ] ; end
           end
           auto_create_class true, app::Resources::Default
           auto_load true, :directories => [ :resources ]          

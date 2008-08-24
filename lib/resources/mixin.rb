@@ -17,9 +17,9 @@ module Waves
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
           
-          def self.define_action(name, &block)
-            define_method( name, &block )
-          end
+          #def self.define_action(name, &block)
+          #  define_method( name, &block )
+          #end
         end
       end
       
@@ -28,13 +28,12 @@ module Waves
       def singular ; self.class.singular ; end
       def plural ; self.class.plural ; end
       def redirect( path ) ; request.redirect( path ) ; end
-      
-      # Matthew thinks this method is getting obscured by the Simple layer
       def paths ; self.class.paths ; end
+      def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
     end
       
     # :)
-    const_set( :Base, Class.new ).module_eval { include Mixin }
+    class Base ; include Mixin ; end 
 
   end
 

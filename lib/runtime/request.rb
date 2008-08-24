@@ -1,8 +1,12 @@
 module Waves
-  # Waves::Request represents an HTTP request and provides convenient methods for accessing request attributes. See Rack::Request for documentation of any method not defined here.
+  # Waves::Request represents an HTTP request and provides convenient methods for accessing request attributes. 
+  # See Rack::Request for documentation of any method not defined here.
+
   class Request
 
     class ParseError < Exception ; end
+
+    class Query ; include Attributes ; end
 
     attr_reader :response, :session, :blackboard
 

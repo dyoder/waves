@@ -15,7 +15,7 @@ module Waves
           @resource = Waves::Resources::Proxy
         end
         if name
-          resource.define_action( name, &block ) if block
+          # resource.define_action( name, &block ) if block
           resource::Paths.define_path( name, options[ :path ] )
         end
       end
