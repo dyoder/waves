@@ -23,6 +23,8 @@ module Waves
 
   # Returns the most recently created instance of Waves::Runtime.
   def self.instance ; Waves::Runtime.instance ; end
+  
+  def self.version ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/VERSION" ) ) ; end
 
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 

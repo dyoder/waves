@@ -52,7 +52,7 @@ module Waves
     def start
       daemonize if options[:daemon]
       start_debugger if options[:debugger]
-      log.info "** Waves Server v0.7.7 starting  on #{host}:#{port}"
+      log.info "** Waves Server #{Waves.version} starting  on #{host}:#{port}"
       handler, options = config.handler
       handler.run( config.application.to_app, options ) do |server|
         @server = server
