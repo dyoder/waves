@@ -4,7 +4,7 @@ module Waves
     
     class Constraints
       
-      METHODS = %w( domain scheme method accept ).map( &:intern )
+      METHODS = %w( domain scheme method accept charset language ).map( &:intern )
       
       def initialize( options )
         METHODS.each do | method |

@@ -1,4 +1,5 @@
 module Waves
+  
   # Waves::Request represents an HTTP request and provides convenient methods for accessing request attributes. 
   # See Rack::Request for documentation of any method not defined here.
 
@@ -30,19 +31,13 @@ module Waves
     end
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
-    def path
-      @request.path_info
-    end
+    def path ; @request.path_info ; end
 
     # The request domain. Ex: +www.fubar.com+
-    def domain
-      @request.host
-    end
+    def domain ; @request.host ; end
 
     # The request content type.
-    def content_type
-      @request.env['CONTENT_TYPE']
-    end
+    def content_type ; @request.env['CONTENT_TYPE'] ; end
     
 
     # Request method predicates, defined in terms of #method.
@@ -70,13 +65,8 @@ module Waves
     
     class Accept < Array
       
-      def =~(arg)
-        self.include? arg
-      end
-      
-      def ===(arg)
-        self.include? arg
-      end
+      def =~(arg) ; self.include? arg ; end
+      def ===(arg) ; self.include? arg ; end
       
       # try the normal include?, then if the arg is a Regexp, see if anything matches
       def include?(arg)
@@ -98,17 +88,9 @@ module Waves
       
     end
     
-    def accept
-      Accept.parse(@request.env['HTTP_ACCEPT'])
-    end
-    
-    def accept_charset
-      Accept.parse(@request.env['HTTP_ACCEPT_CHARSET'])
-    end
-    
-    def accept_language
-      Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE'])
-    end
+    def accept ; Accept.parse(@request.env['HTTP_ACCEPT']) ; end
+    def accept_charset ; Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
+    def accept_language ; Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 
   end
 
