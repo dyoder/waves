@@ -25,6 +25,7 @@ module Waves
   def self.instance ; Waves::Runtime.instance ; end
   
   def self.version ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/VERSION" ) ) ; end
+  def self.license ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/LICENSE" ) ) ; end
 
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
@@ -70,6 +71,12 @@ module Waves
 
     # Returns the cache set for the current configuration
     def cache ; config.cache ; end
+    
+    # Start and / or access the Waves::Logger instance.
+    def log
+      @log ||= Waves::Logger.start
+    end
+
   end
 
 end

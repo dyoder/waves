@@ -10,7 +10,7 @@ Choice.options do
     desc 'Defaults to development.'
     cast Symbol
   end
-  separator ''
+  separator ''  
 end
 
 console = Waves::Console.load( Choice.choices )
@@ -18,4 +18,5 @@ Object.send(:define_method, :waves) { console }
 require 'irb'
 require 'irb/completion'
 ARGV.clear
+Waves.log.info "Waves Runtime #{Waves.version} **"
 IRB.start

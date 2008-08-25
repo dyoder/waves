@@ -30,7 +30,7 @@ module Waves
       
       # Returns the active configuration for the logger.
       def config
-        @config ||= Waves::Server.config.log
+        @config ||= Waves.config.log
       end
       
       # Returns the logging level used to filter logging events.

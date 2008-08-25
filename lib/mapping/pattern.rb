@@ -39,7 +39,8 @@ module Waves
           gots = ( gots + ( [nil] * ( wants.length - gots.length ) ) )
         elsif wants.length < gots.length
           # true is a wildcard matcher ...
-          return false unless wants.last == true or ( wants.last.respond_to? :values and wants.last.values.first == true )
+          return false unless wants.last == true or 
+            ( wants.last.respond_to? :values and wants.last.values.first == true )
           # pad wants with last so they are the same length
           wants = ( wants + ( [ wants.last ] * ( gots.length - wants.length ) ) )
         end
@@ -65,7 +66,7 @@ module Waves
       functor( :match, Hash, Symbol, String, nil ) do | r, key, want, got |
         r[ key.to_s ] = want
       end
-      functor( :match, Hash, Symbol, true, Object ) do | r, key, want, got |
+      functor( :match, Hash, Symbol, true, String ) do | r, key, want, got |
         r[ key.to_s ] ||= []; r[ key.to_s ] << got
       end
       functor( :match, Hash, Symbol, Regexp, String ) do | r, key, want, got |

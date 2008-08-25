@@ -27,8 +27,10 @@ Choice.options do
     desc "Select an ORM (e.g. active_record, sequel, none)"
     default "sequel"
   end
-  
+    
 end
+
+puts "** Waves Runtime #{Waves.version}"
 
 orm = Choice.choices.orm.snake_case
 orm_require, orm_include = case orm

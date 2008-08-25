@@ -58,15 +58,15 @@ module Waves
               @controller ||= app::Controllers[ singular ].process( @request ) { self }
             end
 
-            def view( method = nil, assigns = nil)
+            def view( method = nil, assigns = nil )
               @view ||= app::Views[ singular ].process( @request ) { self }
             end
             
-          end
-          auto_create_class true, app::Resources::Default
-          auto_load true, :directories => [ :resources ]          
+          end     
+          auto_create_class( true, app::Resources::Default )
+          auto_load( true, :directories => [ :resources ] )
         end
-                          
+
       end
     end
   end

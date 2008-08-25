@@ -43,16 +43,12 @@ module Waves
       Thread.new { loop {sleep 1} } if RUBY_PLATFORM =~ /mswin32/
     end
 
-    # Start and / or access the Waves::Logger instance.
-    def log
-      @log ||= Waves::Logger.start
-    end
-
     # Start the server.
     def start
       daemonize if options[:daemon]
       start_debugger if options[:debugger]
-      log.info "** Waves Server #{Waves.version} starting  on #{host}:#{port}"
+      log.info "Waves Runtime #{Waves.version}"
+      log.info "Waves starting  on #{host}:#{port}"
       handler, options = config.handler
       handler.run( config.application.to_app, options ) do |server|
         @server = server
@@ -62,12 +58,12 @@ module Waves
 
     # Stop the server.
     def stop
-      log.info "** Waves Server Stopping ..."
+      log.info "Waves Server Stopping ..."
       if options[:daemon]
         pid_file = :log / $$ + '.pid'; FileUtils.rm( pid_file ) if File.exist?( pid_file )
       end
       @server.stop
-      log.info "** Waves Server Stopped"
+      log.info "Waves Server Stopped"
     end
 
     # Provides access to the server mutex for thread-safe operation.

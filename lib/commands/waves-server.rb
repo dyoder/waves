@@ -51,5 +51,6 @@ Choice.options do
     desc 'Startup file to load.'
     desc 'Defaults to "lib/startup.rb"'
   end
+  separator ''
 end
 Waves::Server.run( Choice.choices )

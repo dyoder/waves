@@ -16,7 +16,7 @@ require 'functor'
 require 'mongrel'
 
 # a bunch of handy stuff
-require 'extensions/all'
+require 'extensions/io'
 require 'fileutils'
 require 'metaid'
 require 'forwardable'
