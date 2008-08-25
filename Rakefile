@@ -27,25 +27,6 @@ gem = Gem::Specification.new do |gem|
   gem.add_dependency('rakegen', '>= 0.6.6')
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.add_dependency('dyoder-filebase', '>= 0.3.1')
-  gem.add_dependency('functor', '>= 0.4.2')
-
-
-  # Unfortunately there are some gems that don't work in JRuby, so...
-  case engine
-    when 'ruby'
-    # Matz' Ruby dependencies here...
-    puts "You are running MRI/Ruby #{RUBY_VERSION}"
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-    when 'jruby'
-    # JRuby compatible dependencies here...
-    puts "You are running JRuby #{JRUBY_VERSION}"
-    gem.add_dependency('RedCloth', '= 3.0.4')
-    else
-    # Not sure what you're running, we're not sure. We'll just try the MRI specifics...
-    puts "You are running #{RUBY_ENGINE} #{RUBY_VERSION}"
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-  end
   
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
