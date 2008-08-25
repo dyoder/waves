@@ -79,7 +79,7 @@ module Waves
         destructured[keys.first.intern] = case val
         when String
           val.strip
-        when Hash
+        when Hash, Array
           val
         when nil
           raise key.inspect

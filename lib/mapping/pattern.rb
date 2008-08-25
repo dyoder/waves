@@ -66,7 +66,7 @@ module Waves
       functor( :match, Hash, Symbol, String, nil ) do | r, key, want, got |
         r[ key.to_s ] = want
       end
-      functor( :match, Hash, Symbol, true, String ) do | r, key, want, got |
+      functor( :match, Hash, Symbol, true, Object ) do | r, key, want, got |
         r[ key.to_s ] ||= []; r[ key.to_s ] << got
       end
       functor( :match, Hash, Symbol, Regexp, String ) do | r, key, want, got |
