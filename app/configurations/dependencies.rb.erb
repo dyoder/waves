@@ -1,0 +1,15 @@
+module <%= @name %>
+
+  module Configurations
+
+    attr_accessor :deps
+
+    # Application Level Dependencies
+    # Used by the dep:check and dep:install rake tasks, @deps defines your environment.
+    # Add your wishes and use the rake tasks make sure it has all those fancy gems you were expecting.
+
+    @deps = []
+
+  end
+
+end

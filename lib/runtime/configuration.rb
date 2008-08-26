@@ -142,7 +142,7 @@ module Waves
     #   reloadable []
     class Default < Base
 
-      %w( host port ports log reloadable database session debug root synchronize? ).
+      %w( host port ports log reloadable database session debug root synchronize? deps ).
       each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
@@ -182,6 +182,7 @@ module Waves
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
+      deps []
     end
   end
 end
