@@ -18,9 +18,7 @@ module <%= @name %>
       # handler ::Rack::Handler::WEBrick, :BindAddress => host, :Port => port
       # handler ::Rack::Handler::Thin, :Host => host, :Port => port
 
-      # 'deps' lets you easily check the environment for expected dependencies.
-      # See configurations/dependecies.rb for more info.
-      deps <%= @name %>::Configurations::Dependencies.deps
+      dependencies []
 
       application do
         use ::Rack::ShowExceptions
