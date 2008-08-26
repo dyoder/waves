@@ -81,6 +81,8 @@ module Waves
           val.strip
         when Hash, Array
           val
+        when Array
+          val
         when nil
           raise key.inspect
         end
