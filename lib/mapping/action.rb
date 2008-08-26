@@ -48,6 +48,7 @@ module Waves
       
       def call( *args )
         request = args.first
+        # Matthew thinks we may need a way to get the original rack request params.
         request.params.merge!( @params )
         @action.call( *args )
       end
