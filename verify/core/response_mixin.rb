@@ -37,9 +37,10 @@ describe "The ResponseMixin module" do
     @thingy.app.should == Thingy
     @thingy.app_name.should == :thingy
   end
-  
+
+# check to see which methods are actually delegated  
   it "defines delegators for request methods" do
-    methods = [ :response, :session, :params, :path, :url, :domain, :blackboard, :not_found ]
+    methods = [ :response, :session, :path, :url, :domain, :blackboard, :not_found ]
     methods.each do |method|
       @thingy.request.should.receive(method)
     end
@@ -47,6 +48,10 @@ describe "The ResponseMixin module" do
     methods.each do |method|
       @thingy.send(method)
     end
+  end
+  
+  it "destructures params now" do
+    # should.flunk "write a test, fool."
   end
   
   it "defines a delegator for the application's paths" do
