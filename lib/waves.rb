@@ -100,3 +100,6 @@ require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
 require 'foundations/default'
+
+# VM specific helpers
+require 'helpers/jruby.rb' if defined?(JRUBY_VERSION)

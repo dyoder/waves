@@ -26,7 +26,18 @@ gem = Gem::Specification.new do |gem|
   end
   gem.add_dependency('rakegen', '>= 0.6.6')
   gem.add_dependency('sequel', '>= 2.0.0')
-  gem.add_dependency('autocode', '>= 1.0.0')
+  gem.add_dependency('dyoder-autocode', '>= 1.0.0')
+  gem.add_dependency('dyoder-filebase', '>= 0.3.0')
+  gem.add_dependency('functor', '>= 0.4.2')
+
+  # Unfortunately there are some gems that don't work in JRuby, so...
+  unless defined?(JRUBY_VERSION)
+  # Matz' Ruby dependencies here...
+    gem.add_dependency('RedCloth', '>= 4.0.0')
+  else
+  # JRuby compatible dependencies here...
+    gem.add_dependency('RedCloth', '= 3.0.4')
+  end
   
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
