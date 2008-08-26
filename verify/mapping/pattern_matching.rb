@@ -105,7 +105,8 @@ describe "In a mapping's path-matcher"  do
       it "may use hash placeholder with value of true, to glom up all remaining components" do
         mappings do
           on( :get => [ :first, { :rest => true } ] ) do
-            [ params['first'], params['rest'].join('-') ].join(', ')
+            # puts params.inspect
+            [ params[:first], params[:rest].join('-') ].join(', ')
           end
         end
         
@@ -114,7 +115,7 @@ describe "In a mapping's path-matcher"  do
       
       it "saves placeholder matches as params" do
         mappings do
-          on( :get => [ :critter, :name ]) { "#{params['critter']}, #{params['name']}" }
+          on( :get => [ :critter, :name ]) { "#{params[:critter]}, #{params[:name]}" }
         end
         
         mock_request.get('/dwarf/tyrion').body.should == "dwarf, tyrion"
@@ -133,7 +134,7 @@ describe "In a mapping's path-matcher"  do
       
       it "can apparently also use hashes to set default values" do
         mappings do
-          on( :get => [ "thingy", { :mode => 'show' } ] ) { "mode: #{params['mode']}" }
+          on( :get => [ "thingy", { :mode => 'show' } ] ) { "mode: #{params[:mode]}" }
         end
         
         mock_request.get("/thingy").body.should == "mode: show"
