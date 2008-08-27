@@ -32,13 +32,17 @@ namespace :dep do
     missing = Array.new
 
     Waves.config.dependencies.each do |dep|
-      missing << dep unless gems.include? dep
+      pattern = /=#{dep}\s/
+      missing << dep unless (pattern.match(gems) != nil)
     end
 
-    puts "You are missing the following expected dependencies:"
-    missing.each { |x| puts "\t#{x}" }
-    puts "(do a 'rake dep:install' to get 'em)"
-
+    unless missing.empty?
+      puts "Environment is missing the following expected dependencies:"
+      missing.each { |x| puts "\t#{x}" }
+    else
+      puts "Environment has all expected dependencies."
+    end
+    
   end
   
   desc "install any missing dependencies specified in the configuration"
@@ -48,7 +52,8 @@ namespace :dep do
     missing = Array.new
 
     Waves.config.dependencies.each do |dep|
-      missing << dep unless gems.include? dep
+      pattern = /=#{dep}\s/
+      missing << dep unless (pattern.match(gems) != nil)
     end
 
     missing.each do |dep|
@@ -66,7 +71,9 @@ namespace :dep do
         Gem::RemoteInstaller.new.install(dep)
       end
     end
-    
+
+    puts "Environment complete. Nothing to install." if missing.empty?
+
   end
 
 end
