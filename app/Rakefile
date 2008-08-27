@@ -33,7 +33,7 @@ namespace :dep do
 
     Waves.config.dependencies.each do |dep|
       pattern = /=#{dep}\s/
-      missing << dep unless (pattern.match(gems) != nil)
+      missing << dep if pattern.match(gems).nil?
     end
 
     unless missing.empty?
@@ -53,7 +53,7 @@ namespace :dep do
 
     Waves.config.dependencies.each do |dep|
       pattern = /=#{dep}\s/
-      missing << dep unless (pattern.match(gems) != nil)
+      missing << dep if pattern.match(gems).nil?
     end
 
     missing.each do |dep|
