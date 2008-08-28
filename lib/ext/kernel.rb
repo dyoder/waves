@@ -9,8 +9,6 @@ module Kernel
 
   unless respond_to?(:engine)
     # 'engine' exists to provide a quick and easy (and MRI-compatible!) interface to the RUBY_ENGINE constant
-    def engine
-      defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'mri'
-    end
+    def engine; defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'; end
   end
 end

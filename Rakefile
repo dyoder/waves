@@ -1,6 +1,6 @@
 begin
   $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
-    ext/string ext/symbol date).each { |dep| require dep }
+    ext/string ext/symbol ext/kernel date).each { |dep| require dep }
 rescue LoadError => e
   if e.message == 'no such file to load -- extensions/all'
     puts "Better do `rake setup` to get all the fancies you're missing"
@@ -30,13 +30,17 @@ gem = Gem::Specification.new do |gem|
   gem.add_dependency('filebase', '>= 0.3.1')
   gem.add_dependency('functor', '>= 0.4.2')
 
+
   # Unfortunately there are some gems that don't work in JRuby, so...
-  unless defined?(JRUBY_VERSION)
-  # Matz' Ruby dependencies here...
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-  else
-  # JRuby compatible dependencies here...
-    gem.add_dependency('RedCloth', '= 3.0.4')
+  case engine
+    when 'ruby'
+      # Matz' Ruby dependencies here...
+      puts "You are running MRI/Ruby #{RUBY_VERSION}"
+      gem.add_dependency('RedCloth', '>= 4.0.0')
+    when 'jruby'
+      # JRuby compatible dependencies here...
+      puts "You are running JRuby #{JRUBY_VERSION}"
+      gem.add_dependency('RedCloth', '= 3.0.4')
   end
   
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
