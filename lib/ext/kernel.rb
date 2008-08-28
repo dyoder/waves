@@ -6,4 +6,11 @@ module Kernel
       Waves::Logger.info "\n***** Debugger requested, but was not available: Start server with --debugger to enable *****\n"
     end
   end
+
+  unless respond_to?(:engine)
+    # 'engine' exists to provide a quick and easy (and MRI-compatible!) interface to the RUBY_ENGINE constant
+    def engine
+      defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'mri'
+    end
+  end
 end
