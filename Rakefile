@@ -43,7 +43,7 @@ gem = Gem::Specification.new do |gem|
     gem.add_dependency('RedCloth', '= 3.0.4')
   else
     # Not sure what you're running, we're not sure. We'll just try the MRI specifics...
-    puts "You are running MRI/Ruby #{RUBY_VERSION}"
+    puts "You are running #{RUBY_ENGINE} #{RUBY_VERSION}"
     gem.add_dependency('RedCloth', '>= 4.0.0')
   end
   
