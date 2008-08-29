@@ -97,7 +97,9 @@ module Waves
       # Render the template found in the directory named after this view (snake cased, of course)
       # E.g. App::Views::Gnome.new.render( "stink" ) would look for templates/gnome/stink.<ext>
       def render( path, assigns = {} )
-        Views.render("#{self.class.basename.snake_case}/#{path}", assigns.merge!( :request => request ))
+        qpath = "#{self.class.basename.snake_case}/#{path}"
+        Waves.log.debug "Rendering template: #{qpath}"
+        Views.render("#{qpath}", assigns.merge!( :request => request ))
       end
 
       # Render the template with the name of the missing method.

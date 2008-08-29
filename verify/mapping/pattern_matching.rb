@@ -134,7 +134,7 @@ describe "In a mapping's path-matcher"  do
       
       it "can apparently also use hashes to set default values" do
         mappings do
-          on( :get => [ "thingy", { :mode => 'show' } ] ) { "mode: #{params[:mode]}" }
+          on( :get => [ "thingy", { :mode => 'show' } ] ) { "mode: #{params['mode']}" }
         end
         
         mock_request.get("/thingy").body.should == "mode: show"
