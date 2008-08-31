@@ -21,9 +21,18 @@ module Waves
       
       include Functor::Method
 
+      functor( :post ) { post( method, request ) }
+      functor( :get ) { get( method, request ) }
+      functor( :put ) { put( method, request ) }
+      functor( :delete ) { delete( method, request ) }
+      
+      functor( :post, Waves::Request ) { nil }
+      functor( :get, Waves::Request ) { nil }
+      functor( :put, Waves::Request ) { nil }
+      functor( :delete, Waves::Request ) { nil }
+
       def self.on( method, path, options = {}, &block )
         options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-        functor( method ) { self.send( method, request ) } unless functors[ method ]
         functor( method, Matchers::Request.new( options ), &block )
         self::Paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
       end

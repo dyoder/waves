@@ -49,13 +49,11 @@ module Waves
 
           begin
             object.send( request.method )
-          rescue InvalidArgumentError => e
-            continue
-          rescue RuntimeError => e
+          rescue Exception => e
             Waves::Logger.info e.to_s
             object.handler( e ) rescue raise e 
           ensure
-            object.always rescue nil
+            object.always
           end
 
           response.finished?
