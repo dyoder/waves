@@ -43,32 +43,26 @@ module Waves
         Waves.reload if Waves.debug?
         response.content_type = Waves.config.mime_types[ request.path ] || 'text/html'
 
-        mapping = Waves.mapping[ request ]
+        Waves.config.resources.find do | resource |
 
-        begin
+          object = resource.new( request )
 
-          request.not_found if mapping[ :main ].empty?
-          mapping[ :before ].each { | action | action.call( request ) }
-          response.write( mapping[ :main ].first.call( request ) )
-          mapping[ :after ].each { | action | action.call( request ) }
-          
-        rescue Exception => e
-
-          Waves::Logger.info e.to_s
-          handler = mapping[ :handle ].find { | action | action.exception === e } 
-          ( handler.call( request, e ) if handler ) or raise e
-
-        ensure
-
-          mapping[ :always ].each do | action |
-            begin
-              action.call( request ) 
-            rescue Exception => e
-              Waves::Logger.info e.to_s
-            end
+          begin
+            object.send( request.method )
+          rescue InvalidArgumentError => e
+            continue
+          rescue RuntimeError => e
+            Waves::Logger.info e.to_s
+            object.handler( e ) rescue raise e 
+          ensure
+            object.always rescue nil
           end
-          
+
+          response.finished?
+
         end
+        
+        response
 
       end
 

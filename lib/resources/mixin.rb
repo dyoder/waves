@@ -23,11 +23,11 @@ module Waves
 
       def self.on( method, path, options = {}, &block )
         options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-        functor( method, Matchers::ContentType.new( options[ :content_type ] ), Matchers::Accepts.new( options ), 
-          Matchers::URI.new( options ), Matchers::Query.new( options[:query] ), &block )
+        functor( method ) { self.send( method, request ) } unless functors[ method ]
+        functor( method, Matchers::Request.new( options ), &block )
         self::Paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
       end
-      
+              
       def self.before( method = true, &block ); functors[ method ].before( &block ); end
       def self.after( method = true, &block ); functors[ method ].after( &block ); end
       def self.wrap( method = true, &block ); functors[ method ].wrap( &block ); end

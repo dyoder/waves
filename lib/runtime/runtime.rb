@@ -46,25 +46,16 @@ module Waves
       Kernel.load( :lib / 'application.rb' ) if Waves.main.nil?
     end
 
-    def synchronize( &block )
-      ( @mutex ||= Mutex.new ).synchronize( &block )
-    end
+    def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
     # The 'mode' of the application determines which configuration it will run under.
-    def mode
-      @mode ||= @options[:mode]||:development
-    end
+    def mode ; @mode ||= @options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
     def debug? ; config.debug ; end
 
     # Returns the current configuration.
-    def config
-      Waves.main::Configurations[ mode ]
-    end
-
-    # Returns the mappings for the application.
-    def mapping ; Waves.main::Configurations[ :mapping ] ; end
+    def config ; Waves.main::Configurations[ mode ] ; end
 
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end
@@ -73,9 +64,7 @@ module Waves
     def cache ; config.cache ; end
     
     # Start and / or access the Waves::Logger instance.
-    def log
-      @log ||= Waves::Logger.start
-    end
+    def log ; @log ||= Waves::Logger.start ; end
 
   end
 

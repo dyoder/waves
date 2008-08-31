@@ -2,9 +2,7 @@ module Waves
 
   module Matchers
 
-    class Query < Proc
-      
-      include Functor::Method
+    class Query < Base
       
       def initialize( pattern ) ; @query = pattern or {} ; end
     

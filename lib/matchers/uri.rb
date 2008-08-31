@@ -2,7 +2,7 @@ module Waves
 
   module Matchers
 
-    class URI < Proc
+    class URI < Base
       
       def initialize( options )
         @path = Waves::Matchers::Path.new( options[ :path ] )
