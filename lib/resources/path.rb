@@ -1,8 +1,8 @@
 module Waves
   
-  module Mapping
+  module Resources
     
-    class Paths
+    class Path
       
       include Functor::Method
       

@@ -25,7 +25,8 @@ module Waves
 
       # Returns the object being used for output by the logger.
       def output
-        @output ||= ( config[:output] ? File.expand_path( config[:output] ) : $stderr )
+        @output ||= ( config[:output] ? ( config[:output].kind_of? String and 
+          File.expand_path( config[:output] ) or config[:output] ) : $stderr )
       end
       
       # Returns the active configuration for the logger.
