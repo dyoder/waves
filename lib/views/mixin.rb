@@ -82,8 +82,8 @@ module Waves
 
       include Waves::ResponseMixin
 
-      def self.included( c )
-        def c.process( request, *args, &block )
+      def self.included( target )
+        def target.process( request, *args, &block )
           self.new( request ).instance_exec( *args, &block )
         end
       end

@@ -16,28 +16,28 @@ module Waves
       # - template: read the template from the file corresponding to the given logical path.
       # - helper: return a helper module that corresponds to the given logical path.
       #
-      def self.included(mod)
+      def self.included( target )
         
         # Register the renderer with the Views module
-        Views.renderers << mod
+        Views.renderers << target
 
-        def mod.extension(*args)
+        def target.extension(*args)
           return @extension if args.length == 0
           @extension = args.first
         end
 
-        def mod.filename(path)
+        def target.filename(path)
           :templates / "#{path}.#{self.extension}"
         end
 
-        def mod.render(path,args=nil)
+        def target.render(path,args=nil)
         end
 
-        def mod.template( path )
+        def target.template( path )
           File.read( filename( path ) )
         end
 
-        def mod.helper( path )
+        def target.helper( path )
           Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
         end
       end
