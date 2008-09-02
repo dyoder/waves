@@ -24,18 +24,15 @@ module Waves
     #
     # Waves::Dispatchers::Default processes a Waves::Request and returns a Waves::Response as follows:
     #
-    # 1. reload any reloadable constants if Waves.debug? is true
-    # 1. determine the content type using the mime-type indicated by the request URL's file extension
-    # 1. identify the resource that corresponds to the request URI
-    # 1. call the appropriate method on that resource
+
     class Default < Base
 
       # Takes a Waves::Request and returns a Waves::Response    
       def safe( request  )
         Waves.reload
-        # set a default -- this can be overridden by the resource
+        # set a default content type -- this can be overridden by the resource
         request.response.content_type = Waves.config.mime_types[ request.accepts.first ] || 'text/html'
-        # grab the appropriate resource from the configuration, based on the request
+        # grab the appropriate resource from those declared in the configuration, based on the request
         resource = Waves.config.resources[ request ]
         begin
           # invoke the request method, wrapped by the before and after methods
