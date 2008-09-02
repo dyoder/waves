@@ -9,7 +9,7 @@ $:.unshift waves_lib if File.exist?(waves_lib)
 require 'waves'
 
 begin
-  require 'utilities/string'
+  require 'ext/string'
 rescue LoadError
   require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
 end

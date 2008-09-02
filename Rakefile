@@ -1,6 +1,6 @@
 begin
   $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
-    utilities/string utilities/symbol date).each { |dep| require dep }
+    ext/string ext/symbol date).each { |dep| require dep }
 rescue LoadError => e
   if e.message == 'no such file to load -- extensions/all'
     puts "Better do `rake setup` to get all the fancies you're missing"
