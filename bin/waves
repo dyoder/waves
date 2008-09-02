@@ -4,15 +4,13 @@ require 'choice'
 require 'rakegen'
 
 # if we're in the waves source, prepend it to the load path
-waves_lib = File.expand_path( "#{File.dirname(__FILE__)}/../../waves/lib" )
-$:.unshift waves_lib if File.exist?(waves_lib)
-require 'waves'
+# waves_lib = File.expand_path( "#{File.dirname(__FILE__)}/../../waves/lib" )
+# $:.unshift waves_lib if File.exist?(waves_lib)
+# require 'waves'
 
-begin
-  require 'ext/string'
-rescue LoadError
-  require File.join(File.dirname(__FILE__), '..', 'lib', 'utilities', 'string')
-end
+WAVES = "#{File.dirname(__FILE__)}/.." 
+
+require File.join(WAVES, 'lib', 'ext', 'string')
 
 Choice.options do
   banner 'Usage:  waves path/to/app [-h]'
@@ -30,7 +28,7 @@ Choice.options do
     
 end
 
-puts "** Waves Runtime #{Waves.version}"
+puts "** Waves #{File.read("#{WAVES}/doc/VERSION")}"
 
 orm = Choice.choices.orm.snake_case
 orm_require, orm_include = case orm
@@ -57,7 +55,6 @@ generator = Rakegen.new("waves:app") do |gen|
   gen.source = template
   gen.target = app_path
   gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
-  gen.executables = %w{ bin/waves-console  bin/waves-server}
 end
 
 puts "** Creating new Waves application ..."

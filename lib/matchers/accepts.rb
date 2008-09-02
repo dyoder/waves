@@ -7,8 +7,8 @@ module Waves
       def initialize( options )
         constraints = {
           :accepts => options[ :accepts ],
-          :lang = options[ :lang ],
-          :charset = options[ :charset ]
+          :lang => options[ :lang ],
+          :charset => options[ :charset ]
         }
       end
     

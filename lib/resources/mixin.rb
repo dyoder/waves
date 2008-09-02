@@ -8,7 +8,7 @@ module Waves
       
       def self.included( target )
         parent = target.superclass
-        base = parent.respond_to?( :paths ) ? parent.paths : Waves::Resources::Paths
+        base = parent.respond_to?( :paths ) ? parent.paths : Waves::Resources::Path
         target.module_eval do
           
           include ResponseMixin
