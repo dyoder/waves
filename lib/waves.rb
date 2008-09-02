@@ -66,6 +66,7 @@ require 'matchers/path'
 require 'matchers/query'
 require 'matchers/uri'
 require 'resources/mixin'
+require 'resources/selector'
 require 'resources/path'
 
 # waves mvc support

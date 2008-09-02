@@ -26,42 +26,32 @@ module Waves
     #
     # 1. reload any reloadable constants if Waves.debug? is true
     # 1. determine the content type using the mime-type indicated by the request URL's file extension
-    # 1. evaluate all :before mappings that match the request
-    # 1. evaluate the first :action mapping that matches the request.  If nothing matches, raise a NotFoundError
-    # 1. evalute all :after mappings that match the request
-    # 1. if any exceptions were raised, evaluate the first 
-    #    exception handler that matches the request.  If no handlers match the request, re-raise the exception.
-    # 1. evaluate every :always mapping that matches the request.  Log any exceptions and continues.
-
+    # 1. identify the resource that corresponds to the request URI
+    # 1. call the appropriate method on that resource
     class Default < Base
 
       # Takes a Waves::Request and returns a Waves::Response    
       def safe( request  )
-
-        response = request.response
-
-        Waves.reload if Waves.debug?
-        response.content_type = Waves.config.mime_types[ request.path ] || 'text/html'
-
-        Waves.config.resources.find do | resource |
-
-          object = resource.new( request )
-
-          begin
-            object.send( request.method )
-          rescue Exception => e
-            Waves::Logger.info e.to_s
-            object.handler( e ) rescue raise e 
-          ensure
-            object.always
-          end
-
-          response.finished?
-
+        Waves.reload
+        # set a default -- this can be overridden by the resource
+        request.response.content_type = Waves.config.mime_types[ request.accepts.first ] || 'text/html'
+        # grab the appropriate resource from the configuration, based on the request
+        resource = Waves.config.resources[ request ]
+        begin
+          # invoke the request method, wrapped by the before and after methods
+          resource.before
+          content = resource.send( request.method )
+          resource.after
+        rescue Exception => e
+          # handle any exceptions using the resource handlers, if any
+          Waves::Logger.info e.to_s
+          resource.handler( e ) rescue raise e 
+        ensure
+          # no matter what happens, also run the resource's always method
+          resource.always
         end
-        
-        response
-
+        # okay, we've handled the request, now write the response unless it was already done
+        request.response.write( content ) unless request.response.finished?
       end
 
     end

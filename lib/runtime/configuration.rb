@@ -173,6 +173,10 @@ module Waves
           self['application']
         end
       end
+      
+      def self.resource( value )
+        self['resource'] = Waves::Resources::Selector.new( value )
+      end
 
       debug true ; synchronize? true
       session :duration => 30.minutes, :path => '/tmp/sessions'
