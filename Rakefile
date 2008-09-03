@@ -120,7 +120,7 @@ task( :setup ) do
     end
   end
   system(cmd = "chmod +x bin/waves*")
-  print "rake setup task completed... happy hacking!"
+  puts "rake setup task completed... happy hacking!"
 end
 
 desc "Run verification suite."
