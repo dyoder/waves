@@ -31,18 +31,18 @@ namespace :dep do
     gems = Gem::SourceIndex.from_installed_gems.to_a.to_s
     missing = Array.new
 
+    puts "\nApplication-level dependencies:"
+    puts "  ('*' means gem is installed and available)"
+    
     Waves.config.dependencies.each do |dep|
       pattern = /=#{dep}\s/
-      missing << dep if pattern.match(gems).nil?
-    end
-
-    unless missing.empty?
-      puts "Environment is missing the following expected dependencies:"
-      missing.each { |x| puts "\t#{x}" }
-    else
-      puts "Environment has all expected dependencies."
-    end
-    
+      print "\t#{dep}:\t\t["
+      unless pattern.match(gems).nil?
+        print "*]\n"
+      else
+        print " ]\n"
+      end
+    end    
   end
   
   desc "install any missing dependencies specified in the configuration"
