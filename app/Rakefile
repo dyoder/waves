@@ -32,15 +32,16 @@ namespace :dep do
     missing = Array.new
 
     puts "\nApplication-level dependencies:"
-    puts "  ('*' means gem is installed and available)"
+    puts " ('*' means gem is installed and available)"
     
     Waves.config.dependencies.each do |dep|
       pattern = /=#{dep}\s/
-      print "\t#{dep}:\t\t["
+      print "\t#{dep}:\t\t"
+      print "\t" if dep.length < 7  # keep our formatting pretty, please.
       unless pattern.match(gems).nil?
-        print "*]\n"
+        print "[*]\n"
       else
-        print " ]\n"
+        print "[ ]\n"
       end
     end    
   end
