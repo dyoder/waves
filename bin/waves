@@ -30,14 +30,19 @@ end
 
 puts "** Waves #{File.read("#{WAVES}/doc/VERSION")}"
 
+available_orms = [ 'sequel' ,  'active_record' , 'none' ]
 orm = Choice.choices.orm.snake_case
 orm_require, orm_include = case orm
 when 'sequel'
   ["require 'layers/orm/sequel'", "include Waves::Layers::ORM::Sequel"]
-when 'active_record'
+when /active([-_]*)record/
   ["require 'layers/orm/active_record'", "include Waves::Layers::ORM::ActiveRecord"]
 when 'none'
-  ['', '# This app was generated without an ORM layer']
+  ['', '# This app was generated without an ORM layer.']
+else
+  puts "I'm sorry, '#{orm}' is not listed as an available option.\nTry: \t"
+  available_orms.each { |x| puts "\t\t#{x}" }
+  raise
 end
 
 app_path = ARGV[0]
