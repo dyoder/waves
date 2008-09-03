@@ -1,5 +1,0 @@
-h2 do
-  a @entry.title, :href => "/entry/#{@entry.name}"
-end
-textile @entry.summary
-a 'Read more ...', :href => "/entry/#{@entry.name}"
