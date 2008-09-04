@@ -21,7 +21,6 @@ module Waves
 
 
         def self.included(app)
-          Waves.config.dependencies << 'activerecord'
 
           require 'active_record'
           require "#{File.dirname(__FILE__)}/active_record/tasks/schema"    if defined?(Rake)

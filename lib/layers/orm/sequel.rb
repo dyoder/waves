@@ -22,7 +22,6 @@ module Waves
         
         
         def self.included(app)
-          Waves.config.dependencies << 'sequel'
           
           gem 'sequel', '>= 2.0.0'
           require 'sequel'
