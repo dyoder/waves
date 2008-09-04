@@ -10,7 +10,6 @@ module Waves
         # - creates on the application module a database method that establishes the Sequel connection
         # - arranges for autoloading/autocreation of missing constants in the Models namespace
         # - defines Sequel-specific helper methods on Waves::Controllers::Base
-        # - adds 'sequel' to the application-level dependencies index, Waves.config.dependencies
         # 
         # The controller helper methdods are:
         # - all

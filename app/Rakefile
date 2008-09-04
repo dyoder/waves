@@ -57,8 +57,10 @@ namespace :dep do
       missing << dep if pattern.match(gems).nil?
     end
 
-    missing.each do |dep|
+    missing.each do |m|
+      dep,ver = m.is_a?(String) ? [m,''] : m
       puts "Installing dependency: #{dep}"
+      puts ver
       begin
         require 'rubygems/dependency_installer'
         if Gem::RubyGemsVersion =~ /^1\.0\./
