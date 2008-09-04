@@ -1,86 +1,85 @@
 namespace :generate do
-
-  desc 'Generate a new controller, with name=<name>'
-  task :controller do |task|
-    name = ENV['name']
-    controller_name = name.camel_case
-    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
-    
-    raise "Cannot generate Default yet" if controller_name == 'Default'
-    
-    filename = File.expand_path "controllers/#{name}.rb"
-    if File.exist?(filename)
-      $stderr.puts "#{filename} already exists" 
-      exit
-    end
-
-    controller = <<TEXT
-module #{app_name}
-  module Controllers
-    class #{controller_name} < Default
-
-    end
-  end
-end
-TEXT
-
-    File.write( filename, controller )
-  end
+  
+  # We're declaring these tasks first so we can add descriptions.
+  # The real work is done in the rule, below.
+  desc 'Generate new controller, with name=<name>'
+  task :controller
   
   desc 'Generate new view, with name=<name>'
-  task :view do |task|
-    name = ENV['name']
-    view_name = name.camel_case
-    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
-    
-    raise "Cannot generate Default yet" if view_name == 'Default'
-    
-    filename = File.expand_path "views/#{name}.rb"
-    if File.exist?(filename)
-      $stderr.puts "#{filename} already exists" 
-      exit
-    end
-
-    view = <<TEXT
-module #{app_name}
-  module Views
-    class #{view_name} < Default
-
-    end
+  task :view
+  
+  desc 'Generate new resource, with name=<name>'
+  task :resource
+  
+  # Rake rules are awesome.  In the main block, t.name is the task name that matched
+  # the regex.  t.source is the string returned by the lambda argument to rule.
+  rule( /controller|view|resource/ => lambda { |task| basetask(task).camel_case << "s" } ) do |t|
+    content = class_template( app_name, t.source, constant_name )
+    name = basetask(t.name) << "s"
+    File.write( filename( name ), content )
   end
-end
-TEXT
-
-    File.write( filename, view )
-  end
- 
-  desc 'Generate a new helper, with name=<name>'
+  
+  desc 'Generate new helper, with name=<name>'
   task :helper do |task|
-    name = ENV['name']
-    helper_name = name.camel_case
-    app_name = ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
-    
-    raise "Cannot generate Default yet" if helper_name == 'Default'
-    
-    filename = File.expand_path "helpers/#{name}.rb"
-    if File.exist?(filename)
-      $stderr.puts "#{filename} already exists" 
-      exit
+    content = module_template( app_name, "Helpers", constant_name) do
+      "include Waves::Helpers::Default"
     end
-    
-    helper = <<TEXT
+    File.write( filename( "helpers" ), content )
+  end
+  
+end
+
+desc "Generate resource, controller, view, and helper with name=<name>"
+task :generate => %w{ generate:resource generate:controller generate:view generate:helper }
+
+# Helper methods
+
+def app_name
+  ( ENV['app'] || Dir.pwd.split('/').last ).camel_case
+end
+
+def constant_name
+  str = ENV['name'].camel_case
+  raise "Cannot generate Default yet" if str == 'Default'
+  str
+end
+
+def filename( kind )
+  path = File.expand_path "#{kind}/#{ENV['name'].snake_case}.rb"
+  if File.exist?(path)
+    $stderr.puts "  Problem encountered:\n  #{path} already exists"
+    exit
+  end
+  path
+end
+
+# Rake only pretends to namespace tasks, so to get what we think of as
+# the task name, you must split and grab.
+def basetask(str)
+  str.split(":").last
+end
+
+def class_template(app_name, place, class_name)
+  str = <<TEXT
 module #{app_name}
-  module Helpers
-    module #{helper_name}
-      include Waves::Helpers::Default
-      
+  module #{place}
+    class #{class_name} < Default
+
     end
   end
 end
 TEXT
+end
 
-    File.write( filename, helper )
+# This method expects its block to return something usable as a string.
+def module_template(app_name, place, module_name, &block)
+  str = <<TEXT
+module #{app_name}
+  module #{place}
+    module #{module_name}
+      #{block.call if block}
+    end
   end
-  
-  
+end
+TEXT
 end
