@@ -174,8 +174,8 @@ module Waves
         end
       end
       
-      def self.resource( value )
-        self['resource'] = Waves::Resources::Selector.new( value )
+      def self.resources( &block )
+        self['resource'] = Waves::Resources::Selector.new.instance_eval( &block )
       end
 
       debug true ; synchronize? true

@@ -8,7 +8,7 @@ module Waves
       
       def self.included( target )
         parent = target.superclass
-        base = parent.respond_to?( :paths ) ? parent.paths : Waves::Resources::Paths
+        base = parent.respond_to?( :paths ) ? parent.paths : Waves::Resources::Path
         target.module_eval do
           
           include ResponseMixin
@@ -19,7 +19,7 @@ module Waves
           def self.plural ; basename.downcase.plural ; end
           def self.on( method, path, options = {}, &block )
             options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-            functor( method, Matchers::Request.new( options ), &block )
+              functor( method, Matchers::Request.new( options ), &block )
             self::Paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
           end
 
