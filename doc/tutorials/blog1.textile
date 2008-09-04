@@ -1,0 +1,103 @@
+The fastest and easiest way to create a new Waves application is to use the @waves@ command, like this:
+
+<pre>
+~ $ waves blog
+</pre>
+
+This will create a default Waves application for you inside the directory named @blog@. Next, from within that directory, you'll need to edit the @development.rb@ file within the @configurations@ directory to connect to your database.
+
+Take a look at the default:
+
+<pre>
+module Blog
+  module Configurations
+    module Development
+      database :adapter => 'sqlite', :database => 'blog'
+    end
+  end
+end
+</pre>
+
+It's worth pointing out that you don't actually need to use a database at all. It's just that Waves assumes you want one when it creates your application. You can also read about using Waves "without a database":/filebase.
+
+Fill in the information for your database. If you don't have one, create one (or request that your sysadmin create one for you). To follow the rest of this tutorial, you need to have access to the database.
+
+Next, let's set up the schema for the database. From the root application directory (@blog@), type:
+
+<pre>
+rake schema:migration name=initial_schema
+</pre>
+
+This will create a file in the directory @schema/migrations@ called @001_initial_schema.rb@. If you're familiar with Rails' @ActiveRecord@ migrations, this works pretty much the same way.
+
+Initially, the file looks like this:
+
+<pre>
+class InitialSchema < Sequel::Migration
+
+  def up
+  end
+	
+  def down
+  end
+
+end
+</pre>
+
+It creates a class with two instance methods, one for migrating "up" (think version numbers) and one for migrating "down." So let's create our initial schema for our blog application. To begin with, let's just start with a table for blog entries. We'll need to add the following to our @up@ method.
+
+<pre>
+create_table :entries do
+  primary_key :id
+  text :name
+  text :title
+  text :summary
+  text :content
+end
+</pre>
+
+(You should also add a @drop_table :entries@ to your @down@ method.) 
+
+We'll use the @name@ field for use with "pretty URLs." Waves assumes you want pretty URLs, although you can change that pretty easily.
+
+Now we need to apply the migration.
+
+<pre>
+rake schema:migrate
+</pre>
+
+This will automatically apply any migrations that have not already been applied. In this case, it will create our @entries@ table for us.
+
+To verify that our migration worked, and to illustrate one of the magical aspects of Waves, let's open up the Waves console.
+
+<pre>
+~/blog $ waves-console
+irb(main):001:0> M = Blog::Models
+irb(main):002:0> M::Entry.all
+=> []
+</pre>
+
+The first thing to notice is that our application is contained within a module, @Blog@ which helps avoid naming collisions and allows you to potentially have multiple applications running side-by-side.
+
+Within your application module, there are several others that are automatically created for you. In this case, we are accessing the @Models@ module, which contains all your applications modules.
+
+We are using the @Entry@ model in this example, which corresponds to the @entries@ table we created earlier in our initial migration. _But hold on a second_, say our readers. _I never coded an Entry model._
+
+Exactly, we reply. Waves has done it for you. Or, rather, we did it simply by referencing it. Had we tried using a model that didn't have a corresponding table, we would get an appropriate database error.
+
+<pre>
+irb(main):003:0> M::Comment.all
+Mysql::Error: Table 'blog.comments' doesn't exist
+</pre>
+
+We've essentially verified that our migration was successful. Let's go ahead and add an entry for kicks. (Take care with the name attribute in the example below, since it will be used within the URL to access the entry.)
+
+<pre>
+irb(main):004:0> M::Entry.create :title => 'My First Entry', :name => 'first-entry',
+  :content => 'Yada, yada, yada.', :summary => 'Yada.'
+=> #<Blog::Models::Entry:0x1540b18 ... >
+irb(main):005:0> M::Entry.all.length
+=> 1
+</pre>
+
+There we go. Our first blog entry. That will come in handy when we "create our views":/tutorial-2 in Part 2 of our little tutorial.

@@ -1,0 +1,111 @@
+The next thing we're going to do is create a view to display a list of blog entries. The first thing to do is simply create a template directory for entry-related views. On Unix, simply do:
+
+<pre>
+~/blog $ mkdir templates/entry
+</pre>
+
+Next, edit the file @list.mab@ in the @templates/entry@ directory. The "mab" extension is for Markaby templates. Waves supports both Markaby and Erubis templates (and you can easily add others), but we're going to use Markaby for this particular template.
+
+<pre>
+layout :default, :title => 'Blog Entries' do
+  h1 'My Blog'
+  @entries.each do |entry|
+    view :entry, :summary, :entry => entry
+  end
+end</pre>
+
+A few highlights of the techniques we're using here:
+
+* Markaby templates use Ruby syntax. In fact, they are Ruby. Methods correspond (more or less) to HTML tags. Each block tag is a method that takes a block. "And so on":http://markaby.rubyforge.org/.
+
+* We're using the @layout@ helper, which embeds our content inside the "default" layout, using the title "Blog Entries." In Waves, you specify the layout within a template, not in the controller (as in Rails).
+
+* The @entries@ instance variable has been defined for us automatically, because we're using a list view. We'll see more about how this is done soon.
+
+* We're invoking another view with the @view@ helper. This is how we can create reusable view components. Anytime you want a reusable view, you can just refactor and use the @view@ helper, like we've done here. We've passed in an instance variable, called @entry@ that contains the object to render.
+
+Now, we have to go ahead and define the view we've invoked, so let's do that. This time, we'll edit the @summary.mab@ file in @templates/entry@.
+
+<pre>
+h2 do
+  a @entry.title, :href => "/entry/#{@entry.name}" 
+end
+textile @entry.summary
+a 'Read more ...', :href => "/entry/#{@entry.name}"
+</pre>
+
+Here we've used the built-in support for Textile formatting. The rest is pretty self-explanatory. You might be wondering about a few things, but let's go ahead and start our application and see our new view.
+
+<pre>
+~/blog $ waves-server
+I, [2008-01-28T11:01:19.945459 #3755]  INFO -- : ** Waves Server Starting ...
+I, [2008-01-28T11:01:20.059007 #3755]  INFO -- : ** Waves Server Running on 127.0.0.1:3000
+I, [2008-01-28T11:01:20.059482 #3755]  INFO -- : Server started in 30 ms.
+</pre>
+
+Now open your browser and go to the url 'http://localhost:3000/entries'. You should see something that looks like this:    
+
+!/images/our-first-view.png?size=small!
+
+Let's add a view for viewing the entire entry. This will look a lot like our summary entry. We'll put it in the @show.mab@ template:
+
+<pre>
+layout :default, :title => @entry.title do
+  h1 @entry.title
+  textile @entry.content
+end
+</pre>
+
+Now let's click on the "Read more ..." link and see how it looks.
+
+!/images/show-entry-view.png?size=small!    
+
+There we go! It's worth pointing out that we haven't yet needed to write a line of controller or model code. So far, Waves has been able to infer what we wanted by following a couple of simple conventions.
+
+* URLs for a list of things look like @/entries@.
+
+* URLs for a specific instance look like @/entry/first-entry@.
+
+These conventions can be easily customized, but we're getting ahead of ourselves a bit. We still don't have a way to add a new entry. So let's add a little form to the top of our list template. So now it will look like this:
+
+<pre>
+layout :default, :title => 'Blog Entries' do
+  h1 'My Blog'
+  form :action => '/entries', :method => 'post' do
+    label 'Name'
+    input :type => :text, :name => 'entry.name'
+    input :type => :submit, :value => 'Add'
+  end
+  @entries.each do |entry|
+    view :entry, :summary, :entry => entry
+  end
+end
+</pre>
+
+We're following a REST-style interface here, using the same URL to add a new entry as we do to obtain a list of all entries. The difference is simply the method used in the request. To add a new entry, we use a POST. This says, _create a new resource at the URL /entries_. Which is exactly what will happen.
+
+We still have to add another view to edit the entry we've created. Simple enough. Let's call it @editor.mab@:
+
+<pre>
+layout :default, :title => 'Edit Entry' do
+  form :action => "/entry/#{@entry.name}/", :method => 'POST' do
+    # fake an HTTP PUT
+    input :name => '_method', :type => 'hidden', :value => 'put'
+    label 'Title'; br
+    input :type => :text, :value => @entry.title, :name => 'entry.title'; br
+    label 'Summary'; br
+    textarea @entry.summary, :name => 'entry.summary', :rows => 10, :cols => 80; br
+    label 'Content'; br
+    textarea @entry.content, :name => 'entry.content', :rows => 20, :cols => 80; br
+    input :type => :submit, :value => 'Save'
+  end
+end
+</pre>
+
+Now let's add an entry using the form on our @/entries@ page and then edit it. Let's call this new entry 'second-entry.'
+
+!/images/second-entry.png?size=medium!
+
+Click save and you should now see the new entry displayed in the browser.
+
+We still haven't needed to create a model or controller. In "Part 3":/tutorial-3 of our tutorial, we'll take a look at what's going on behind the scenes.

@@ -1,0 +1,177 @@
+Before continuing, let's quickly review what we have done so far:
+
+* We created a new project with the @waves@ command.
+* We set up our database configuration in the default configuration file in @configurations/default.rb@.
+* We created an initial schema using the @rake schema:migration@ and @rake schema:migrate@ commands.
+* We used the @waves-console@ to verify that Waves was correctly inferring the models from our database and added a record for testing purposes.
+* We added some templates for listing, showing, and editing a blog entry using layouts and reusable views.
+* We used a REST-style interface to add and update records, where the same URLs are mapped differently depending on whether they are GETs or POSTs.
+
+We were able to do all this without writing any code besides the views. Yet obviously somehow data is being retrieved from the database and being stuffed into instance variables by the time we get to the templates.
+
+However, now we're going to add a little more complexity to our model by adding comments. This will force us to explicitly define our model and show us how we can override the defaults that Waves gives us.
+
+Let's start by adding a new migration, for comments.
+
+<pre>
+~/blog $ rake schema:migration name=add_comments
+</pre>
+
+Now let's edit the result migration file (remember, this is in @schema/migrations@ and should be named something like @002_add_comments.rb@). When we're done, it should look something like this.
+
+<pre>
+class AddComments < Sequel::Migration
+
+  def up
+    create_table :comments do
+      primary_key :id
+      foreign_key :entry_id, :table => :entries
+      text :name
+      text :email
+      text :content
+      timestamp :created_on
+    end
+  end
+
+  def down
+    drop_table :comments
+  end
+
+end
+</pre>
+
+We will use Sequel::Model's before_save callback to auto-populate the timestamp.
+
+Now let's run the migration:
+
+<pre>
+~/blog $ rake schema:migrate
+</pre>
+
+Next, we want to change the Entry model so that it can have comments associated with it. Which is where it gets interesting, since we've never created an Entry model. But that's no problem. If you explicitly define something in Waves, it overrides the default. So we simply create a @entry.rb@ file in the @models@ directory, and edit it. The easiest way to do that is with the rake generator tasks.
+
+<pre>
+~/blog $ rake generate:model name=entry
+</pre>
+
+Now let's open the @entry.rb@ file and edit it. We need to add the comments association. When we're done, it should look like this.
+
+<pre>
+module Blog
+  module Models
+  class Entry < Default
+    one_to_many :comments, :class => Blog::Models::Comment, :key => :entry_id, :order => :updated_on
+    before_save do
+      set_with_params(:updated_on => Time.now) if columns.include? :updated_on
+    end
+  end
+  end
+end
+</pre>
+
+We added a @before_save@ callback to set the timestamp. We declared a one-to-many relationship with comments, using Sequel's @one_to_many@ macro. This is equivalent to Rails' @has_many@ macro, just a bit more explicit.
+
+Next, we do the same for Comments, so they point back to an Entry. First, as before, generate the model:
+
+<pre>
+~/blog $ rake generate:model name=comment
+</pre>
+
+Then we add the association. It should end up something like this:    
+
+<pre>
+module Blog
+  module Models
+    class Comment < Default
+      many_to_one :entry, :class => Blog::Models::Entry
+      before_save do
+        set_with_params(:updated_on => Time.now) if columns.include? :updated_on
+      end
+    end
+  end
+end
+</pre>
+
+Now let's add the ability to list and add comments to our @entry/show@ template. When we're done, it should look something like this:
+
+<pre>
+layout :default, :title => @entry.title do
+  a 'Show All Entries', :href => '/entries'
+  h1 @entry.title
+  textile @entry.content
+  h1 'Comments'
+  view :comment, :add, :entry => @entry
+  view :comment, :list, :comments => @entry.comments
+end
+</pre>
+
+Basically, all we've done is embed a couple of comment related views into our form. So, obviously, the next thing to do here is to add these views. Let's start with the @add@ view, which goes in @add.mab@ within the @templates/comment@.
+
+<pre>
+form :action => "/comments", :method => 'POST' do
+  input :type => :hidden, :name => 'comment.entry_id', :value => @entry.id
+  label 'Name'; br
+  input :type => :text, :name => 'comment.name'; br
+  label 'Email'; br
+  input :type => :text, :name => 'comment.email'; br
+  label 'Comment'; br
+  textarea :name => 'comment.content', :rows => 10, :cols => 80; br
+  input :type => :submit, :value => 'Save'
+end
+</pre>
+
+Simple enough. We use our REST-style convention for adding new objects via a POST method to @/comments@ and a hidden field with the @entry_id@, so we know which entry to add the comment to. We didn't need a layout here because we know comments are only edited in the context of an entry.
+
+Next, let's do the comment listing (@templates/comment/list.mab@):
+
+<pre>
+@comments.map{ |c| c }.sort_by( &:created_on ).each do |comment|
+  p 'Posted on ' << comment.created_on.strftime('%b %d, %Y') << ' by ' <<
+    ( ( comment.name.nil? or comment.name.empty? ) ? 
+      'anonymous coward' : comment.name )
+  textile comment.content
+end
+</pre>
+
+(We need the awkward @map@ call due to a limitation with Sequel's MySQL adapter.) So now we have our add form and our comment listing, along with our association tying comments to entries.
+
+So let's go ahead and bring up a blog entry and add a comment. Go to @/entries@ and click on 'My First Blog Entry' and then add a comment.
+
+!/images/adding-a-comment?size=medium!
+
+Click save and -- uh-oh. We get a 404. What happened? The problem is that the default URL mappings ("routes" in Rails) attempts to load the editor for the given resource after you add it. But in this case, we haven't defined an editor and, besides, we just want to redisplay the entry with the new comment added. So we have to add a new mapping rule.
+
+This is pretty straightforward and gives us a chance to explore Waves' approach to mapping rules. Open the @mapping.rb@ file in your @configurations@ directory. Let's take a look.
+
+<pre>
+module Blog
+  module Configurations
+    module Mapping
+      extend Waves::Mapping
+      # your custom rules go here
+      include Waves::Mapping::PrettyUrls::RestRules
+      include Waves::Mapping::PrettyUrls::GetRules
+    end
+  end
+end
+</pre>
+
+Like most things in Waves, we start by re-opening the application module, in this case, @Blog@. We also open the the @Configurations@ module, since the mapping is part of the configuration. Finally, we define our @Mapping@ module, which is where Waves looks to figure out how to handle a given request.
+
+A mapping module will typically @extend Waves::Mapping@ in order to get the mapping methods and then include a set of pre-packaged rules that encapsulate commonly used patterns. You can even define your own patterns if you want and include those. By default, Waves gives you pretty URLs with REST style add, update, and delete rules.
+
+In this case, we need to add a custom rule for comments. So how do we add new rules? There are several ways to do this, but, for now, we'll just look at one, using the @path@ method. The @path@ method takes a regular expression to match against the URL, a hash of constraints, and a block. In this case, we want to override the default for adding a new comment. Add it right below the comment @your custom rules go here@.
+
+<pre>
+path %r{^/comments/?$}, :method => :post do
+  resource( :comment ) do
+    controller { comment = create; redirect( "/entry/#{comment.entry.name}" ) }
+  end
+end
+</pre>
+
+This rule says, _using comment as the model, view, and controller, invoke the controller's create method, and then redirect to the comment's entry_.
+
+Hit the back button and try to add your comment again. You should see your comment listed twice, since it actually was added the first time we clicked save, but you were not redirected to the right URL.
+
+In the "next part of our tutorial":/tutorial-4, we'll add a stylesheet and some JavaScript to begin to pimp our little blog out a bit. So, if you're ready, "move on to part 4":/tutorial-4.
