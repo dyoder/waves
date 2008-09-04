@@ -23,6 +23,61 @@ rescue LoadError => e
   end
 end
 
+namespace :dep do
+
+  desc "check if all the dependencies specified in the configuration"
+  task :check do
+
+    gems = Gem::SourceIndex.from_installed_gems.to_a.to_s
+    missing = Array.new
+
+    puts "\nApplication-level dependencies:"
+    puts "  ('*' means gem is installed and available)"
+    
+    Waves.config.dependencies.each do |dep|
+      pattern = /=#{dep}\s/
+      print "\t#{dep}:\t\t["
+      unless pattern.match(gems).nil?
+        print "*]\n"
+      else
+        print " ]\n"
+      end
+    end    
+  end
+  
+  desc "install any missing dependencies specified in the configuration"
+  task :install do
+
+    gems = Gem::SourceIndex.from_installed_gems.to_a.to_s
+    missing = Array.new
+
+    Waves.config.dependencies.each do |dep|
+      pattern = /=#{dep}\s/
+      missing << dep if pattern.match(gems).nil?
+    end
+
+    missing.each do |dep|
+      puts "Installing dependency: #{dep}"
+      begin
+        require 'rubygems/dependency_installer'
+        if Gem::RubyGemsVersion =~ /^1\.0\./
+          Gem::DependencyInstaller.new(dep).install
+        else
+          # as of 1.1.0
+          Gem::DependencyInstaller.new.install(dep)
+        end
+      rescue LoadError # < rubygems 1.0.1
+        require 'rubygems/remote_installer'
+        Gem::RemoteInstaller.new.install(dep)
+      end
+    end
+
+    puts "Environment complete. Nothing to install." if missing.empty?
+
+  end
+
+end
+
 namespace :waves do
   
   desc "freeze src=<wherever> to ./waves"

@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'startup'
-require 'commands/waves-console'

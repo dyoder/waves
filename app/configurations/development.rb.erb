@@ -18,9 +18,11 @@ module <%= @name %>
       # handler ::Rack::Handler::WEBrick, :BindAddress => host, :Port => port
       # handler ::Rack::Handler::Thin, :Host => host, :Port => port
 
+      dependencies []
+
       application do
         use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => [ '/css/', '/javascript/' ], :root => 'public'
+        use ::Rack::Static, :urls => [ '/css/', '/javascript/', '/favicon.ico' ], :root => 'public'
         run ::Waves::Dispatchers::Default.new
       end
 

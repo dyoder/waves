@@ -8,7 +8,6 @@ require 'rack'
 require 'daemons'
 require 'live_console'
 
-gem 'dyoder-autocode'
 require 'autocode'
 require 'functor'
 

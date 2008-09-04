@@ -1,6 +1,6 @@
 begin
-  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask extensions/all
-    utilities/string utilities/symbol date).each { |dep| require dep }
+  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask
+    ext/string ext/symbol ext/kernel extensions/all date).each { |dep| require dep }
 rescue LoadError => e
   if e.message == 'no such file to load -- extensions/all'
     puts "Better do `rake setup` to get all the fancies you're missing"
@@ -21,14 +21,32 @@ gem = Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
   %w( mongrel rack markaby erubis haml metaid
-      extensions live_console choice daemons rakegen functor ).each do |dep|
+      extensions live_console choice daemons functor ).each do |dep|
     gem.add_dependency dep
   end
+  gem.add_dependency('rakegen', '>= 0.6.6')
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.add_dependency('RedCloth', '>= 3.0.0')
-  gem.add_dependency('filebase', '>= 0.3.1')
+  gem.add_dependency('dyoder-filebase', '>= 0.3.1')
   gem.add_dependency('functor', '>= 0.4.2')
+
+
+  # Unfortunately there are some gems that don't work in JRuby, so...
+  case engine
+    when 'ruby'
+    # Matz' Ruby dependencies here...
+    puts "You are running MRI/Ruby #{RUBY_VERSION}"
+    gem.add_dependency('RedCloth', '>= 4.0.0')
+    when 'jruby'
+    # JRuby compatible dependencies here...
+    puts "You are running JRuby #{JRUBY_VERSION}"
+    gem.add_dependency('RedCloth', '= 3.0.4')
+    else
+    # Not sure what you're running, we're not sure. We'll just try the MRI specifics...
+    puts "You are running #{RUBY_ENGINE} #{RUBY_VERSION}"
+    gem.add_dependency('RedCloth', '>= 4.0.0')
+  end
+  
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
@@ -102,6 +120,7 @@ task( :setup ) do
     end
   end
   system(cmd = "chmod +x bin/waves*")
+  puts "rake setup task completed... happy hacking!"
 end
 
 desc "Run verification suite."

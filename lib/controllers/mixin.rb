@@ -96,8 +96,8 @@ module Waves
       # controller with the request, then evaluates the block using +instance_eval+. This allows the
       # controller to be used from within a mapping lambda (i.e. a ResponseProxy).
 
-      def self.included( mod )
-        def mod.process( request, &block )
+      def self.included( target )
+        def target.process( request, &block )
           self.new( request ).instance_eval( &block )
         end
       end
