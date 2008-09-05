@@ -11,11 +11,14 @@ module Waves
       # used to provide consisting matching logic across all matchers
       def test( request )
         constraints.all? do | key, val |
-          return true if val.nil?
-          if val.respond_to? :call
-            val.call( request )
+          if val.nil?
+            true
           else
-            val == request.send( key ) or val === request.send( key ) or request.send( key ) === val
+            if val.respond_to? :call
+              val.call( request )
+            else
+              val == request.send( key ) or val === request.send( key ) or request.send( key ) === val
+            end
           end
         end
       end

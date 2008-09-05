@@ -43,7 +43,7 @@ module Waves
       # given a resource, find the path prefix 
       # used to generate paths
       functor( :call, Class, nil ) do | resource |
-        @paths[ resource ]
+        @paths[ [ resource, nil ] ]
       end
       
       # given a resource and a mount name, find the path prefix
