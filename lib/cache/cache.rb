@@ -31,6 +31,7 @@ module Waves
     end
 
     def fetch(key)
+      return nil if @cache[key].nil?
       return @cache[key][:value] if @cache[key][:expires].nil?
       
       if @cache[key][:expires] <= Time.now
