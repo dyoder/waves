@@ -35,7 +35,6 @@ module Waves
           resource = params[:resources].singular if resource == true
           params.delete(:resources)
         end
-        request.params.merge!( params )
         ( ( resource.is_a? Class and resource ) or Waves.main::Resources[ resource ] ).new( request )
       end
       

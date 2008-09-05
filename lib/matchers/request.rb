@@ -16,8 +16,10 @@ module Waves
       end
     
       def call( request )
-        ( request.blackboard.waves.mount or 
-          ( request.blackboard.waves.mount = ( @mount or true ) ) ) if test( request )
+        if test( request )
+          request.params.merge!( request.blackboard.waves.path_params )
+          request.blackboard.waves.mount ||= ( @mount or true )
+        end
       end
       
     end

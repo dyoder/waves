@@ -54,7 +54,7 @@ module Waves
         key, want = want.to_a.first ; call( r, key, want, got )
       end
       functor( :call, Hash, Symbol, String, String ) do | r, key, want, got |
-        r[ key.to_s ] = got
+        r[ key.to_s ] = (( got.empty? and want ) or got )
       end
       functor( :call, Hash, Symbol, String, nil ) do | r, key, want, got |
         r[ key.to_s ] = want
