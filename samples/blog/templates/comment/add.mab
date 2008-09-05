@@ -1,4 +1,4 @@
-form :action => "/comments", :method => 'POST' do
+form :action => request.path, :method => 'POST' do
   input :type => :hidden, :name => 'comment.entry_id', :value => @entry.id
   label 'Name'; br
   input :type => :text, :name => 'comment.name'; br
@@ -8,3 +8,4 @@ form :action => "/comments", :method => 'POST' do
   textarea :name => 'comment.content', :rows => 10, :cols => 80; br
   input :type => :submit, :value => 'Save'
 end
+

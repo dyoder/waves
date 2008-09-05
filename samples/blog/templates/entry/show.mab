@@ -1,5 +1,5 @@
 layout :default, :title => @entry.title do
-  a 'Show All Entries', :href => '/entries'
+  a 'Show All Entries', :href => '/entry'
   a 'Edit This Entry', :href => "/entry/#{@entry.name}/edit"
   h1 @entry.title
   textile @entry.content

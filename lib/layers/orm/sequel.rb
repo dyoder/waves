@@ -72,7 +72,7 @@ module Waves
           end
           
           def create
-            model.create( attributes )
+            model.create( attributes.to_hash )
           end
           
           def delete( name )
@@ -81,7 +81,7 @@ module Waves
           
           def update( name )
             instance = find( name )
-            instance.update_with_params( attributes )
+            instance.update_with_params( attributes.to_hash )
             instance
           end
         end

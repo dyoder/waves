@@ -1,6 +1,6 @@
 layout :default, :title => 'Blog Entries' do
   h1 'My Blog'
-  form :action => '/entries', :method => 'post' do
+  form :action => '/entry', :method => 'post' do
     label 'Name'
     input :type => :text, :name => 'entry.name'
     input :type => :submit, :value => 'Add'
