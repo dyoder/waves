@@ -7,14 +7,14 @@ module Waves
       attr_reader :request
       
       def self.included( target )
-        parent = target.superclass
-        base = parent.respond_to?( :paths ) ? parent.paths : Waves::Resources::Path
         target.module_eval do
           
           include ResponseMixin
-
-          const_set( :Paths, Class.new( base ) )
-          def self.paths ; @object ||= self::Paths.new( self ) ; end
+          
+          def self.paths
+            @paths ||= const_set( :Paths, Class.new( superclass.respond_to?(:paths) ? 
+              superclass.paths : Waves::Resources::Path ) )
+          end
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
           def self.with( mount ) ; @mount = mount ; yield ; @mount = nil ; end
@@ -22,7 +22,7 @@ module Waves
             options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
             options[ :mount ] = @mount if @mount
             functor( method, Waves::Matchers::Request.new( options ), &block )
-            self::Paths.define_path( path.keys.first, options[ :path ], options[ :mount ] ) if path.is_a? Hash
+            self.paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
           end
           def self.before( path = true, options = {}, &block )
             options[ :path ] = path
@@ -65,9 +65,8 @@ module Waves
       def singular ; self.class.singular ; end
       def plural ; self.class.plural ; end
       def redirect( path ) ; request.redirect( path ) ; end
-      def paths ; self.class.paths ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
-
+      def paths ; self.class.paths ; end
     end
       
     class Base ; include Mixin ; end 

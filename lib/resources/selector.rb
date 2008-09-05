@@ -37,34 +37,40 @@ module Waves
           resource = params[:resources].singular if resource == true
           params.delete(:resources)
         end
-        ( ( resource.is_a? Class and resource ) or Waves.main::Resources[ resource ] ).new( request )
-      end
-      
-      # given a resource, find the path prefix 
-      # used to generate paths
-      functor( :call, Class, nil ) do | resource |
-        @paths[ [ resource, nil ] ]
-      end
-      
-      # given a resource and a mount name, find the path prefix
-      functor( :call, Class, Symbol ) do | resource, mount |
-        @paths[ [ resource, mount ] ]
+        request.blackboard.waves.resource = resolve( resource ).new( request )
       end
       
       resource = lambda { |x| x.is_a? Class or x.is_a? Symbol or x == true }
+
+      # given a resource and a mount name, find the path prefix
+      functor( :call, resource, nil ) do | resource |
+        @paths[ [ resource, nil ] ]
+      end
+      
+      functor( :call, resource, Symbol ) do | resource, mount |
+        @paths[ [ resource, mount ] ] or @paths[ [ true, mount ] ]
+      end
+      
       functor( :mount, resource, Array ) do | res, path | 
         @rules << [ res, Waves::Matchers::Path.new( path ) ]
-        @paths[ [ res, nil ] ] = path
+        @paths[ [ resolve( res ), nil ] ] = path
       end
       
       functor( :mount, resource, Hash ) do | res, opts | 
         @rules << [ res, Waves::Matchers::Request.new( opts ) ]
-        @paths[ [ res, opts[ :as ] ] ] = opts[ :path ]
+        @paths[ [ resolve( res ), opts[ :as ] ] ] = opts[ :path ]
       end
       
       functor( :mount, resource, Array, Hash ) do | res, path, opts | 
         opts[ :path ] = path ; mount( res, opts )
       end
+      
+      def resolve( resource )
+        return true if resource == true
+        ( ( resource.is_a? Class and resource ) or 
+          Waves.main::Resources[ resource ] )
+      end
+      
       
     end
       

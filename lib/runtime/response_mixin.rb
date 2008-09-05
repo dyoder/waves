@@ -60,7 +60,15 @@ module Waves
     # access stuff from an app
     def app_name ; self.class.rootname.snake_case.to_sym ; end
     def app ; eval(  "::#{app_name.to_s.camel_case}" ) ; end
-    def paths( r ) ; app.paths( r ) ; end
+    
+    def resource ; blackboard.waves.resource ; end
+    def paths( r = nil )
+      if r
+        Waves.main::Resources[r].paths.new( request, r )
+      else
+        resource.paths.new( request )
+      end
+    end
     
     private
 
