@@ -66,6 +66,7 @@ module Waves
       def redirect( path ) ; request.redirect( path ) ; end
       def paths ; self.class.paths ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
+      def handler( e ) ; response.status = 404; response.body = 'Not Found!' ; end
 
     end
       

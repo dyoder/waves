@@ -24,7 +24,6 @@ module Waves
       # otherwise break the path down into an array and match arrays
       functor( :call, Array, '/' ) { | pattern, path | call( pattern, [ '' ] ) }
       functor( :call, Array, String ) { | pattern, path | call( pattern, path.split('/')[1..-1] ) }
-      # this variation should never come up ... right?
       # alright, now we are into the general case, matching two arrays ...
       functor( :call, Array, Array ) do | wants, gots |
         if wants.length > gots.length

@@ -11,14 +11,15 @@ module Waves
           :accept => Matchers::Accepts.new( options ), 
           :uri => Matchers::URI.new( options ), 
           :query => Matchers::Query.new( options[:query] ),
-          :mount => lambda { | request | request.blackboard.waves.mount == options[ :mount ] }
+          :mount => lambda { | request | request.blackboard.waves.mount == options[ :mount ] || true }
         }
       end
     
       def call( request )
         if test( request )
           request.params.merge!( request.blackboard.waves.path_params )
-          request.blackboard.waves.mount ||= ( @mount or true )
+          request.blackboard.waves.mount ||= @mount
+          return true
         end
       end
       

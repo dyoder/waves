@@ -70,14 +70,15 @@ module Waves
       
       # try the normal include?, then if the arg is a Regexp, see if anything matches
       def include?(arg)
-        super || self.any? do |entry|
-          return true if  entry == '*/*' || entry == '*' || arg === entry
-          if entry.match('\*') && arg.respond_to?(:split)
-            a, e = arg.split('/'), entry.split('/')
-            return true if e[0] == '*' && a[1] == e[1]
-            return true if e[1] == '*' && a[0] == e[0]
+        return arg.any? { |pat| self.include?( pat ) } if arg.is_a? Array
+        arg = arg.to_s.split('/')
+        self.any? do |entry|
+          false if entry == '*/*' or entry == '*'
+          entry = entry.split('/')
+          if arg.size == 1 # implicit wildcard in arg
+            arg[0] == entry[0] or arg[0] == entry[1]
           else
-            false
+            arg == entry
           end
         end
       end
@@ -88,7 +89,7 @@ module Waves
       
     end
     
-    def accept ; Accept.parse(@request.env['HTTP_ACCEPT']) ; end
+    def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
     def accept_charset ; Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 

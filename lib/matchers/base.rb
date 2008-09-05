@@ -15,7 +15,7 @@ module Waves
           if val.respond_to? :call
             val.call( request )
           else
-            val == request.send( key ) or val === request.send( key )
+            val == request.send( key ) or val === request.send( key ) or request.send( key ) === val
           end
         end
       end

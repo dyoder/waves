@@ -9,8 +9,9 @@ require 'daemons'
 require 'live_console'
 
 require 'autocode'
-# require 'functor'
-require '../functor/lib/functor.rb'
+
+gem 'dyoder-functor'
+require 'functor'
 
 # for mimetypes only or when using as default handler
 require 'mongrel'
@@ -26,8 +27,7 @@ require 'benchmark'
 # require 'memcache'
 require 'base64'
 
-#gem 'dyoder-filebase'
-$:.unshift '../filebase/lib'
+gem 'dyoder-filebase'
 require 'filebase'
 require 'filebase/model'
 
