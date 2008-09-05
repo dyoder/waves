@@ -31,7 +31,7 @@ module Waves
       def safe( request  )
         Waves.reload
         # set a default content type -- this can be overridden by the resource
-        request.response.content_type = request.accept.find { |entry| ! entry.match(/\*/) } || 'text/html'
+        request.response.content_type = request.accept.default
         # grab the appropriate resource from those declared in the configuration, based on the request
         resource = Waves.config.resources[ request ]
         begin

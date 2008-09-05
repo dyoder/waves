@@ -87,9 +87,16 @@ module Waves
         string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
       end
       
+      def default
+        return 'text/html' if self.include?('text/html')
+        find { |entry| ! entry.match(/\*/) } || 'text/html'
+      end
+      
     end
     
-    def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
+    # this is a hack - need to incorporate browser variations for "accept" here ...
+    # def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
+    def accept ; ( Waves.config.mime_types[ path ] || 'text/html' ) ; end
     def accept_charset ; Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 
