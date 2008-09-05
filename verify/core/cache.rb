@@ -19,6 +19,15 @@ describe "Waves::Cache" do
     @cache[:key1].should == "value1"
   end
 
+  it "has members who obey their time-to-live" do
+    @cache.store(:key3,"value3",1)
+    @cache[:key3].should == "value3"
+    sleep 1.01
+    #@cache[:key3].should == "value3"
+    @cache[:key3].should == nil
+  end
+
+
   it "can delete a value from the cache" do
     @cache = fill_cache
     @cache.delete :key1
@@ -74,6 +83,14 @@ describe "Waves::Layers::Cache::FileCache" do
     @cache.clear
   end
 
+  it "has members who obey their time-to-live" do
+    @cache.store(:key3,"value3",1)
+    @cache[:key3].should == "value3"
+    sleep 1.01
+    #@cache[:key3].should == "value3"
+    @cache[:key3].should == nil
+  end
+  
   it "can clear the cache" do
     @cache = fill_cache
     @cache.clear

@@ -34,11 +34,11 @@ module Waves
       return nil if @cache[key].nil?
       return @cache[key][:value] if @cache[key][:expires].nil?
       
-      if @cache[key][:expires] <= Time.now
+      if @cache[key][:expires] > Time.now
         @cache[key][:value]
-        delete key
       else
-        @cache[key][:value]
+        delete key
+        return nil
       end
     end
 
