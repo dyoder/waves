@@ -4,9 +4,9 @@ module Blog
       
       resources do
         
-        mount :entry, [ 'entry' ]
+        mount :entry, :path => [ 'entry' ]
         mount :entry, [ 'entry', { :rest => true } ]
-        
+                
       end      
       
     end

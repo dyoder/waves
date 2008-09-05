@@ -20,11 +20,15 @@ module Blog
       end
       
       on :post, :create => [ ] do
-        i = controller.create
-        redirect "/entry/#{i.name}/edit"
+        redirect "/entry/#{controller.create.name}/edit"
       end
       
-
+      on :post, :comment => [ :name ] do
+        entry = controller.find( query.name )
+        comment = Models::Comment.create( query.comment.to_hash )
+        entry.add_comment( comment )
+        redirect request.path
+      end
       
     end
   end
