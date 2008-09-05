@@ -66,7 +66,6 @@ module Waves
 
     def destructure( hash )
       destructured = {}
-      debugger
       hash.keys.map { |key| key.split('.') }.each do |keys|
         destructure_with_array_keys(hash, '', keys, destructured)
       end

@@ -14,7 +14,6 @@ module Waves
       def initialize( pattern ) ; @pattern = pattern ; end
 
       functor( :call, Waves::Request ) do | request | 
-        debugger if request.blackboard.waves.mount
         request.blackboard.waves.path_params = call( @pattern, ( request.blackboard.waves.rest or request.path ) )
       end
       # when the pattern array is omitted, match on any path
@@ -23,9 +22,9 @@ module Waves
       functor( :call, [], '/' ) { | pattern, path | {} }
       functor( :call, [], Array ) { false }
       # otherwise break the path down into an array and match arrays
+      functor( :call, Array, '/' ) { | pattern, path | call( pattern, [ '' ] ) }
       functor( :call, Array, String ) { | pattern, path | call( pattern, path.split('/')[1..-1] ) }
       # this variation should never come up ... right?
-      functor( :call, Array, nil ) { | pattern, path | nil }
       # alright, now we are into the general case, matching two arrays ...
       functor( :call, Array, Array ) do | wants, gots |
         if wants.length > gots.length
@@ -38,13 +37,13 @@ module Waves
           # pad wants with last so they are the same length
           wants = ( wants + ( [ wants.last ] * ( gots.length - wants.length ) ) )
         end
-        r = {}; r if wants.zip( gots ).all? { |want, got| match( r, want, got ) }
+        r = {}; r if wants.zip( gots ).all? { |want, got| call( r, want, got ) }
       end
       functor( :call, Hash, String, String ) { | r, want, got | got if want == got }
       functor( :call, Hash, Regexp, String ) { | r, want, got | got if want === got }
       # a symbol matches pretty much anything and stores it as a param ...
       functor( :call, Hash, Symbol, String ) do | r, want, got | 
-        r[ want.to_s ] = match( r, /^(\S+)$/, got )
+        r[ want.to_s ] = call( r, /^(\S+)$/, got )
       end
       functor( :call, Hash, true, Object ) do | r, key, got | 
         r[ true ] ||= []; r[ true ] << got
@@ -52,7 +51,7 @@ module Waves
       
       # a hash is either a param with a custom regexp or a default value ...
       functor( :call, Hash, Hash, Object ) do | r, want, got |
-        key, want = want.to_a.first ; match( r, key, want, got )
+        key, want = want.to_a.first ; call( r, key, want, got )
       end
       functor( :call, Hash, Symbol, String, String ) do | r, key, want, got |
         r[ key.to_s ] = got
@@ -64,7 +63,7 @@ module Waves
         r[ key.to_s ] ||= []; r[ key.to_s ] << got
       end
       functor( :call, Hash, Symbol, Regexp, String ) do | r, key, want, got |
-        r[ key.to_s ] = match( r, want, got )
+        r[ key.to_s ] = call( r, want, got )
       end
       functor( :call, Hash, Symbol, Regexp, nil ) do | r, key, want, got |
         false
