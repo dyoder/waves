@@ -3,6 +3,10 @@ module Waves
   class Cache
     attr_accessor :cache
 
+    def initialize
+      @cache = {}
+    end
+
     def [](key)
       fetch(key)
     end
@@ -13,13 +17,13 @@ module Waves
 
     def store(key, value, ttl = {})
       @cache[key] = {
-        :expires => ttl.i_a?(Number) ? Time.now + ttl : nil,
+        :expires => ttl.kind_of?(Numeric) ? Time.now + ttl : nil,
         :value => value
       }
     end
 
     def delete(*keys)
-      keys.each {|key| @cache[key].delete }
+     keys.each {|key| @cache.delete(key) }
     end
 
     def clear
@@ -27,11 +31,13 @@ module Waves
     end
 
     def fetch(key)
-      if @cache[key][:expires] > Time.now
+      return @cache[key][:value] if @cache[key][:expires].nil?
+      
+      if @cache[key][:expires] <= Time.now
         @cache[key][:value]
+        delete key
       else
         @cache[key][:value]
-        @cachce[key].delete
       end
     end
 

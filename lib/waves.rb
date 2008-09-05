@@ -27,6 +27,7 @@ require 'date'
 require 'benchmark'
 # require 'memcache'
 require 'base64'
+require 'cache/cache'
 
 # gem 'dyoder-filebase'
 $:.unshift('../filebase/lib')
@@ -93,13 +94,12 @@ require 'renderers/haml'
 
 
 # waves foundations / layers
+require 'foundations/default'
+require 'foundations/simple'
+
 require 'layers/simple'
 require 'layers/simple_errors'
-require 'foundations/simple'
 require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
-require 'foundations/default'
 
-# VM specific helpers
-require 'helpers/jruby.rb' if defined?(JRUBY_VERSION)

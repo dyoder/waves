@@ -4,39 +4,41 @@ module Waves
 
     class FileCache < Waves::Cache
 
-      @files = Hash.new
+      def initialize(dir)
+        @directory = dir
+        @cache = {}
+      end
 
       def store(key, value, ttl = {})
-        item = {
-          :expires => ttl.i_a?(Number) ? Time.now + ttl : nil,
-          :value => value
-        }
+        super(key, value, ttl)
 
-        @files[key] = File.new(key,'w') if @files[key].nil?
-        Marshal.dump(item, @file[key])
+        key_file = @directory / key
+
+        file = File.new(key_file,'w')
+        Marshal.dump(@cache[key], file)
+        file.close
       end
 
       def delete(*keys)
-        keys.each do |key|
-          File.delete(@files[key])
-          @files[key].delete
-        end
+        keys.each {|key| File.delete(@directory / key) }
+        super keys
       end
 
       def clear
-        # in a sec...
+        @cache.each_key {|key| File.delete(@directory / key) }
+        super
       end
 
       def fetch(key)
-        raise "No cache found for #{key}" unless @files[key]
-        item = Marshal.load(@files[key])
+        raise "No cache found for #{key}" unless File.exists?(@directory / key)
+        @cache[key] = Marshal.load File.new(@directory / key)
+        return @cache[key][:value] if @cache[key][:expires].nil?
 
-        if item[:expires] > Time.now
-          item[:value]
+        if @cache[key][:expires] <= Time.now
+          @cache[key][:value]
+          delete key
         else
-          File.delete(@files[key])
-          @files[key].delete
-          item[:value]
+          @cache[key][:value]
         end
       end
 
