@@ -27,6 +27,8 @@ module Waves
         if params[:rest]
           request.blackboard.waves.rest = params[:rest]
           params.delete(:rest)
+        else
+          request.blackboard.waves.rest = '/'
         end
         if params[:resource]
           resource = params[:resource] if resource == true
@@ -40,7 +42,7 @@ module Waves
       
       # given a resource, find the path prefix 
       # used to generate paths
-      functor( :call, Class ) do | resource |
+      functor( :call, Class, nil ) do | resource |
         @paths[ resource ]
       end
       

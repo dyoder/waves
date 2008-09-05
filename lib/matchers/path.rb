@@ -11,7 +11,7 @@ module Waves
       include Functor::Method
       
       # Takes an array of pattern elements ... coming soon, support for formatted strings!
-      def initialize( pattern ) ; @pattern = pattern ; end
+      def initialize( pattern ) ; @pattern = pattern || [{ :rest => true }] ; end
 
       functor( :call, Waves::Request ) do | request | 
         request.blackboard.waves.path_params = call( @pattern, ( request.blackboard.waves.rest or request.path ) )

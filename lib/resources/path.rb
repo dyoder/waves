@@ -6,7 +6,9 @@ module Waves
       
       include Functor::Method
       
-      def self.define_path(name, path_array)
+      def self.define_path( name, path_array, mount )
+        prefix = Waves.config.resources.call( self, mount )
+        ( path_array = prefix  + path_array ) if prefix
         define_method( name ) { |*args| generate( path_array, args ) }
       end
 

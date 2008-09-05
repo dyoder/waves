@@ -11,7 +11,7 @@ module Waves
           :accept => Matchers::Accepts.new( options ), 
           :uri => Matchers::URI.new( options ), 
           :query => Matchers::Query.new( options[:query] ),
-          :mount => lambda { | request | request.blackboard.waves.mount == options[ :mount ] || true }
+          :mount => lambda { | request | request.blackboard.waves.mount == options[ :mount ] }
         }
       end
     

@@ -22,7 +22,7 @@ module Waves
             options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
             options[ :mount ] = @mount if @mount
             functor( method, Waves::Matchers::Request.new( options ), &block )
-            self::Paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
+            self::Paths.define_path( path.keys.first, options[ :path ], options[ :mount ] ) if path.is_a? Hash
           end
           def self.before( path = true, options = {}, &block )
             options[ :path ] = path
