@@ -12,7 +12,7 @@ module Blog
 
       host '127.0.0.1'
 
-      port 3000
+      port 4000
 
       handler ::Rack::Handler::Mongrel, :Host => host, :Port => port
       # handler ::Rack::Handler::WEBrick, :BindAddress => host, :Port => port
