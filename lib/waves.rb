@@ -25,7 +25,6 @@ require 'metaid'
 require 'forwardable'
 require 'date'
 require 'benchmark'
-# require 'memcache'
 require 'base64'
 require 'cache/cache'
 
