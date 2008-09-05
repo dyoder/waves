@@ -175,7 +175,9 @@ module Waves
       end
       
       def self.resources( &block )
-        self['resource'] = Waves::Resources::Selector.new.instance_eval( &block )
+        return self['resource'] unless block
+        self['resource'] = selector = Waves::Resources::Selector.new
+        selector.instance_eval( &block )
       end
 
       debug true ; synchronize? true

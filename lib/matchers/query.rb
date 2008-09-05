@@ -4,12 +4,11 @@ module Waves
 
     class Query < Base
       
-      def initialize( pattern ) ; @query = pattern or {} ; end
+      def initialize( pattern ) ; @pattern = ( pattern or {} ) ; end
     
-      def call( pattern )
-        query = request.query
-        pattern.all? do | key, val |
-          ( val.is_a? Proc and val.call( query[ key ] ) ) or val === query.key
+      def call( request )
+        @pattern.all? do | key, val |
+          ( val.is_a? Proc and val.call( request.params[ key ] ) ) or val === request.params[ key ]
         end
       end
       

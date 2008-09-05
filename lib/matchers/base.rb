@@ -2,15 +2,21 @@ module Waves
 
   module Matchers
 
-    class Base < Proc
+    class Base
       
       attr_accessor :constraints
+      
+      def []( *args ) ; call( *args ) ; end
       
       # used to provide consisting matching logic across all matchers
       def test( request )
         constraints.all? do | key, val |
-          val.nil? or ( val.is_a? Proc and val.call( request ) ) or 
+          return true if val.nil?
+          if val.respond_to? :call
+            val.call( request )
+          else
             val == request.send( key ) or val === request.send( key )
+          end
         end
       end
       

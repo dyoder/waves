@@ -12,7 +12,7 @@ module Waves
         self.name.split('::').first
       end
       
-      def root_constant
+      def root
         eval( "::#{self.rootname}" )
       end
 

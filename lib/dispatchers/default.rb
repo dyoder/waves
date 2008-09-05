@@ -31,7 +31,7 @@ module Waves
       def safe( request  )
         Waves.reload
         # set a default content type -- this can be overridden by the resource
-        request.response.content_type = Waves.config.mime_types[ request.accepts.first ] || 'text/html'
+        request.response.content_type = Waves.config.mime_types[ request.accept.first ] || 'text/html'
         # grab the appropriate resource from those declared in the configuration, based on the request
         resource = Waves.config.resources[ request ]
         begin
@@ -48,7 +48,8 @@ module Waves
           resource.always
         end
         # okay, we've handled the request, now write the response unless it was already done
-        request.response.write( content ) unless request.response.finished?
+        request.response.write( content.to_s )
+        request.response.finish
       end
 
     end

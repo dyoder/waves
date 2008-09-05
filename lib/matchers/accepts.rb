@@ -5,8 +5,8 @@ module Waves
     class Accepts < Base
       
       def initialize( options )
-        constraints = {
-          :accepts => options[ :accepts ],
+        @constraints = {
+          :accept => options[ :accepts ],
           :lang => options[ :lang ],
           :charset => options[ :charset ]
         }

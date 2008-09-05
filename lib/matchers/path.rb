@@ -13,7 +13,10 @@ module Waves
       # Takes an array of pattern elements ... coming soon, support for formatted strings!
       def initialize( pattern ) ; @pattern = pattern ; end
 
-      functor( :call, Waves::Request ) { | request | call( @pattern, request.path ) }
+      functor( :call, Waves::Request ) do | request | 
+        debugger if request.blackboard.waves.mount
+        request.blackboard.waves.path_params = call( @pattern, ( request.blackboard.waves.rest or request.path ) )
+      end
       # when the pattern array is omitted, match on any path
       functor( :call, nil, String ) { |pattern, path| {} }
       # an empty pattern array matches root, i.e. "/"

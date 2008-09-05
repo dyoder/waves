@@ -17,7 +17,7 @@ module Waves
       @request = Rack::Request.new( env )
       @response = Waves::Response.new( self )
       @session = Waves::Session.new( self )
-      @blackboard = Waves::Blackboard.new( self )
+      @blackboard = Class.new { include Attributes }.new
     end
     
     def rack_request; @request; end

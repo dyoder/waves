@@ -6,7 +6,7 @@ module Waves
       
       def initialize( options )
         @path = Waves::Matchers::Path.new( options[ :path ] )
-        constraints = { :server => options[ :server ], :scheme => options[ :scheme ] }
+        @constraints = { :server => options[ :server ], :scheme => options[ :scheme ] }
       end
     
       def call( request ) ; @path.call( request ) and test( request ) ; end

@@ -9,7 +9,8 @@ require 'daemons'
 require 'live_console'
 
 require 'autocode'
-require 'functor'
+# require 'functor'
+require '../functor/lib/functor.rb'
 
 # for mimetypes only or when using as default handler
 require 'mongrel'
@@ -25,7 +26,8 @@ require 'benchmark'
 # require 'memcache'
 require 'base64'
 
-gem 'dyoder-filebase'
+#gem 'dyoder-filebase'
+$:.unshift '../filebase/lib'
 require 'filebase'
 require 'filebase/model'
 
@@ -40,7 +42,6 @@ require 'ext/proc'
 require 'ext/hash'
 require 'ext/tempfile'
 require 'ext/kernel'
-require 'ext/functor'
 
 # waves Runtime
 require 'dispatchers/base'
@@ -54,7 +55,6 @@ require 'runtime/request'
 require 'runtime/response'
 require 'runtime/response_mixin'
 require 'runtime/session'
-require 'runtime/blackboard'
 require 'runtime/configuration'
 
 # waves URI mapping
@@ -64,6 +64,7 @@ require 'matchers/content_type'
 require 'matchers/path'
 require 'matchers/query'
 require 'matchers/uri'
+require 'matchers/request'
 require 'resources/path'
 require 'resources/mixin'
 require 'resources/selector'

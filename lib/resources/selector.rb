@@ -18,10 +18,25 @@ module Waves
       
       # given a request, find the right resource
       functor( :call, Waves::Request ) do | request |
-        @rules.each do | resource, constraint |
-          return resource if constraint[ request ]
+        resource, constraint = @rules.find do | resource, constraint |
+          request.blackboard.waves = {}
+          constraint[ request ]
         end
-        raise NoMatchingResourceError.new( request )
+        raise NoMatchingResourceError.new( request ) unless resource
+        params = request.blackboard.waves.path_params
+        if params[:rest]
+          request.blackboard.waves.rest = params[:rest]
+          params.delete(:rest)
+        end
+        if params[:resource]
+          resource = params[:resource] if resource == true
+          params.delete(:resource)
+        elsif params[:resources]
+          resource = params[:resources].singular if resource == true
+          params.delete(:resources)
+        end
+        request.params.merge!( params )
+        ( ( resource.is_a? Class and resource ) or Waves.main::Resources[ resource ] ).new( request )
       end
       
       # given a resource, find the path prefix 
@@ -35,24 +50,21 @@ module Waves
         @paths[ [ resource, mount ] ]
       end
       
-      functor( :mount, Class, Array ) do | res, path | 
+      resource = lambda { |x| x.is_a? Class or x.is_a? Symbol or x == true }
+      functor( :mount, resource, Array ) do | res, path | 
         @rules << [ res, Waves::Matchers::Path.new( path ) ]
         @paths[ [ res, nil ] ] = path
       end
       
-      functor( :mount, Class, Hash ) do | res, opts | 
+      functor( :mount, resource, Hash ) do | res, opts | 
         @rules << [ res, Waves::Matchers::Request.new( opts ) ]
         @paths[ [ res, opts[ :as ] ] ] = opts[ :path ]
       end
-
-      functor( :mount, Symbol, Array ) do | res, path |
-        mount( app::Resources[res], path )
+      
+      functor( :mount, resource, Array, Hash ) do | res, path, opts | 
+        opts[ :path ] = path ; mount( res, opts )
       end
       
-      functor( :mount, Symbol, Hash ) do | res, opts | 
-        mount( app::Resources[res], opts )
-      end
-            
     end
       
   end
