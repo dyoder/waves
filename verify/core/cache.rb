@@ -23,7 +23,6 @@ describe "Waves::Cache" do
     @cache.store(:key3,"value3", 0.01)
     @cache[:key3].should == "value3"
     sleep 0.02
-    #@cache[:key3].should == "value3"
     @cache[:key3].should == nil
   end
 
