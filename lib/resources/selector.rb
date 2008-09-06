@@ -65,6 +65,10 @@ module Waves
         opts[ :path ] = path ; mount( res, opts )
       end
       
+      functor( :mount, resource ) do | res |
+        mount( res, {} )
+      end
+      
       def resolve( resource )
         return true if resource == true
         ( ( resource.is_a? Class and resource ) or 
