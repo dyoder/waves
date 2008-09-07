@@ -83,10 +83,9 @@ describe "Waves::Layers::Cache::FileCache" do
   end
 
   it "has members who obey their time-to-live" do
-    @cache.store(:key3,"value3",1)
+    @cache.store(:key3,"value3",0.01)
     @cache[:key3].should == "value3"
-    sleep 1.01
-    #@cache[:key3].should == "value3"
+    sleep 0.02
     @cache[:key3].should == nil
   end
   
