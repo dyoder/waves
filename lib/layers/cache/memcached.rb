@@ -26,6 +26,8 @@ module Waves
 
         def get(key)
           @memcached.get(key.to_s)
+        rescue Memcached::NotFound    # In order to keep the MemcachedCache layer compliant with Waves::Cache...
+          return nil                  # ...we need to be able to expect that an absent key returns 'nil'.
         end
 
         def delete(*keys)
@@ -41,8 +43,8 @@ module Waves
 
         def method_missing(*args, &block)
           @memcached.__send__(*args, &block)
-        rescue MemCache::MemCacheError => e
-          Log.error e.to_s
+        rescue => e
+          Waves::Logger.error e.to_s
           nil
         end
 
