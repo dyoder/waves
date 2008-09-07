@@ -3,10 +3,7 @@ module Waves
   class Cache
     attr_accessor :cache
 
-    def initialize
-      @cache = {}
-    end
-
+    # Universal to all cache objects.
     def [](key)
       fetch(key)
     end
@@ -14,7 +11,18 @@ module Waves
     def []=(key,value)
       store(key,value)
     end
+ 
+    def exists?(key)
+      fetch(key) == nil ? false : true
+    end
 
+    alias_method :exist?, :exists?
+
+    # Replace these when you write a layer.
+    def initialize
+      @cache = {}
+    end
+    
     def store(key, value, ttl = {})
       @cache[key] = {
         :expires => ttl.kind_of?(Numeric) ? Time.now + ttl : nil,
