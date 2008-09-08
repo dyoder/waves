@@ -1,8 +1,14 @@
 module Waves
 
   class Cache
-    attr_accessor :cache
 
+    # Exception classes
+    class WavesCacheError < StandardError
+      class KeyMissing < WavesCacheError; end
+    end
+      
+    attr_accessor :cache
+    
     # Universal to all cache objects.
     def [](key)
       fetch(key)
@@ -13,7 +19,11 @@ module Waves
     end
  
     def exists?(key)
-      fetch(key) == nil ? false : true
+      fetch(key)
+    rescue WavesCacheError::KeyMissing
+      return false
+    else
+      return true
     end
 
     alias_method :exist?, :exists?
@@ -39,14 +49,14 @@ module Waves
     end
 
     def fetch(key)
-      return nil if @cache[key].nil?
+      raise WavesCacheError::KeyMissing, "#{key} doesn't exist in cache" if @cache.has_key?(key) == false
       return @cache[key][:value] if @cache[key][:expires].nil?
       
       if @cache[key][:expires] > Time.now
         @cache[key][:value]
       else
         delete key
-        return nil
+        raise WavesCacheError::KeyMissing, "#{key} expired before access attempt"
       end
     end
 

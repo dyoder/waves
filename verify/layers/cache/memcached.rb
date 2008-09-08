@@ -4,10 +4,10 @@ include Cache::Helpers
 
 require 'layers/cache/memcached'
 
-describe "Waves::Layers::Cache::MemcachedCache" do
+describe "Waves::Layers::Cache::Memcached" do
 
   before do
-    @cache = Waves::Layers::Cache::MemcachedCache.new('localhost:11211')
+    @cache = Waves::Layers::Cache::Memcached.new('localhost:11211')
     fill_cache @cache
   end
   
@@ -24,7 +24,7 @@ describe "Waves::Layers::Cache::MemcachedCache" do
   end
 
   it "has members who obey their time-to-live" do
-    ttl_test @cache
+    ttl_test_integer @cache  # memcached will not allow floats for time-to-live
   end
   
   it "can clear the cache" do

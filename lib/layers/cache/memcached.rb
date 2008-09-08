@@ -12,12 +12,12 @@ module Waves
 
     module Cache
 
-      class MemcachedCache < Waves::Cache
+      class Memcached < Waves::Cache
         require 'memcached'
         
         def initialize(servers, opt = {})
         # Waves::Layers::Cache::MemcachedCache.new is the same format as Memcached.new
-          @memcached = Memcached.new(servers, opt)
+          @memcached = ::Memcached.new(servers, opt)
         end
 
         def add(key,value, ttl = 0, marshal = true)
@@ -26,8 +26,9 @@ module Waves
 
         def get(key)
           @memcached.get(key.to_s)
-        rescue Memcached::NotFound    # In order to keep the MemcachedCache layer compliant with Waves::Cache...
-          return nil                  # ...we need to be able to expect that an absent key returns 'nil'.
+        rescue ::Memcached::NotFound    # In order to keep the MemcachedCache layer compliant with Waves::Cache...
+                                        # ...we need to be able to expect that an absent key raises WavesCacheError::KeyMissing
+          raise WavesCacheError::KeyMissing, "#{key} doesn't exist"
         end
 
         def delete(*keys)

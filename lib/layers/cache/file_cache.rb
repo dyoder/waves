@@ -32,7 +32,7 @@ module Waves
         end
 
         def fetch(key)
-          return nil unless File.exists?(@directory / key)
+          raise WavesCacheError::KeyMissing, "#{key} doesn't exist" unless File.exists?(@directory / key)
           @cache[key] = Marshal.load File.new(@directory / key)
           return @cache[key][:value] if @cache[key][:expires].nil?
 
@@ -40,7 +40,7 @@ module Waves
             @cache[key][:value]
           else
             delete key
-            return nil
+            raise WavesCacheError::KeyMissing, "#{key} expired before access attempt"
           end
         end
 

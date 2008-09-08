@@ -15,28 +15,28 @@ module Cache
       cache.store(:key3,"value3", 0.01)
       cache[:key3].should == "value3"
       sleep 0.02
-      cache[:key3].should == nil
+      cache.exists?(:key3).should == false
     end
 
     def delete_test(cache)
       fill_cache cache
       cache.delete :key1
-      cache[:key1].should == nil
+      cache.exists?(:key1).should == false
       cache[:key2].should =="value2"
     end
 
     def multi_delete_test(cache)
       fill_cache cache
       cache.delete :key1, :key2
-      cache[:key1].should == nil
-      cache[:key2].should == nil
+      cache.exists?(:key1).should == false
+      cache.exists?(:key2).should == false
     end
 
     def clear_test(cache)
       fill_cache cache
       cache.clear
       cache.exists?(:key1).should == false
-      cache[:key2].should == nil
+      cache.exists?(:key2).should == false
     end
   end
 end
