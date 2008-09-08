@@ -7,7 +7,7 @@ require 'layers/cache/file_cache'
 describe "Waves::Layers::Cache::FileCache" do
 
   before do
-    @cache = Waves::Layers::Cache::FileCache.new('/tmp')
+    @cache = Waves::Layers::Cache::FileCache.new(:dir => '/tmp')
     fill_cache @cache
   end
   

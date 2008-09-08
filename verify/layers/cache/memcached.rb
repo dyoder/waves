@@ -7,7 +7,7 @@ require 'layers/cache/memcached'
 describe "Waves::Layers::Cache::Memcached" do
 
   before do
-    @cache = Waves::Layers::Cache::Memcached.new('localhost:11211')
+    @cache = Waves::Layers::Cache::Memcached.new(:servers => 'localhost:11211')
     fill_cache @cache
   end
   

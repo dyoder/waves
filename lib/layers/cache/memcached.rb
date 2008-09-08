@@ -15,9 +15,15 @@ module Waves
       class Memcached < Waves::Cache
         require 'memcached'
         
-        def initialize(servers, opt = {})
-        # Waves::Layers::Cache::MemcachedCache.new is the same format as Memcached.new
-          @memcached = ::Memcached.new(servers, opt)
+        def initialize(args)
+          # initialize takes what you would throw at Memcached.new, but in the form of a hash,
+          # so a direct call looks like:
+          #    Waves::Layers::Cache::Memcached.new { :servers => ['this:10909','that:14405'], :opt => {:prefix_key => 'test'} }
+          # Mainly we expect you will be specifying these things in your configurations files using the 'cache' attribute.
+          
+          raise ArgumentError, "need :servers to not be nil" if args[:servers].nil?
+          args[:opt] = args.has_key?(:opt) ? args[:opt] : {}
+          @memcached = ::Memcached.new(args[:servers], args[:opt])
         end
 
         def add(key,value, ttl = 0, marshal = true)
@@ -26,9 +32,9 @@ module Waves
 
         def get(key)
           @memcached.get(key.to_s)
-        rescue ::Memcached::NotFound    # In order to keep the MemcachedCache layer compliant with Waves::Cache...
+        rescue ::Memcached::NotFound => e   # In order to keep the MemcachedCache layer compliant with Waves::Cache...
                                         # ...we need to be able to expect that an absent key raises WavesCacheError::KeyMissing
-          raise WavesCacheError::KeyMissing, "#{key} doesn't exist"
+          raise WavesCacheError::KeyMissing, "#{key} doesn't exist, #{e}"
         end
 
         def delete(*keys)
@@ -49,7 +55,10 @@ module Waves
           nil
         end
 
-
+        def self.included(app)
+          Waves.cache = Waves::Layers::Cache::Memcached.new( Waves.config.cache )
+        end
+        
       end
 
     end
