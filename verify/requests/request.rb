@@ -4,44 +4,39 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "A Waves request instance" do
   
   before do
-    Waves::Session.stub!(:base_path).and_return(BasePath)
-    @request = Waves::Request.new(env_for("/"))
+    @session = mock("session")
+    @response = mock("response")
+    Waves::Session.stub!(:new).and_return(@session)
+    Waves::Response.stub!(:new).and_return(@response)
+    @request = Waves::Request.new(env_for("http://example.com/index.html", 'CONTENT_TYPE' => "text/html"))
   end
   
-  it "has session, response, and blackboard objects" do
-    @request.session.class.should == Waves::Session
-    @request.response.class.should == Waves::Response
-    @request.blackboard.class.should == Waves::Blackboard
+  it "has session and response objects" do
+    @request.session.should == @session
+    @request.response.should == @response
   end
   
-  it "provides an accessor to the Rack request" do
+  it "provides an accessor to the immutable Rack request" do
     @request.rack_request.class.should == Rack::Request
+    @request.rack_request.frozen?.should == true
   end
   
   it "wraps some useful Rack data in more elegant methods" do
-    @request.rack_request.should.receive(:path_info)
-    @request.path
-
-    @request.rack_request.should.receive(:host)
-    @request.domain
-
-    @request.rack_request.env.should.receive(:[]).with('CONTENT_TYPE')
-    @request.content_type
+    @request.path.should == "/index.html"
+    @request.domain.should == "example.com"
+    @request.content_type.should == "text/html"
   end
-  
-  
-  # ** API CHANGE.  figure out what changed and fix the tests **
-  # it "delegates unknown methods to the Rack request" do
-  #   @request.rack_request.should.receive(:chitty_bang_bang)
-  #   @request.chitty_bang_bang
-  # end
+
   
 end
 
 describe "The HTTP request method" do
   
   before do
-    Waves::Session.stub!(:base_path).and_return(BasePath)
+    @session = mock("session")
+    @response = mock("response")
+    Waves::Session.stub!(:new).and_return(@session)
+    Waves::Response.stub!(:new).and_return(@response)
   end
   
   it "is determined in a straightforward manner for straightforward requests" do
