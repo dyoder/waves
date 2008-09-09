@@ -26,8 +26,8 @@ module Waves
           
           # MVC Params get automatically destructured with the keys as accessors methods.
           # You can still access the original query by calling request.query
-          alias_method :_query, :query
-          def query ; @query ||= Waves::Request::Query.new( _query ) ; end
+          def query ; @query ||= Waves::Request::Object.new( 
+              Waves::Request::Utilities.destructure( request.query ) )
           alias_method :params, :query
 
         end
