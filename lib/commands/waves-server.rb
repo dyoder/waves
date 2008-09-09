@@ -49,7 +49,7 @@ Choice.options do
     short '-s'
     long '--startup'
     desc 'Startup file to load.'
-    desc 'Defaults to "lib/startup.rb"'
+    desc 'Defaults to "startup.rb"'
   end
   separator ''
 end

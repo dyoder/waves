@@ -30,6 +30,8 @@ module Waves
       # Takes a Waves::Request and returns a Waves::Response    
       def safe( request  )
         Waves.reload
+        # set up a place to store dynamic information about the request
+        request.traits.waves = {}
         # set a default content type -- this can be overridden by the resource
         request.response.content_type = request.accept.default
         # grab the appropriate resource from those declared in the configuration, based on the request

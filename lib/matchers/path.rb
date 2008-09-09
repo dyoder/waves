@@ -14,7 +14,7 @@ module Waves
       def initialize( pattern ) ; @pattern = pattern || [{ :rest => true }] ; end
 
       functor( :call, Waves::Request ) do | request | 
-        request.blackboard.waves.path_params = call( @pattern, ( request.blackboard.waves.rest or request.path ) )
+        request.traits.waves.path_params = call( @pattern, ( request.traits.waves.rest or request.path ) )
       end
       # when the pattern array is omitted, match on any path
       functor( :call, nil, String ) { |pattern, path| {} }

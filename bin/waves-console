@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-require 'startup'
+lambda {
+  waves = ( ( WAVES if defined? WAVES ) || ENV['WAVES'] || 'waves' )
+  $:.unshift(File.join( waves, "lib" )) if File.exist? waves
+}.call
+require 'waves'
 require 'commands/waves-console'

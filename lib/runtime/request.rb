@@ -9,25 +9,30 @@ module Waves
 
     class Query ; include Attributes ; end
 
-    attr_reader :response, :session, :blackboard
+    attr_reader :response, :session, :traits
 
     # Create a new request. Takes a env parameter representing the request passed in from Rack.
     # You shouldn't need to call this directly.
     def initialize( env )
-      @request = Rack::Request.new( env )
+      @traits = Class.new { include Attributes }.new( :waves => {} )
+      @request = Rack::Request.new( env ).freeze
       @response = Waves::Response.new( self )
       @session = Waves::Session.new( self )
-      @blackboard = Class.new { include Attributes }.new
     end
     
     def rack_request; @request; end
 
-    # Accessor not explicitly defined by Waves::Request are delegated to Rack::Request.
-    # Check the Rack documentation for more information.
-    def method_missing( name, *args )
-      ( ( @request.respond_to?( name ) and @request.send( name,*args ) ) or
-        ( args.empty? and ( @request.env[ "HTTP_#{name.to_s.upcase}" ] or 
-          @request.env[ "rack.#{name.to_s.downcase}" ] ) ) or super )
+    # Accessor not explicitly defined by Waves::Request or added dynamically to
+    # traits.waves are delegated to Rack::Request.
+    def method_missing( name, *args, &block )
+      if args.empty?
+        ( ( @request.respond_to?( name ) and @request.send( name ) ) or
+          ( @request.env[ "HTTP_#{name.to_s.upcase}" ] or
+            @request.env[ "rack.#{name.to_s.downcase}" ] ) or
+          ( traits.waves.has_key?( name ) and traits.waves[ name ] ) or super )
+      else
+        @request.respond_to?( name ) and @request.send( name, *args, &block )
+      end
     end
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
@@ -62,6 +67,10 @@ module Waves
     def redirect( path, status = '302' )
       raise Waves::Dispatchers::Redirect.new( path, status )
     end
+        
+    # Access to "params" - aka the query string - as a hash
+    def query ; @request.params ; end
+    alias_method :params, :query
     
     class Accept < Array
       
@@ -99,6 +108,42 @@ module Waves
     def accept ; Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
     def accept_charset ; Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
+
+
+    module Utilities
+      
+      def self.destructure( hash )
+        destructured = {}
+        hash.keys.map { |key| key.split('.') }.each do |keys|
+          destructure_with_array_keys(hash, '', keys, destructured)
+        end
+        destructured
+      end
+
+      private
+
+      def self.destructure_with_array_keys( hash, prefix, keys, destructured )
+        if keys.length == 1
+          key = "#{prefix}#{keys.first}"
+          val = hash[key]
+          destructured[keys.first.intern] = case val
+          when String
+            val.strip
+          when Hash, Array
+            val
+          when Array
+            val
+          when nil
+            raise key.inspect
+          end
+        else
+          destructured = ( destructured[keys.first.intern] ||= {} )
+          new_prefix = "#{prefix}#{keys.shift}."
+          destructure_with_array_keys( hash, new_prefix, keys, destructured )
+        end
+      end
+      
+    end
 
   end
 

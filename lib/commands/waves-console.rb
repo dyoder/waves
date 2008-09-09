@@ -11,6 +11,13 @@ Choice.options do
     cast Symbol
   end
   separator ''  
+  option :startup do
+    short '-s'
+    long '--startup'
+    desc 'Startup file to load.'
+    desc 'Defaults to "startup.rb"'
+  end
+  separator ''
 end
 
 console = Waves::Console.load( Choice.choices )

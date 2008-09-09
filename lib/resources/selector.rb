@@ -10,71 +10,46 @@ module Waves
     
     class Selector
       
+      #
+      # TODO: Path generation stuff has been taken out until we work out the right design.
+      #
+      
       include Functor::Method
       
-      def initialize ; @rules = [] ; @paths = {} ; end
-
+      def initialize ; @rules = [] ; end
+      functor( :direct, Symbol ) { | resource | direct( :to => resource ) }
+      functor( :direct, Array ) { | path | direct( :path => path ) }
+      functor( :direct, Array, Hash ) { | path, options | options[ :path ] = path ; direct( options ) }
+      functor( :direct, Hash ) { | options | @rules << resolver(  options ) }
+      
+      def resolver( options )
+        matcher = Waves::Matchers::Request.new( options )
+        lambda do | request |
+          if matcher.call( request )
+            resource = ( resolve( options[:to] ) or resolve( true ) ).new( request )
+            ( resolve( options[:through] ).new( resource, request ) if options[:through] ) or resource
+          end
+        end
+      end
+      functor( :resolve, Symbol ) { | resource | Waves.main::Resources[ resource ] }
+      functor( :resolve, Class ) { | resource | resource }
+      functor( :resolve, nil ) { false }
+      functor( :resolve, true ) do
+        resolve( request.traits.waves.resource ||
+          request.traits.waves.resources.to_s.singular )
+      end
+      
       def []( request ) ; call( request ); end
       
       # given a request, find the right resource
-      functor( :call, Waves::Request ) do | request |
-        resource, constraint = @rules.find do | resource, constraint |
-          request.blackboard.waves = {}
-          constraint[ request ]
+      def call( request )
+        @rules.each do | rule | 
+          resource = rule.call( request )
+          return resource if resource
         end
-        raise NoMatchingResourceError.new( request ) unless resource
-        params = request.blackboard.waves.path_params
-        if params[:rest]
-          request.blackboard.waves.rest = params[:rest]
-          params.delete(:rest)
-        else
-          request.blackboard.waves.rest = '/'
-        end
-        if params[:resource]
-          resource = params[:resource] if resource == true
-          params.delete(:resource)
-        elsif params[:resources]
-          resource = params[:resources].singular if resource == true
-          params.delete(:resources)
-        end
-        request.blackboard.waves.resource = resolve( resource ).new( request )
+        raise NoMatchingResourceError.new( request )
       end
-      
-      resource = lambda { |x| x.is_a? Class or x.is_a? Symbol or x == true }
-
-      # given a resource and a mount name, find the path prefix
-      functor( :call, resource, nil ) do | resource |
-        @paths[ [ resource, nil ] ]
-      end
-      
-      functor( :call, resource, Symbol ) do | resource, mount |
-        @paths[ [ resource, mount ] ] or @paths[ [ true, mount ] ]
-      end
-      
-      functor( :mount, resource, Array ) do | res, path | 
-        @rules << [ res, Waves::Matchers::Path.new( path ) ]
-        @paths[ [ resolve( res ), nil ] ] = path
-      end
-      
-      functor( :mount, resource, Hash ) do | res, opts | 
-        @rules << [ res, Waves::Matchers::Request.new( opts ) ]
-        @paths[ [ resolve( res ), opts[ :as ] ] ] = opts[ :path ]
-      end
-      
-      functor( :mount, resource, Array, Hash ) do | res, path, opts | 
-        opts[ :path ] = path ; mount( res, opts )
-      end
-      
-      functor( :mount, resource ) do | res |
-        mount( res, {} )
-      end
-      
-      def resolve( resource )
-        return true if resource == true
-        ( ( resource.is_a? Class and resource ) or 
-          Waves.main::Resources[ resource ] )
-      end
-      
+            
       
     end
       

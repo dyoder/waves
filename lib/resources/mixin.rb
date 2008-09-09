@@ -11,27 +11,22 @@ module Waves
           
           include ResponseMixin
           
-          def self.paths
-            @paths ||= const_set( :Paths, Class.new( superclass.respond_to?(:paths) ? 
-              superclass.paths : Waves::Resources::Path ) )
-          end
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
-          def self.with( mount ) ; @mount = mount ; yield ; @mount = nil ; end
+          def self.with( options ) ; @options = options ; yield ; @options = nil ; end
           def self.on( method, path, options = {}, &block )
+            options.merge!( @options ) if @options
             options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-            options[ :mount ] = @mount if @mount
             functor( method, Waves::Matchers::Request.new( options ), &block )
-            self.paths.define_path( path.keys.first, options[ :path ] ) if path.is_a? Hash
           end
           def self.before( path = true, options = {}, &block )
+            options.merge!( @options ) if @options
             options[ :path ] = path
-            options[ :mount ] = @mount if @mount
             functor( :before, Waves::Matchers::Request.new( options ), &block )
           end
           def self.after( path = true, options = {}, &block )
+            options.merge!( @options ) if @options
             options[ :path ] = path
-            options[ :mount ] = @mount if @mount
             functor( :after, Waves::Matchers::Request.new( options ), &block )
           end
           def self.wrap( path = true, options = {}, &block )
@@ -52,11 +47,6 @@ module Waves
           functor( :always ) {}
           functor( :handler, Waves::Dispatchers::NotFoundError ){ |e|  response.status = 404; response.body = 'Not Found!' }
 
-          #functor( :post, Waves::Request ) { nil }
-          #functor( :get, Waves::Request ) { nil }
-          #functor( :put, Waves::Request ) { nil }
-          #functor( :delete, Waves::Request ) { nil }
-
         end
       end
       
@@ -66,7 +56,6 @@ module Waves
       def plural ; self.class.plural ; end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
-      def paths ; self.class.paths ; end
     end
       
     class Base ; include Mixin ; end 

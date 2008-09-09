@@ -8,6 +8,30 @@ module Waves
 
       def self.included( app )
         
+        Waves::ResponseMixin.module_eval do 
+
+          # Returns the name of the model corresponding to this controller by taking the basename
+          # of the module and converting it to snake case. If the model plurality is different than
+          # the controller, this will not, in fact, be the model name.
+          def model_name; self.class.basename.snake_case; end
+
+          # Returns the model corresponding to this controller by naively assuming that 
+          # +model_name+ must be correct. This allows you to write generic controller methods such as:
+          #
+          #   model.find( name )
+          #
+          # to find an instance of a given model. Again, the plurality of the controller and
+          # model must be the same for this to work.
+          def model; app::Models[ model_name.intern ]; end
+          
+          # MVC Params get automatically destructured with the keys as accessors methods.
+          # You can still access the original query by calling request.query
+          alias_method :_query, :query
+          def query ; @query ||= Waves::Request::Query.new( _query ) ; end
+          alias_method :params, :query
+
+        end
+        
         app.auto_create_module( :Models ) do
           include AutoCode
           auto_create_class :Default
