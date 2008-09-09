@@ -1,6 +1,6 @@
 # See the README for an overview.
 module Waves
-  
+
   # A temporary measure until the applications "array" becomes a hash.
   # Currently used to keep track of all loaded Waves applications.
   class Applications < Array
@@ -16,10 +16,10 @@ module Waves
 
   # Deprecated. Do not write new code against this.
   def self.application ; warn "Waves.application is deprecated"; applications.last ; end
-  
+
   # Access the principal Waves application.
   def self.main ; applications.first ; end
-  
+
   # Register a module as a Waves application.
   def self.<< ( app )
     applications << app if Module === app
@@ -34,7 +34,7 @@ module Waves
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
   # A Waves::Runtime takes an inert application module and gives it concrete, pokeable form.
-  # Waves::Server and Waves::Console are types of runtime.  
+  # Waves::Server and Waves::Console are types of runtime.
   class Runtime
 
     class << self; attr_accessor :instance; end
@@ -42,8 +42,12 @@ module Waves
     # Accessor for options passed to the runtime.
     attr_reader :options
 
-    # Create a new Waves runtime instance.
+    # Accessor to set and return an application's cache object.
+    attr_accessor :cache
+
+    # Create a new Waves application instance.
     def initialize( options={} )
+      @cache = nil # initialize the instance variable. Waves.cache is set by whatever cache layer you include.
       @options = options
       Dir.chdir options[:directory] if options[:directory]
       Runtime.instance = self

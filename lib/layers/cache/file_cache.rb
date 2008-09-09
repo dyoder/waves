@@ -46,11 +46,12 @@ module Waves
           end
         end
 
-        def self.included(app)
-          Waves.cache = Waves::Layers::Cache::FileCache.new( Waves.config.cache )
-        end
       end
 
+      def self.included(app)
+        Waves.cache = Waves::Layers::Cache::FileCache.new( Waves.config.cache )
+      end
+      
     end
   end
 end

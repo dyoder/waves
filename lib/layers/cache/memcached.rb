@@ -7,9 +7,7 @@
 # for precise uses.
 
 module Waves
-
   module Layers
-
     module Cache
 
       class Memcached < Waves::Cache
@@ -55,14 +53,12 @@ module Waves
           nil
         end
 
-        def self.included(app)
-          Waves.cache = Waves::Layers::Cache::Memcached.new( Waves.config.cache )
-        end
-        
       end
 
+      def self.included(app)
+        Waves.cache = Waves::Layers::Cache::Memcached.new( Waves.config.cache )
+      end
+        
     end
-
   end
-
 end
