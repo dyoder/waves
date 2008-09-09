@@ -22,17 +22,25 @@ module Waves
     
     def rack_request; @request; end
 
-    # Accessor not explicitly defined by Waves::Request or added dynamically to
+    # Accessors not explicitly defined by Waves::Request or added dynamically to
     # traits.waves are delegated to Rack::Request.
     def method_missing( name, *args, &block )
       if args.empty?
         ( ( @request.respond_to?( name ) and @request.send( name ) ) or
-          ( @request.env[ "HTTP_#{name.to_s.upcase}" ] or
-            @request.env[ "rack.#{name.to_s.downcase}" ] ) or
-          ( traits.waves.has_key?( name ) and traits.waves[ name ] ) or super )
+          ( http_variable( name ) or rack_variable( name ) ) or
+          ( traits.waves.has_key?( name ) and traits.waves[ name ] ) or 
+          super )
       else
         @request.respond_to?( name ) and @request.send( name, *args, &block )
       end
+    end
+    
+    def rack_variable(name)
+      @request.env["rack.#{name.to_s.downcase}"]
+    end
+    
+    def http_variable(name)
+      @request.env[ "HTTP_#{name.to_s.upcase}" ]
     end
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
@@ -77,7 +85,6 @@ module Waves
       def =~(arg) ; self.include? arg ; end
       def ===(arg) ; self.include? arg ; end
       
-      # try the normal include?, then if the arg is a Regexp, see if anything matches
       def include?(arg)
         return arg.any? { |pat| self.include?( pat ) } if arg.is_a? Array
         arg = arg.to_s.split('/')

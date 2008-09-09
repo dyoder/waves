@@ -35,10 +35,10 @@ module Waves
 
     class << self; attr_accessor :instance; end
 
-    # Accessor for options passed to the application.
+    # Accessor for options passed to the runtime.
     attr_reader :options
 
-    # Create a new Waves application instance.
+    # Create a new Waves runtime instance.
     def initialize( options={} )
       @options = options
       Dir.chdir options[:directory] if options[:directory]
@@ -48,7 +48,7 @@ module Waves
 
     def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
-    # The 'mode' of the application determines which configuration it will run under.
+    # The 'mode' of the runtime determines which configuration it will run under.
     def mode ; @mode ||= @options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
