@@ -3,7 +3,7 @@
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
-UTILITIES = "#{File.dirname(__FILE__)}/../../lib/utilities"
+UTILITIES = "#{File.dirname(__FILE__)}/../../lib/ext"
 
 require "#{UTILITIES}/module"
 require "#{UTILITIES}/inflect"
@@ -28,7 +28,7 @@ describe "Waves::Utilities::Module" do
   
   it "defines methods for reaching the root constant" do
     Eenie::Meenie::Miney.rootname.should == "Eenie"
-    Eenie::Meenie::Miney.root_constant.should == Eenie
+    Eenie::Meenie::Miney.root.should == Eenie
   end
   
   it "defines [] for easy access to namespaced constants" do
