@@ -6,6 +6,10 @@ module Waves
   class Applications < Array
     def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
   end
+  
+  def self.config; Waves.main::Configurations[ mode ]; end
+  
+  def self.mode; ENV['mode'] || :development ; end
 
   # The list of all loaded applications
   def self.applications ; @applications ||= Applications.new ; end
@@ -49,13 +53,13 @@ module Waves
     def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
     # The 'mode' of the runtime determines which configuration it will run under.
-    def mode ; @mode ||= @options[:mode]||:development ; end
+    def mode ; Waves.mode ; end
     
     # Returns true if debug was set to true in the current configuration.
     def debug? ; config.debug ; end
 
     # Returns the current configuration.
-    def config ; Waves.main::Configurations[ mode ] ; end
+    def config ; Waves.config ; end
 
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end
