@@ -8,6 +8,18 @@ module Waves
 
       def self.included( app )
         
+        Waves::Resources::Mixin.module_eval do
+            
+          def controller( method = nil, *args, &block )
+            @controller ||= app::Controllers[ singular ].process( @request ) { self }
+          end
+
+          def view( method = nil, assigns = nil )
+            @view ||= app::Views[ singular ].process( @request ) { self }
+          end
+        
+        end
+        
         Waves::ResponseMixin.module_eval do 
 
           # Returns the name of the model corresponding to this controller by taking the basename
@@ -26,8 +38,10 @@ module Waves
           
           # MVC Params get automatically destructured with the keys as accessors methods.
           # You can still access the original query by calling request.query
-          def query ; @query ||= Waves::Request::Object.new( 
+          def query
+            @query ||= Waves::Request::Query.new( 
               Waves::Request::Utilities.destructure( request.query ) )
+          end
           alias_method :params, :query
 
         end
@@ -76,17 +90,6 @@ module Waves
         app.auto_eval :Resources do
           auto_create_class :Default, Waves::Resources::Base
           auto_load :Default, :directories => [ :resources ]
-          auto_eval :Default do
-            
-            def controller( method = nil, *args, &block )
-              @controller ||= app::Controllers[ singular ].process( @request ) { self }
-            end
-
-            def view( method = nil, assigns = nil )
-              @view ||= app::Views[ singular ].process( @request ) { self }
-            end
-            
-          end     
           auto_create_class( true, app::Resources::Default )
           auto_load( true, :directories => [ :resources ] )
         end

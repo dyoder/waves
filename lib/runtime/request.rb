@@ -29,7 +29,7 @@ module Waves
         ( ( @request.respond_to?( name ) and @request.send( name ) ) or
           ( @request.env[ "HTTP_#{name.to_s.upcase}" ] or
             @request.env[ "rack.#{name.to_s.downcase}" ] ) or
-          ( traits.waves.has_key?( name ) and traits.waves[ name ] ) or super )
+          ( traits.has_key?( name ) ? traits[ name ] : super ) )
       else
         @request.respond_to?( name ) and @request.send( name, *args, &block )
       end
@@ -70,7 +70,6 @@ module Waves
         
     # Access to "params" - aka the query string - as a hash
     def query ; @request.params ; end
-    alias_method :params, :query
     
     class Accept < Array
       

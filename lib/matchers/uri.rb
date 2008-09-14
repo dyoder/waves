@@ -9,7 +9,9 @@ module Waves
         @constraints = { :server => options[ :server ], :scheme => options[ :scheme ] }
       end
     
-      def call( request ) ; @path.call( request ) and test( request ) ; end
+      def call( request )
+        @path.call( request ) if test( request )
+      end
       
     end
     

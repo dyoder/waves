@@ -12,8 +12,13 @@ module Waves
 
     # Access to the query string as a object where the keys are accessors
     # You can still access the original query as request.query
-    def query ; @query ||= Waves::Request::Query.new( request.query ) ; end
-    alias_method :params, :query
+    def query ; @query ||= Waves::Request::Query.new( request.query ) ; end    
+    
+    # Elements captured the path
+    def captured ; @captured ||= request.traits.waves.captured ; end
+    
+    # Both the query and capture merged together
+    def params ; @params ||= query.merge( captured ) ; end
 
     %w( session path url domain not_found blackboard ).each do | m |
       define_method( m ) { request.send( m ) }

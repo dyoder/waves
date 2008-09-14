@@ -27,7 +27,8 @@ require 'benchmark'
 # require 'memcache'
 require 'base64'
 
-gem 'dyoder-filebase'
+# gem 'dyoder-filebase'
+$:.unshift('../filebase/lib')
 require 'filebase'
 require 'filebase/model'
 
@@ -63,6 +64,7 @@ require 'matchers/accepts'
 require 'matchers/content_type'
 require 'matchers/path'
 require 'matchers/query'
+require 'matchers/traits'
 require 'matchers/uri'
 require 'matchers/request'
 require 'resources/path'

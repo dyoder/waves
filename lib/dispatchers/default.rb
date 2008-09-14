@@ -34,6 +34,7 @@ module Waves
         request.response.content_type = request.accept.default
         # grab the appropriate resource from those declared in the configuration, based on the request
         resource = Waves.config.resources[ request ]
+        Waves::Logger.debug  "Directing request to #{resource.class.name}"
         begin
           # invoke the request method, wrapped by the before and after methods
           resource.before

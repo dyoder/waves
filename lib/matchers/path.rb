@@ -8,71 +8,51 @@ module Waves
     
     class Path < Base
       
-      include Functor::Method
-      
       # Takes an array of pattern elements ... coming soon, support for formatted strings!
       def initialize( pattern ) ; @pattern = pattern || [{ :rest => true }] ; end
-
-      functor( :call, Waves::Request ) do | request | 
-        request.traits.waves.path_params = call( @pattern, ( request.traits.waves.rest or request.path ) )
-      end
-      # when the pattern array is omitted, match on any path
-      functor( :call, nil, String ) { |pattern, path| {} }
-      # an empty pattern array matches root, i.e. "/"
-      functor( :call, [], '/' ) { | pattern, path | {} }
-      functor( :call, [], Array ) { false }
-      # otherwise break the path down into an array and match arrays
-      functor( :call, Array, '/' ) { | pattern, path | call( pattern, [ '' ] ) }
-      functor( :call, Array, String ) { | pattern, path | call( pattern, path.split('/')[1..-1] ) }
-      # alright, now we are into the general case, matching two arrays ...
-      functor( :call, Array, Array ) do | wants, gots |
-        if wants.length > gots.length
-          # pad gots with nils so they are the same length
-          gots = ( gots + ( [nil] * ( wants.length - gots.length ) ) )
-        elsif wants.length < gots.length
-          # true is a wildcard matcher ...
-          return false unless wants.last == true or 
-            ( wants.last.respond_to? :values and wants.last.values.first == true )
-          # pad wants with last so they are the same length
-          wants = ( wants + ( [ wants.last ] * ( gots.length - wants.length ) ) )
-        end
-        r = {}; r if wants.zip( gots ).all? { |want, got| call( r, want, got ) }
-      end
-      functor( :call, Hash, String, String ) { | r, want, got | got if want == got }
-      functor( :call, Hash, Regexp, String ) { | r, want, got | got if want === got }
-      # a symbol matches pretty much anything and stores it as a param ...
-      functor( :call, Hash, Symbol, String ) do | r, want, got | 
-        r[ want.to_s ] = call( r, /^(\S+)$/, got )
-      end
-      functor( :call, Hash, true, Object ) do | r, key, got | 
-        r[ true ] ||= []; r[ true ] << got
-      end
       
-      # a hash is either a param with a custom regexp or a default value ...
-      functor( :call, Hash, Hash, Object ) do | r, want, got |
-        key, want = want.to_a.first ; call( r, key, want, got )
+      def call( request )
+        capture = {}
+        path = extract_path( request ).reverse
+        capture if @pattern.all? do | want |
+          case want
+          when true then path = []
+          when String then want == path.pop
+          when Symbol then capture[ want ] = path.pop
+          when Regexp then want === path.pop
+          when Hash
+            key, value = want.to_a.first
+            case value
+            when true then
+              unless path.empty?
+                capture[ key ] = path.reverse
+                path = []
+              end
+            when String, Symbol
+              got = path.pop
+              capture[ key ] = got ? got : value.to_s
+            when Regexp then
+              got = path.pop
+              capture[ key ] = got if value === got
+            end
+          end
+        end
       end
-      functor( :call, Hash, Symbol, String, String ) do | r, key, want, got |
-        r[ key.to_s ] = (( got.empty? and want ) or got )
-      end
-      functor( :call, Hash, Symbol, true, nil ) do | r, key, want, got |
-        false
-      end
-      functor( :call, Hash, Symbol, String, nil ) do | r, key, want, got |
-        r[ key.to_s ] = want
-      end
-      functor( :call, Hash, Symbol, true, Object ) do | r, key, want, got |
-        r[ key.to_s ] ||= []; r[ key.to_s ] << got
-      end
-      functor( :call, Hash, Symbol, Regexp, String ) do | r, key, want, got |
-        r[ key.to_s ] = call( r, want, got )
-      end
-      functor( :call, Hash, Symbol, Regexp, nil ) do | r, key, want, got |
-        false
-      end
-      functor( :call, Hash, Object, nil ) { | r, want, got | false }      
-    end
 
+      private 
+
+      # just a little helper method
+      def extract_path( request )
+        path = ( request.traits.waves.rest || request.traits.waves.path )
+        return path if path
+        path = request.path.split('/')
+        path.shift unless path.empty?
+        request.traits.waves.path = path
+      end
+
+    end
+    
+    
   end
 
 end
