@@ -26,7 +26,7 @@ module Waves
  
     def exists?(key)
       fetch(key)
-    rescue WKeyMissing
+    rescue KeyMissing
       return false
     else
       return true
