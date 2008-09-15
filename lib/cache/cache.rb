@@ -5,7 +5,15 @@ module Waves
     # Exception classes
     class KeyMissing < StandardError; end
       
-    attr_accessor :cache
+    # Class method to keep track of layers
+    def self.layers(layer = nil, namespace = nil)
+      @layers ||= {}
+      unless layer.nil?
+        @layers[layer] = namespace
+      else
+        @layers
+      end
+    end
     
     # Universal to all cache objects.
     def [](key)
