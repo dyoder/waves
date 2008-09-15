@@ -186,7 +186,7 @@ module Waves
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
-      engines :cache => 'filecache', :ruby => Kernel.engine
+      engines :cache => :file_cache, :ruby => Kernel.engine
       cache :dir => 'app-local/cache'
     end
   end
