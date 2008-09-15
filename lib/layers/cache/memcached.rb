@@ -21,33 +21,33 @@ module Waves
           
           raise ArgumentError, "need :servers to not be nil" if args[:servers].nil?
           args[:opt] = args.has_key?(:opt) ? args[:opt] : {}
-          @memcached = ::Memcached.new(args[:servers], args[:opt])
+          @cache = ::Memcached.new(args[:servers], args[:opt])
         end
 
         def add(key,value, ttl = 0, marshal = true)
-          @memcached.add(key.to_s,value,ttl,marshal)
+          @cache.add(key.to_s,value,ttl,marshal)
         end
 
         def get(key)
-          @memcached.get(key.to_s)
+          @cache.get(key.to_s)
         rescue ::Memcached::NotFound => e   # In order to keep the MemcachedCache layer compliant with Waves::Cache...
                                         # ...we need to be able to expect that an absent key raises WavesCacheError::KeyMissing
           raise WavesCacheError::KeyMissing, "#{key} doesn't exist, #{e}"
         end
 
         def delete(*keys)
-          keys.each {|key| @memcached.delete(key.to_s) }
+          keys.each {|key| @cache.delete(key.to_s) }
         end
 
         def clear
-          @memcached.flush
+          @cache.flush
         end
 
         alias_method :store, :add   # Override our natural Waves::Cache :store method with Memcache's :add
         alias_method :fetch, :get   # Override our natural Waves::Cache :fetch method with Memcache's :get
 
         def method_missing(*args, &block)
-          @memcached.__send__(*args, &block)
+          @cached.__send__(*args, &block)
         rescue => e
           Waves::Logger.error e.to_s
           nil

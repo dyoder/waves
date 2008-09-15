@@ -24,8 +24,14 @@ module Waves
         end
 
         def delete(*keys)
-          keys.each {|key| File.delete(@directory / key); @keys.delete key }
-          #super *keys
+          keys.each do |key|
+            if @keys.has_key? key
+              File.delete(@directory / key)
+              @keys.delete key
+            else
+              raise KeyMissing, "no key #{key} to delete"
+            end
+          end
         end
 
         def clear
@@ -34,7 +40,7 @@ module Waves
         end
 
         def fetch(key)
-          raise WavesCacheError::KeyMissing, "#{key} doesn't exist" unless File.exists?(@directory / key)
+          raise KeyMissing, "#{key} doesn't exist" unless File.exists?(@directory / key)
           @cache[key] = Marshal.load File.new(@directory / key)
           return @cache[key][:value] if @cache[key][:expires].nil?
 
@@ -42,14 +48,14 @@ module Waves
             @cache[key][:value]
           else
             delete key
-            raise WavesCacheError::KeyMissing, "#{key} expired before access attempt"
+            raise KeyMissing, "#{key} expired before access attempt"
           end
         end
 
       end
 
-      def self.included(app)
-        Waves.cache = Waves::Layers::Cache::FileCache.new( Waves.config.cache )
+      def self.included
+          Waves::Cache.layers :file_cache
       end
       
     end
