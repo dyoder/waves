@@ -2,62 +2,16 @@ module Waves
   module Layers
     module Cache
 
-      class FileCache < Waves::Cache
+      module FileCache
+        
+        def self.included(app)
+          require 'layers/cache/file_cache/ipi'
 
-        def initialize(arg)
-          raise ArgumentError, ":dir needs to not be nil" if arg[:dir].nil?
-          @directory = arg[:dir]
-          @cache = {}
-          @keys = []  # for keeping track of the files we've created without keeping
+          def app.cache ; @cache ||= Waves::Layers::Cache::FileCache::IPI.new( Waves.config.cache ) ; end
+          
         end
-
-        def store(key, value, ttl = {})
-          super(key, value, ttl)
-          @keys << key
-
-          key_file = @directory / key
-
-          file = File.new(key_file,'w')
-          Marshal.dump(@cache[key], file)
-          file.close
-          @cache.delete key
-        end
-
-        def delete(*keys)
-          keys.each do |key|
-            if @keys.include? key
-              File.delete(@directory / key)
-              @keys.delete key
-            else
-              raise KeyMissing, "no key #{key} to delete"
-            end
-          end
-        end
-
-        def clear
-          @keys.each {|key| File.delete(@directory / key) }
-          @keys.clear
-        end
-
-        def fetch(key)
-          raise KeyMissing, "#{key} doesn't exist" unless File.exists?(@directory / key)
-          @cache[key] = Marshal.load File.new(@directory / key)
-          return @cache[key][:value] if @cache[key][:expires].nil?
-
-          if @cache[key][:expires] > Time.now
-            @cache[key][:value]
-          else
-            delete key
-            raise KeyMissing, "#{key} expired before access attempt"
-          end
-        end
-
       end
 
-      def self.included(app)
-          Waves::Cache.layers :file_cache, Waves::Layers::Cache::FileCache
-      end
-      
     end
   end
 end

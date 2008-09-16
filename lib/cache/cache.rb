@@ -1,3 +1,8 @@
+#!waves#########/0.8.0/##\|/4V35###
+# a Waves Cache brought to you by ab5tract
+# :This is the Cache API. Do as you will, so long as you return what I do.
+###################################
+
 module Waves
 
   class Cache
@@ -53,24 +58,6 @@ module Waves
       else
         delete key
         raise KeyMissing, "#{key} expired before access attempt"
-      end
-    end
-
-    @layers = {}    
-    # Class methods.
-    class << self
-      # Class method to keep track of layers
-      def layers(layer = nil, namespace = nil)
-        unless layer.nil?
-          @layers[layer] = namespace
-        else
-          @layers
-        end
-      end
-
-      # Class method to instantiate a new cache in an agnostic fashion
-      def create( engine, config )
-        @layers[engine].new config
       end
     end
 
