@@ -55,7 +55,7 @@ module Waves
 
       end
 
-      def self.included
+      def self.included(app)
         Waves::Cache.layers :memcached, Waves::Layers::Cache::Memcached
       end
         

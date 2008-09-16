@@ -56,11 +56,10 @@ module Waves
       end
     end
 
-    
+    @layers = {}    
     # Class methods.
     class << self
       # Class method to keep track of layers
-      @layers = {}
       def layers(layer = nil, namespace = nil)
         unless layer.nil?
           @layers[layer] = namespace
