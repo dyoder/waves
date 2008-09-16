@@ -7,7 +7,9 @@ module Waves
         def self.included(app)
           require 'layers/cache/file_cache/ipi'
 
-          def app.cache ; @cache ||= Waves::Layers::Cache::FileCache::IPI.new( Waves.config.cache ) ; end
+          unless Waves.cache.respond_to? :exists?
+            Waves.cache = Waves::Layers::Cache::FileCache::IPI.new( Waves.config.cache )
+          end
           
         end
       end
@@ -15,3 +17,4 @@ module Waves
     end
   end
 end
+

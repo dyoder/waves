@@ -5,6 +5,11 @@ include Cache::Helpers
 
 # Helpers for testing cache
 clear_all_apps
+module Waves
+  attr_accessor :cache
+  @cache = {}
+end
+
 module TestApplication
   include AutoCode
   module Configurations
@@ -15,6 +20,8 @@ module TestApplication
   
   include Waves::Layers::Cache::FileCache
 end
+
+
 
 Waves.stub!(:config).and_return(TestApplication::Configurations::Development)
 

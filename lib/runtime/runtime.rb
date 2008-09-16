@@ -48,6 +48,7 @@ module Waves
     # Create a new Waves application instance.
     def initialize( options={} )
       @options = options
+      @cache = {}
       Dir.chdir options[:directory] if options[:directory]
       Runtime.instance = self
       Kernel.load( options[:startup] || 'startup.rb' )
