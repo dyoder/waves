@@ -6,8 +6,13 @@ include Cache::Helpers
 # Helpers for testing cache
 clear_all_apps
 module Waves
-  attr_accessor :cache
-  @cache = {}
+  def cache(init=nil)
+    if init.nil?
+      @cache
+    else
+
+    end
+  end
 end
 
 module TestApplication

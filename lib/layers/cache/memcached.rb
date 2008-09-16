@@ -15,7 +15,7 @@ module Waves
         def self.included
           require 'layers/cache/memcached/ipi'
           
-          unless Waves.cache.respond_to? :exists?
+          unless Waves.cache.nil?
             Waves.cache = Waves::Layers::Cache::Memcached::IPI.new( Waves.config.cache )
           end
           
