@@ -7,14 +7,20 @@ module Waves
       
     # Class method to keep track of layers
     @layers = {}
-    def self.layers(layer = nil, namespace = nil)
+    def Cache.layers(layer = nil, namespace = nil)
       unless layer.nil?
         @layers[layer] = namespace
       else
         @layers
       end
     end
+
+    # Class method to instantiate a new cache in an agnostic fashion
+    def Cache.create( engine, config )
+      @layers[engine].new config
+    end
     
+
     # Universal to all cache objects.
     def [](key)
       fetch(key)
