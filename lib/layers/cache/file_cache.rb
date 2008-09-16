@@ -5,7 +5,7 @@ module Waves
       module FileCache
         
         def self.included(app)
-          require 'layers/cache/file_cache/ipi'
+          require 'layers/cache/file_cache/filecache-ipi'
 
           unless Waves.cache.nil?
             Waves.cache = Waves::Layers::Cache::FileCache::IPI.new( Waves.config.cache )
