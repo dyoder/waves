@@ -6,8 +6,8 @@ module Waves
     class KeyMissing < StandardError; end
       
     # Class method to keep track of layers
+    @layers = {}
     def self.layers(layer = nil, namespace = nil)
-      @layers ||= {}
       unless layer.nil?
         @layers[layer] = namespace
       else
