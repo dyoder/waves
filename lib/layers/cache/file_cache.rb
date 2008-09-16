@@ -25,7 +25,7 @@ module Waves
 
         def delete(*keys)
           keys.each do |key|
-            if @keys.has_key? key
+            if @keys.include? key
               File.delete(@directory / key)
               @keys.delete key
             else
@@ -55,7 +55,7 @@ module Waves
       end
 
       def self.included
-          Waves::Cache.layers :file_cache
+          Waves::Cache.layers :file_cache, Waves::Layers::Cache::FileCache
       end
       
     end

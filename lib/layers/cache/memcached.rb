@@ -32,7 +32,7 @@ module Waves
           @cache.get(key.to_s)
         rescue ::Memcached::NotFound => e   # In order to keep the MemcachedCache layer compliant with Waves::Cache...
                                         # ...we need to be able to expect that an absent key raises WavesCacheError::KeyMissing
-          raise WavesCacheError::KeyMissing, "#{key} doesn't exist, #{e}"
+          raise KeyMissing, "#{key} doesn't exist, #{e}"
         end
 
         def delete(*keys)
@@ -55,8 +55,8 @@ module Waves
 
       end
 
-      def self.included(app)
-        Waves.cache = Waves::Layers::Cache::Memcached.new( Waves.config.cache )
+      def self.included
+        Waves::Cache.layers :memcached, Waves::Layers::Cache::Memcached
       end
         
     end

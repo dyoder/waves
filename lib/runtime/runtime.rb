@@ -47,7 +47,6 @@ module Waves
 
     # Create a new Waves application instance.
     def initialize( options={} )
-      @cache = nil # initialize the instance variable. Waves.cache is set by whatever cache layer you include.
       @options = options
       Dir.chdir options[:directory] if options[:directory]
       Runtime.instance = self
