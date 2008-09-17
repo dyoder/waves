@@ -89,7 +89,7 @@ require 'helpers/built_in'
 require 'renderers/mixin'
 require 'renderers/erubis'
 require 'renderers/markaby'
-require 'renderers/haml'
+#require 'layers/renderers/haml'
 
 
 # waves foundations / layers

@@ -12,11 +12,11 @@ module Waves
 
       module Memcached
         
-        def self.included
-          require 'layers/cache/memcached/ipi'
+        def self.included(app)
+          require 'layers/cache/memcached/memcached-ipi'
           
-          unless Waves.cache.nil?
-            Waves.cache = Waves::Layers::Cache::Memcached::IPI.new( Waves.config.cache )
+          if Waves.cache.nil?
+            Waves.cache = Waves::Cache::Memcached.new( Waves.config.cache )
           end
           
         end
