@@ -16,27 +16,15 @@ module Waves
     
     # Universal to all cache objects.
     def [](key)
-      if Waves.config.synchronize?
-        Waves.synchronize _fetch(key)
-      else
-        _fetch(key)
-      end
+      Waves.synchronize { fetch(key) }
     end
 
     def []=(key,value)
-      if Waves.config.synchronize? 
-        Waves.synchronize _store(key,value)
-      else
-        _store(key,value)
-      end
+      Waves.synchronize { store(key,value ) }
     end
  
     def exists?(key)
-      if Waves.config.synchronize?
-        Waves.synchronize _fetch(key)
-      else
-        _fetch(key)
-      end
+      Waves.synchronize { fetch(key) }
     rescue KeyMissing
       return false
     else
