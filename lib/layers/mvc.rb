@@ -42,6 +42,8 @@ module Waves
             @query ||= Waves::Request::Query.new( 
               Waves::Request::Utilities.destructure( request.query ) )
           end
+          
+          # TODO: I don't think this right. I think params is now the merge of query + captured
           alias_method :params, :query
 
         end
