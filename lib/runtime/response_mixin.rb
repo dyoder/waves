@@ -19,7 +19,9 @@ module Waves
     
     # Both the query and capture merged together
     def params ; @params ||= query.merge( captured ) ; end
-
+    
+    def paths( rname = nil ) ; debugger; request.traits.waves.resource.paths( rname) ; end
+    
     %w( session path url domain not_found blackboard ).each do | m |
       define_method( m ) { request.send( m ) }
     end

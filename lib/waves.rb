@@ -10,7 +10,8 @@ require 'live_console'
 
 require 'autocode'
 
-gem 'dyoder-functor'
+#gem 'dyoder-functor'
+$:.unshift('../functor/lib')
 require 'functor'
 
 # for mimetypes only or when using as default handler
@@ -68,8 +69,9 @@ require 'matchers/traits'
 require 'matchers/uri'
 require 'matchers/request'
 require 'resources/path'
-require 'resources/mixin'
 require 'resources/selector'
+require 'resources/mixin'
+require 'resources/delegate'
 
 # waves mvc support
 require 'controllers/mixin'

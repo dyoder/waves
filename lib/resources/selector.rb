@@ -44,7 +44,7 @@ module Waves
               else
                 
                 # they neither told us what it was, nor was it in the path ...
-                raise NoMatchingResourceError.new( "virtual resource with no capture resource(s)" )
+                raise NoMatchingResourceError.new( request )
               end
             end
             

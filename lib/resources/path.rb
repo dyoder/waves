@@ -2,16 +2,16 @@ module Waves
   
   module Resources
     
-    class Path
+    class Paths
       
       include Functor::Method
       
       # TODO: path generation is broken ...
-      def self.define_path( name, path_array )
-        define_method( name ) { |*args| nil } # generate( path_array, args ) }
-      end
+      # def self.define_path( name, path_array )
+      #  define_method( name ) { |*args| nil } # generate( path_array, args ) }
+      # end
       
-      def initialize( request, resource = nil )
+      def initialize( request )
         # @request = request ; @resource = ( resource or blackboard.waves.resource.basename.snake_case.to_s )
       end
 

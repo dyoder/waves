@@ -9,11 +9,12 @@ module Waves
     class Path < Base
       
       # Takes an array of pattern elements ... coming soon, support for formatted strings!
-      def initialize( pattern ) ; @pattern = pattern || [{ :rest => true }] ; end
+      def initialize( pattern ) ; @pattern = pattern  ; end
       
       def call( request )
-        capture = {}
         path = extract_path( request ).reverse
+        return {} if ( @pattern.nil? or ( path.empty? and @pattern.empty? ) )
+        capture = {}
         capture if @pattern.all? do | want |
           case want
           when true then path = []
