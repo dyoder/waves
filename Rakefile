@@ -1,6 +1,6 @@
 begin
   $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask
-    utilities/string utilities/symbol utilities/kernel date  extensions/all ).each { |dep| require dep }
+    ext/string ext/symbol ext/kernel extensions/all date ).each { |dep| require dep }
 rescue LoadError => e
   if e.message == 'no such file to load -- extensions/all'
     puts "Better do `rake setup` to get all the fancies you're missing"
@@ -24,8 +24,10 @@ gem = Gem::Specification.new do |gem|
       extensions live_console choice daemons functor ).each do |dep|
     gem.add_dependency dep
   end
-  gem.add_dependency('dyoder-autocode', '>= 1.0.0')
-  gem.add_dependency('dyoder-filebase', '>= 0.3.0')
+  gem.add_dependency('rakegen', '>= 0.6.6')
+  gem.add_dependency('sequel', '>= 2.0.0')
+  gem.add_dependency('autocode', '>= 1.0.0')
+  gem.add_dependency('dyoder-filebase', '>= 0.3.1')
   gem.add_dependency('functor', '>= 0.4.2')
 
 

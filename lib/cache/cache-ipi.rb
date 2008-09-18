@@ -6,7 +6,7 @@
 module Waves
 
   module Cache
-    class API
+    class IPI
       # Exception classes
       class KeyMissing < StandardError; end
 

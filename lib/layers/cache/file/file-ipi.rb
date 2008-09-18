@@ -1,7 +1,7 @@
 module Waves
   module Cache
 
-    class File < Waves::Cache::API
+    class File < Waves::Cache::IPI
 
       def initialize(arg)
         raise ArgumentError, ":dir needs to not be nil" if arg[:dir].nil?

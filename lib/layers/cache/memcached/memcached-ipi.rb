@@ -1,7 +1,7 @@
 module Waves
   module Cache
 
-    class Memcached < Waves::Cache::API
+    class Memcached < Waves::Cache::IPI
       require 'memcached'
 
       def initialize(args)
