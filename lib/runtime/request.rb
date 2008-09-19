@@ -27,7 +27,7 @@ module Waves
     def method_missing( name, *args, &block )
       if args.empty?
         ( ( @request.respond_to?( name ) and @request.send( name ) ) or
-          ( http_variable( name ) or rack_variable( name ) ) or super )
+          ( http_variable( name ) or rack_variable( name ) ) or super ) 
       else
         @request.respond_to?( name ) and @request.send( name, *args, &block )
       end

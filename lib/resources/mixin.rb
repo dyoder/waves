@@ -10,24 +10,25 @@ module Waves
         target.module_eval do
           
           include ResponseMixin
-          
+          include Functor::Method
+                    
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
           def self.with( options ) ; @options = options ; yield ; @options = nil ; end
           def self.on( method, path, options = {}, &block )
             options.merge!( @options ) if @options
             options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-            functor( method, Waves::Matchers::Request.new( options ), &block )
+            functor_with_self( method, Waves::Matchers::Resource.new( options ), &block )
           end
           def self.before( path = nil, options = {}, &block )
             options.merge!( @options ) if @options
             options[ :path ] = path
-            functor( :before, Waves::Matchers::Request.new( options ), &block )
+            functor_with_self( :before, Waves::Matchers::Resource.new( options ), &block )
           end
           def self.after( path = nil, options = {}, &block )
             options.merge!( @options ) if @options
             options[ :path ] = path
-            functor( :after, Waves::Matchers::Request.new( options ), &block )
+            functor_with_self( :after, Waves::Matchers::Resource.new( options ), &block )
           end
           def self.wrap( path = nil, options = {}, &block )
             before( path, options, &block )
@@ -35,16 +36,7 @@ module Waves
           end
           def self.handler( exception, &block ) ; functor( :handler, exception, &block ) ; end
           def self.always( &block ) ; define_method( :always, &block ) ; end
-
-          include Functor::Method
           
-          functor( :post ) { post( request ) }
-          functor( :get ) { get( request ) }
-          functor( :put ) { put( request ) }
-          functor( :delete ) { delete( request ) }
-          functor( :before ) { before( request ) }
-          functor( :after ) { after( request ) }
-                    
           before {} ; after {} ; always {}
           
           handler( Waves::Dispatchers::NotFoundError ) do | e |

@@ -13,7 +13,7 @@ module Waves
       
       def call( request )
         path = extract_path( request ).reverse
-        return {} if ( @pattern.nil? or ( path.empty? and @pattern.empty? ) )
+        return {} if ( @pattern.nil? or @pattern == false or ( path.empty? and @pattern.empty? ) )
         capture = {}
         capture if @pattern.all? do | want |
           case want
