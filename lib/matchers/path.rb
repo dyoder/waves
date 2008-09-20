@@ -12,6 +12,7 @@ module Waves
       def initialize( pattern ) ; @pattern = pattern  ; end
       
       def call( request )
+        return {} if @pattern == true
         path = extract_path( request ).reverse
         return {} if ( @pattern.nil? or @pattern == false or ( path.empty? and @pattern.empty? ) )
         capture = {}
@@ -44,7 +45,7 @@ module Waves
 
       # just a little helper method
       def extract_path( request )
-        path = ( request.traits.waves.rest || request.traits.waves.path )
+        path = request.traits.waves.path
         return path if path
         path = request.path.split('/')
         path.shift unless path.empty?

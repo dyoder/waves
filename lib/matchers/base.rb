@@ -11,7 +11,7 @@ module Waves
       # used to provide consisting matching logic across all matchers
       def test( request )
         constraints.all? do | key, val |
-          if val.nil?
+          if val.nil? or val == true
             true
           else
             if val.respond_to? :call

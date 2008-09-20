@@ -142,7 +142,7 @@ module Waves
     #   reloadable []
     class Default < Base
 
-      %w( host port ports log reloadable database session debug root synchronize? dependencies cache ).
+      %w( host port ports log reloadable resource database session debug root synchronize? dependencies cache ).
       each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
@@ -174,12 +174,6 @@ module Waves
         end
       end
       
-      def self.resources( &block )
-        return self['resource'] unless block
-        self['resource'] = selector = Waves::Resources::Selector.new
-        selector.instance_eval( &block )
-      end
-
       debug true
       synchronize? true
       session :duration => 30.minutes, :path => '/tmp/sessions'

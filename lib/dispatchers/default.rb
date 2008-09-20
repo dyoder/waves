@@ -33,23 +33,21 @@ module Waves
         # set a default content type -- this can be overridden by the resource
         request.response.content_type = request.accept.default
         # grab the appropriate resource from those declared in the configuration, based on the request
-        resource = Waves.config.resources[ request ]
-        Waves::Logger.debug  "Directing request to #{resource.class.name}"
+        resource = Waves.config.resource.new( request )
         begin
           # invoke the request method, wrapped by the before and after methods
           resource.before
-          content = resource.send( request.method )
+          request.response.body = resource.send( request.method )
           resource.after
         rescue Exception => e
           # handle any exceptions using the resource handlers, if any
           Waves::Logger.info e.to_s
-          resource.handler( e ) rescue raise e 
+          ( request.response.body = resource.handler( e ) ) rescue raise e 
         ensure
           # no matter what happens, also run the resource's always method
           resource.always
         end
         # okay, we've handled the request, now write the response unless it was already done
-        request.response.write( content.to_s )
         request.response.finish
       end
 
