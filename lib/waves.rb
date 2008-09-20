@@ -8,15 +8,6 @@ require 'rack'
 require 'daemons'
 require 'live_console'
 
-require 'autocode'
-
-#gem 'dyoder-functor'
-$:.unshift('../functor/lib')
-require 'functor'
-
-# for mimetypes only or when using as default handler
-require 'mongrel'
-
 # a bunch of handy stuff
 require 'extensions/io'
 require 'extensions/symbol' unless Symbol.instance_methods.include? 'to_proc'
@@ -28,10 +19,16 @@ require 'benchmark'
 require 'base64'
 require 'cache/cache'
 
-# gem 'dyoder-filebase'
-$:.unshift('../filebase/lib')
+require 'autocode'
+gem 'dyoder-functor', '>= 0.5.0'
+require 'functor'
+gem 'dyoder-filebase', '>= 0.3.4'
 require 'filebase'
 require 'filebase/model'
+
+# TODO: we should not be including this just for mime-types
+# should get dynamically required when we know that is the handler
+require 'mongrel'
 
 # selected project-specific extensions
 require 'ext/module'
