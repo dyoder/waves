@@ -107,7 +107,6 @@ module Waves
 
     end
 
-    # I'm sorry ... :)
     class Base ; include Mixin ; end
 
   end

@@ -15,20 +15,34 @@ module Waves
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
           def self.with( options ) ; @options = options ; yield ; @options = nil ; end
-          def self.on( method, path, options = {}, &block )
-            options.merge!( @options ) if @options
-            options[ :path ] = ( path.is_a? Hash and path.values.first ) or path
-            functor_with_self( method, Waves::Matchers::Resource.new( options ), &block )
+          def self.on( method, path = true, options = nil, &block )
+            if path.is_a? Hash
+              generator = path.keys.first
+              path = path.values.first
+            end
+            if options
+              options[ :path ] = path
+            else
+              options = { :path => path }
+            end
+            options = @options.merge( options ) if @options
+            matcher = Waves::Matchers::Resource.new( options )
+            methods = case method
+              when nil then nil
+              when true then [ :post, :get, :put, :delete ]
+              when Array then method
+              else [ method ]
+            end
+            methods.each do | method |
+              functor_with_self( method, matcher, &block )
+            end
+            # define generator method
           end
           def self.before( path = nil, options = {}, &block )
-            options.merge!( @options ) if @options
-            options[ :path ] = path
-            functor_with_self( :before, Waves::Matchers::Resource.new( options ), &block )
+            on( :before, path, options, &block )
           end
           def self.after( path = nil, options = {}, &block )
-            options.merge!( @options ) if @options
-            options[ :path ] = path
-            functor_with_self( :after, Waves::Matchers::Resource.new( options ), &block )
+            on( :after, path, options, &block )
           end
           def self.wrap( path = nil, options = {}, &block )
             before( path, options, &block )
@@ -38,9 +52,13 @@ module Waves
           def self.always( &block ) ; define_method( :always, &block ) ; end
           
           before {} ; after {} ; always {}
+          %w( post get put delete ).each do | method |
+            on( method ) { not_found }
+          end
           
           handler( Waves::Dispatchers::NotFoundError ) do | e |
-            response.status = 404; response.body = 'Not Found!'
+            response.status = 404; response.content_type = 'text/html'
+            Waves::Views::Errors.process( request ) { not_found_404 }
           end
 
         end
@@ -56,6 +74,15 @@ module Waves
         else
           self.class::Paths.new( request )
         end
+      end
+      def to( resource )
+        resource = case resource
+        when Base
+          resource
+        when Symbol, String
+          Waves.main::Resources[ resource ]
+        end
+        resource.new( request ).send( request.method )
       end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end

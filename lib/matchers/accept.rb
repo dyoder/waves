@@ -2,7 +2,7 @@ module Waves
 
   module Matchers
 
-    class Accepts < Base
+    class Accept < Base
       
       def initialize( options )
         @constraints = {
