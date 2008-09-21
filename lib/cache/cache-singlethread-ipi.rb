@@ -7,12 +7,15 @@
 module Waves
 
   module Cache
-    # Exception classes
-    class KeyMissing < StandardError; end
-    class KeyExpired < StandardError; end
-
+      # Exception classes
+      class KeyMissing < StandardError; end
+      class KeyExpired < StandardError; end
+    def self.new
+      Waves::Cache::IPI.new
+    end
     
     class IPI
+
 
       def initialize
         #Waves.synchronize { @cache = {} }
@@ -41,24 +44,21 @@ module Waves
       # Replicate the same capabilities in any descendent of Waves::Cache for API compatibility.
 
       def store(key, value, ttl = {})
-        Waves.synchronize do
         @cache[key] = {
           :expires => ttl.kind_of?(Numeric) ? Time.now + ttl : nil,
           :value => value
         }
-        end
       end
 
       def delete(*keys)
-       Waves.synchronize { keys.each {|key| @cache.delete(key) }}
+       keys.each {|key| @cache.delete(key) }
       end
 
       def clear
-        Waves.synchronize { @cache.clear }
+        @cache.clear 
       end
 
       def fetch(key)    # :TODO: Should probably take a splat
-        Waves.synchronize do
 
           raise KeyMissing, "#{key} doesn't exist in cache" if @cache.has_key?(key) == false
           return @cache[key][:value] if @cache[key][:expires].nil?
@@ -70,7 +70,6 @@ module Waves
             raise KeyExpired, "#{key} expired before access attempt"
           end
 
-        end
       end
 
     end
