@@ -14,28 +14,28 @@ module Waves
       def call( request )
         # TODO: refactor terminating conditions - these work but don't make sense
         return {} if @pattern == true
-        path = extract_path( request )
+        path = extract_path( request ).reverse
         return {} if ( @pattern.nil? or @pattern == false or ( path.empty? and @pattern.empty? ) )
         capture = {}
         match =  @pattern.all? do | want |
           case want
           when true then path = []
-          when String then want == path.shift
-          when Symbol then capture[ want ] = path.shift
-          when Regexp then want === path.shift
+          when String then want == path.pop
+          when Symbol then capture[ want ] = path.pop
+          when Regexp then want === path.pop
           when Hash
             key, value = want.to_a.first
             case value
             when true then
               unless path.empty?
-                capture[ key ] = path
+                capture[ key ] = path.reverse
                 path = []
               end
             when String, Symbol
-              got = path.shift
+              got = path.pop
               capture[ key ] = got ? got : value.to_s
             when Regexp then
-              got = path.shift
+              got = path.pop
               capture[ key ] = got if value === got
             end
           end
