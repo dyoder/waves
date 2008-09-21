@@ -17,7 +17,7 @@ module Waves
         path = extract_path( request ).reverse
         return {} if ( @pattern.nil? or @pattern == false or ( path.empty? and @pattern.empty? ) )
         capture = {}
-        capture if @pattern.all? do | want |
+        match =  @pattern.all? do | want |
           case want
           when true then path = []
           when String then want == path.pop
@@ -40,6 +40,7 @@ module Waves
             end
           end
         end
+        capture if match && path.empty?
       end
 
       private 

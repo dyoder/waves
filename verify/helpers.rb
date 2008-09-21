@@ -56,8 +56,8 @@ module Waves
         @request ||= ::Rack::MockRequest.new( ::Waves::Dispatchers::Default.new )
       end
 
-      def waves_request
-        Waves::Request.new(Rack::MockRequest.env_for("/"))
+      def waves_request(*args)
+        Waves::Request.new(Rack::MockRequest.env_for(*args))
       end
 
       def env_for(uri="/", options={})
