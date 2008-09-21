@@ -12,6 +12,7 @@ module Waves
       def initialize( pattern ) ; @pattern = pattern  ; end
       
       def call( request )
+        # TODO: refactor terminating conditions - these work but don't make sense
         return {} if @pattern == true
         path = extract_path( request ).reverse
         return {} if ( @pattern.nil? or @pattern == false or ( path.empty? and @pattern.empty? ) )

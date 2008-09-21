@@ -9,19 +9,20 @@ module Waves
     
     # Access the response.
     def response; request.response; end
+    
+    def resource ; traits.waves.resource ; end
 
+    def traits ; request.traits ; end
+    
     # Access to the query string as a object where the keys are accessors
     # You can still access the original query as request.query
     def query ; @query ||= Waves::Request::Query.new( request.query ) ; end    
     
     # Elements captured the path
-    def captured ; @captured ||= request.traits.waves.captured ; end
+    def captured ; @captured ||= traits.waves.captured ; end
     
     # Both the query and capture merged together
     def params ; @params ||= query.merge( captured ) ; end
-    
-    # def paths( rname = nil ) ; request.traits.waves.resource.paths( rname) ; end
-    def paths( rname = nil ) ; Waves::Resources::Paths.new( request ) ; end
     
     %w( session path url domain not_found blackboard ).each do | m |
       define_method( m ) { request.send( m ) }
@@ -34,6 +35,9 @@ module Waves
     # access stuff from an app
     def app_name ; self.class.rootname.snake_case.to_sym ; end
     def app ; eval(  "::#{app_name.to_s.camel_case}" ) ; end    
+    def paths( rname = nil )
+      ( rname.nil? ? resource.class.paths : app::Resources[ rname ].paths ).new( request )
+    end
     
   end
 
