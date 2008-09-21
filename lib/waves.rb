@@ -66,9 +66,8 @@ require 'matchers/traits'
 require 'matchers/uri'
 require 'matchers/request'
 require 'matchers/resource'
-require 'resources/path'
+require 'resources/paths'
 require 'resources/mixin'
-require 'resources/delegate'
 
 # waves mvc support
 require 'controllers/mixin'

@@ -11,7 +11,19 @@ module Waves
           
           include ResponseMixin
           include Functor::Method
-                    
+          
+          # TODO: why the fuck is @resource nil here?
+          def self.paths
+            unless @paths
+              resource = self
+              @paths = Class.new( superclass.respond_to?( :paths ) ? superclass.paths : Waves::Resources::Paths ) do
+                @resource = resource
+                def self.resource ; @resource ; end
+              end
+            else
+              @paths
+            end
+          end
           def self.singular ; basename.downcase ; end
           def self.plural ; basename.downcase.plural ; end
           def self.with( options ) ; @options = options ; yield ; @options = nil ; end
@@ -36,7 +48,9 @@ module Waves
             methods.each do | method |
               functor_with_self( method, matcher, &block )
             end
-            # define generator method
+            paths.module_eval { 
+              define_method( generator ) { | *args | generate( path, args ) }
+            } if generator
           end
           def self.before( path = nil, options = {}, &block )
             on( :before, path, options, &block )
@@ -68,13 +82,6 @@ module Waves
       def initialize( request ); @request = request ; end
       def singular ; self.class.singular ; end
       def plural ; self.class.plural ; end
-      def paths( rname = nil )
-        if rname
-          Waves.main::Resources[ rname ]::Paths.new( request )
-        else
-          self.class::Paths.new( request )
-        end
-      end
       def to( resource )
         resource = case resource
         when Base
@@ -82,7 +89,7 @@ module Waves
         when Symbol, String
           Waves.main::Resources[ resource ]
         end
-        resource.new( request ).send( request.method )
+        traits.waves.resource = resource.new( request ).send( request.method )
       end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
