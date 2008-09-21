@@ -7,15 +7,16 @@
 module Waves
 
   module Cache
-      # Exception classes
-      class KeyMissing < StandardError; end
-      class KeyExpired < StandardError; end
+    # Exception classes
+    class KeyMissing < StandardError; end
+    class KeyExpired < StandardError; end
+   
     def self.new
       Waves::Cache::IPI.new
     end
-    
-    class IPI
 
+    # Initial iPi : @cache is just a hash.
+    class IPI
 
       def initialize
         #Waves.synchronize { @cache = {} }
