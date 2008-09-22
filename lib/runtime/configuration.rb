@@ -174,12 +174,8 @@ module Waves
         end
       end
       
-<<<<<<< HEAD:lib/runtime/configuration.rb
-      debug true ; synchronize? true
-=======
       debug true
       synchronize? true
->>>>>>> c94241035285a310310cb5bc5079438a33cd41ae:lib/runtime/configuration.rb
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
