@@ -142,8 +142,8 @@ module Waves
     #   reloadable []
     class Default < Base
 
-      %w( host port ports log reloadable resource database session debug root synchronize? dependencies ).
-      each { |name| attribute(name) }
+      %w( host port ports log reloadable resource database session 
+        debug root synchronize? dependencies cache ).each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
       # that need to be passed to the handler's #run method. 
@@ -174,11 +174,13 @@ module Waves
         end
       end
       
-      debug true ; synchronize? true
+      debug true
+      synchronize? true
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
+      cache :dir => 'app-local/cache'
     end
   end
 end

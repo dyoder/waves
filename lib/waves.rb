@@ -16,7 +16,6 @@ require 'metaid'
 require 'forwardable'
 require 'date'
 require 'benchmark'
-# require 'memcache'
 require 'base64'
 
 require 'autocode'
@@ -69,6 +68,14 @@ require 'matchers/resource'
 require 'resources/paths'
 require 'resources/mixin'
 
+
+# TODO: if these are truly layers, they should not be included here
+# this includes the MVC support, the helpers, and the renderers
+# ... the inflector stuff should probably be in core, since the resources
+# actually depends on it ... otherwise the singular / plural stuff
+# should be removed and made a part of the inflector layer
+
+# waves foundations / layers
 # waves mvc support
 require 'controllers/mixin'
 require 'views/mixin'
@@ -79,17 +86,18 @@ require 'helpers/formatting'
 require 'helpers/model'
 require 'helpers/view'
 require 'helpers/built_in'
+
+
 require 'renderers/mixin'
 require 'renderers/erubis'
 require 'renderers/markaby'
-require 'renderers/haml'
+#require 'layers/renderers/haml'
 
+require 'foundations/default'
+require 'foundations/simple'
 
-# waves foundations / layers
 require 'layers/simple'
 require 'layers/simple_errors'
-require 'foundations/simple'
 require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
-require 'foundations/default'
