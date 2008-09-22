@@ -42,7 +42,7 @@ when 'none'
 else
   puts "I'm sorry, '#{orm}' is not listed as an available option.\nTry: \t"
   available_orms.each { |x| puts "\t\t#{x}" }
-  raise
+  raise ArgumentError
 end
 
 app_path = ARGV[0]

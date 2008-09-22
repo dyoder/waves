@@ -16,8 +16,8 @@ require 'metaid'
 require 'forwardable'
 require 'date'
 require 'benchmark'
-# require 'memcache'
 require 'base64'
+require 'cache/cache'
 
 require 'autocode'
 gem 'dyoder-functor', '>= 0.5.0'
@@ -82,14 +82,16 @@ require 'helpers/built_in'
 require 'renderers/mixin'
 require 'renderers/erubis'
 require 'renderers/markaby'
-require 'renderers/haml'
+#require 'layers/renderers/haml'
 
 
 # waves foundations / layers
+require 'foundations/default'
+require 'foundations/simple'
+
 require 'layers/simple'
 require 'layers/simple_errors'
-require 'foundations/simple'
 require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
-require 'foundations/default'
+
