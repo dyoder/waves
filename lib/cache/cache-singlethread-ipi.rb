@@ -33,14 +33,12 @@ module Waves
       end
 
       def exists?(key)
-        fetch(key)
-      rescue KeyMissing
-        return false
-      else
-        return true
+        true if fetch(key)
+      rescue KeyMissing, KeyExpired
+        false
       end
 
-      alias_method :exist?, :exists?
+      alias :exist? :exists?
 
       # Replicate the same capabilities in any descendent of Waves::Cache for API compatibility.
 
@@ -61,15 +59,15 @@ module Waves
 
       def fetch(key)    # :TODO: Should probably take a splat
 
-          raise KeyMissing, "#{key} doesn't exist in cache" if @cache.has_key?(key) == false
-          return @cache[key][:value] if @cache[key][:expires].nil?
+        raise KeyMissing, "#{key} doesn't exist in cache" if @cache.has_key?(key) == false
+        return @cache[key][:value] if @cache[key][:expires].nil?
 
-          if @cache[key][:expires] > Time.now
-            @cache[key][:value]
-          else
-            delete key
-            raise KeyExpired, "#{key} expired before access attempt"
-          end
+        if @cache[key][:expires] > Time.now
+          @cache[key][:value]
+        else
+          delete key
+          raise KeyExpired, "#{key} expired before access attempt"
+        end
 
       end
 
