@@ -27,8 +27,8 @@ gem = Gem::Specification.new do |gem|
   gem.add_dependency('rakegen', '>= 0.6.6')
   gem.add_dependency('sequel', '>= 2.0.0')
   gem.add_dependency('autocode', '>= 1.0.0')
-  gem.add_dependency('dyoder-filebase', '>= 0.3.1')
-  gem.add_dependency('functor', '>= 0.4.2')
+  gem.add_dependency('dyoder-filebase', '>= 0.3.4')
+  gem.add_dependency('dyoder-functor', '>= 0.5.0')
 
 
   # Unfortunately there are some gems that don't work in JRuby, so...
