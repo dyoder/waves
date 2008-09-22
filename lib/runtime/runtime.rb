@@ -68,9 +68,6 @@ module Waves
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end
 
-    # Returns the cache set for the current configuration
-    def cache ; config.cache ; end
-    
     # Start and / or access the Waves::Logger instance.
     def log ; @log ||= Waves::Logger.start ; end
 
