@@ -18,7 +18,7 @@ module Waves
       def generate( template, args )
         return "/#{ args * '/' }" unless template.is_a?( Array ) and not template.empty?
         path = []
-        ( path * '/' ) if template.all? do | want |
+        ( "/#{ path * '/' }" ) if template.all? do | want |
           case want
           when true then path += args
           when String then path << want

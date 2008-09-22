@@ -43,9 +43,6 @@ module Waves
               Waves::Request::Utilities.destructure( request.query ) )
           end
           
-          # TODO: I don't think this right. I think params is now the merge of query + captured
-          alias_method :params, :query
-
         end
         
         app.auto_create_module( :Models ) do

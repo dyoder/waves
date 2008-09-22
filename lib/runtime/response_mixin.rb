@@ -22,9 +22,9 @@ module Waves
     def captured ; @captured ||= traits.waves.captured ; end
     
     # Both the query and capture merged together
-    def params ; @params ||= query.merge( captured ) ; end
+    def params ; @params ||= Waves::Request::Query.new( request.query.merge( captured.to_h ) ) ; end
     
-    %w( session path url domain not_found blackboard ).each do | m |
+    %w( session path url domain not_found ).each do | m |
       define_method( m ) { request.send( m ) }
     end
     
