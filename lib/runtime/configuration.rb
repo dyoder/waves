@@ -180,7 +180,7 @@ module Waves
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
-      cache :dir => 'local/cache'
+      cache :dir => 'cache'
     end
   end
 end
