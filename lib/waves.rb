@@ -54,6 +54,7 @@ require 'runtime/response'
 require 'runtime/response_mixin'
 require 'runtime/session'
 require 'runtime/configuration'
+require 'cache/cache-ipi'
 
 # waves URI mapping
 require 'matchers/base'
