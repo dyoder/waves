@@ -12,12 +12,12 @@ module Waves
         @cache = ::Memcached.new(args[:servers], args[:opt])
       end
 
-      def add(key,value, ttl = 0, marshal = true)
-        @cache.add(key.to_s,value,ttl,marshal)
+      def store(key,value, ttl = 0, marshal = true)
+        Waves.synchronize { cache = @cache.clone;  cache.add(key.to_s,value,ttl,marshal);  cache.destroy }
       end
 
-      def get(key)
-        @cache.get(key.to_s)
+      def fetch(key)
+        Waves.synchronize { cache = @cache.clone;  cache.get(key.to_s);  cache.destroy }
       rescue ::Memcached::NotFound => e
         # In order to keep the Memcached layer compliant with Waves::Cache...
         # ...we need to be able to expect that an absent key raises KeyMissing
@@ -25,21 +25,11 @@ module Waves
       end
 
       def delete(*keys)
-        keys.each {|key| @cache.delete(key.to_s) }
+        keys.each {|key| Waves.synchronize { cache = @cache.clone; cache.delete(key.to_s) };  cache.destroy }
       end
 
       def clear
-        @cache.flush
-      end
-
-      alias_method :store, :add   # Override our natural Waves::Cache :store method with Memcache's :add
-      alias_method :fetch, :get   # Override our natural Waves::Cache :fetch method with Memcache's :get
-
-      def method_missing(*args, &block)
-        @cached.__send__(*args, &block)
-      rescue => e
-        Waves::Logger.error e.to_s
-        nil
+        Waves.synchronize { cache = @cache.clone;  cache.flush;  cache.destroy }
       end
 
     end
