@@ -1,8 +1,6 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
 
-#Waves::Console.load( :mode => 'development', :startup => "#{File.dirname(__FILE__)}/../../app/startup.rb")
-
 module Waves
   def synchronize; @mutex ||= Mutex.new; end
 end

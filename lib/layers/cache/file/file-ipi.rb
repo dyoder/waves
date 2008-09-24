@@ -26,8 +26,8 @@ module Waves
       end
 
       def delete(*keys)
-        keys.each do |key|
-          Waves.synchronize do
+        Waves.synchronize do
+          keys.each do |key|
             if @keys.include? key
               ::File.delete(@directory / key)
               @keys.delete key
@@ -48,13 +48,16 @@ module Waves
       def fetch(key)
         Waves.synchronize do
 
-          raise KeyMissing unless item = ::Marshal.load(::File.new(@directory / key))
+          item = ::Marshal.load(::File.new(@directory / key))
 
           if item[:expires] and item[:expires] < Time.now
-            (::File.delete(@directory / key) and @keys.delete key) and raise KeyExpired
+            ::File.delete(@directory / key)
+            @keys.delete key and raise KeyExpired
           end
           item[:value]
         end
+      rescue Errno::ENOENT
+        raise KeyMissing
       end
 
     end
