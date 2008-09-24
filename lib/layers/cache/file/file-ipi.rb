@@ -6,7 +6,6 @@ module Waves
       def initialize(arg)
         raise ArgumentError, ":dir needs to not be nil" if arg[:dir].nil?
         @directory = arg[:dir]
-        @cache = {}
         @keys = []
       end
 
@@ -34,10 +33,7 @@ module Waves
               @keys.delete key
             end
           end
-
         end
-      rescue IOError => e
-
       end
 
       def clear
@@ -55,7 +51,7 @@ module Waves
           raise KeyMissing unless item = ::Marshal.load(::File.new(@directory / key))
 
           if item[:expires] and item[:expires] < Time.now
-            delete(key) and raise KeyExpired
+            (::File.delete(@directory / key) and @keys.delete key) and raise KeyExpired
           end
           item[:value]
         end
