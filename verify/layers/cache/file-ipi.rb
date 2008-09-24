@@ -10,11 +10,12 @@ end
 describe "Waves::Cache::File" do
 
   before do
-    @cache = Waves::Cache::File.new :dir => '/tmp' 
+    FileUtils.mkdir '/tmp/waves_cache' unless File.exist?('/tmp/waves_cache')
+    @cache = Waves::Cache::File.new :dir => '/tmp/waves_cache' 
   end
 
   after do
-    @cache.clear
+    FileUtils.rm_rf '/tmp/waves_cache'
   end
   
   it "can find a value in the cache" do
@@ -23,6 +24,7 @@ describe "Waves::Cache::File" do
   end
 
   it "can delete (multiple) values from the cache" do
+    @cache[:a] = 1
     @cache[:a].should == 1
     @cache[:b] = 2
     @cache.delete :a, :b
@@ -67,11 +69,15 @@ describe "Waves::Cache::File" do
 
   it "can synchronize" do
     @cache[:a] = 0
-    threads=[]; 5.times do |x| threads << Thread.new do
-      Thread.stop
-      @cache[:a] = x 
-    end; end
+    threads=[]
+    90.times do |x| 
+      threads << Thread.new do
+        Thread.stop; sleep rand / 100
+        @cache[:a] = @cache[:a] + 1 
+      end
+    end
     threads.each {|thread| thread.run; thread.join }
-    @cache[:a].should == 5
+    @cache[:a].should == 90
   end
+  
 end
