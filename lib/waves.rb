@@ -90,9 +90,6 @@ require 'helpers/built_in'
 
 
 require 'renderers/mixin'
-require 'renderers/erubis'
-require 'renderers/markaby'
-#require 'layers/renderers/haml'
 
 require 'foundations/default'
 require 'foundations/simple'
@@ -102,3 +99,7 @@ require 'layers/simple_errors'
 require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
+require 'layers/renderers/markaby'
+require 'layers/renderers/erubis'
+require 'layers/renderers/haml'
+

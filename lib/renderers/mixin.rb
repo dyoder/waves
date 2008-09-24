@@ -8,38 +8,25 @@ module Waves
 
       # Adds the following methods to the mod class:
       #
-      # - extension: allows you to set or get the extension used by this renderer.
-      #
-      #     Renderers::Markaby.extension 'foo' # tell Waves to use .foo as Markaby extension
-      #
       # - filename: generate a filename for the template based on a logical path.
       # - template: read the template from the file corresponding to the given logical path.
       # - helper: return a helper module that corresponds to the given logical path.
       #
-      def self.included( target )
-        
-        # Register the renderer with the Views module
-        Views.renderers << target
 
-        def target.extension(*args)
-          return @extension if args.length == 0
-          @extension = args.first
-        end
+      def included( app )
+        Waves::Views.renderers << self
+      end
 
-        def target.filename(path)
-          :templates / "#{path}.#{self.extension}"
-        end
+      def filename(path)
+        :templates / "#{path}.#{self::Extension}"
+      end
 
-        def target.render(path,args=nil)
-        end
+      def template( path )
+        File.read( filename( path ) )
+      end
 
-        def target.template( path )
-          File.read( filename( path ) )
-        end
-
-        def target.helper( path )
-          Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
-        end
+      def helper( path )
+        Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
       end
 
     end
