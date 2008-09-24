@@ -88,16 +88,11 @@ require 'helpers/built_in'
 require 'views/mixin'
 require 'views/errors'
 
-
 require 'renderers/mixin'
 
 require 'foundations/default'
 require 'foundations/simple'
 
-require 'layers/simple'
-require 'layers/simple_errors'
-require 'layers/mvc'
-require 'layers/default_errors'
 require 'layers/inflect/english'
 require 'layers/renderers/markaby'
 require 'layers/renderers/erubis'

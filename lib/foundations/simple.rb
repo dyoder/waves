@@ -17,10 +17,13 @@ module Waves
       # On inclusion in a module, the Simple foundation includes Waves::Layers::Simple and 
       # registers the module as a Waves application.
       def self.included( app )
+        require 'layers/simple'
+        require 'layers/simple_errors'
 
         app.instance_eval do
           include Waves::Layers::Inflect::English
           include Waves::Layers::Simple
+          include Waves::Layers::SimpleErrors
         end
         
         Waves << app

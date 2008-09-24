@@ -1,7 +1,3 @@
-gem 'dm-core', '=0.9.0'
-
-require 'data_mapper'
-
 module Waves
   module Layers
     module ORM
@@ -10,6 +6,9 @@ module Waves
       module DataMapper
         
         def self.included(app)
+          gem 'dm-core', '=0.9.0'
+
+          require 'data_mapper'
           
           def app.database
             @adapter ||= ::DataMapper.setup(:main_repository, config.database[:database])

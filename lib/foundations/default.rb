@@ -9,14 +9,19 @@ module Waves
 
       def self.included( app )
 
+        require 'layers/simple'
+        require 'layers/mvc'
+        require 'layers/default_errors'
+        
         app.instance_eval do
 
           include Waves::Layers::Inflect::English
-          include Waves::Renderers::Markaby
-          include Waves::Renderers::Erubis
           include Waves::Layers::Simple
           include Waves::Layers::MVC
           include Waves::Layers::DefaultErrors
+          
+          include Waves::Renderers::Markaby
+          include Waves::Renderers::Erubis   
           
         end
         
