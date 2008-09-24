@@ -25,10 +25,6 @@ gem 'dyoder-filebase', '>= 0.3.4'
 require 'filebase'
 require 'filebase/model'
 
-# TODO: we should not be including this just for mime-types
-# should get dynamically required when we know that is the handler
-require 'mongrel'
-
 # selected project-specific extensions
 require 'ext/module'
 require 'ext/string'
@@ -76,9 +72,6 @@ require 'resources/mixin'
 # actually depends on it ... otherwise the singular / plural stuff
 # should be removed and made a part of the inflector layer
 
-# waves foundations / layers
-# waves mvc support
-require 'controllers/mixin'
 require 'helpers/common'
 require 'helpers/form'
 require 'helpers/formatting'

@@ -7,6 +7,9 @@ module Waves
     module MVC
 
       def self.included( app )
+        require 'controllers/mixin'
+        require 'views/mixin'
+        require 'views/errors'
         
         Waves::Resources::Mixin.module_eval do
             
