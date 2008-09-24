@@ -18,7 +18,7 @@ module Waves
     class IPI
 
       def initialize
-        @cache = {}  #raise TriedBoth
+        @cache = {}  
       end
 
       # Universal to all cache objects.
@@ -36,7 +36,7 @@ module Waves
         false
       end
 
-      alias_method :exist?, :exists?
+      alias :exist? :exists?
 
       # Replicate the same capabilities in any descendent of Waves::Cache for API compatibility.
 
@@ -45,11 +45,11 @@ module Waves
         item[ :expires ] = Time.now + ttl if ttl
         Waves.synchronize { @cache[key] = item }
       rescue TypeError => e
-        raise e, "The ttl value must be convertable to a float"
+        raise e, "The ttl value was a wrong type"
       end
 
       def delete(*keys)
-       Waves.synchronize { keys.each { |key| @cache.delete(key) } }
+       Waves.synchronize { keys.each { |key| raise KeyMissing unless (@cache.has_key?(key) and @cache.delete(key)) }}
       end
 
       def clear
