@@ -8,7 +8,7 @@ module Waves
     
     def self.renderer_for(path)
       @renderers.find do |renderer|
-        File.exists?( renderer.filename( path ) )
+        File.extname( path ) == ".#{renderer::Extension}" or File.exists?( renderer.filename( path ) )
       end
     end
     
