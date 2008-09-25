@@ -30,6 +30,7 @@ module Waves
   
   def self.version ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/VERSION" ) ) ; end
   def self.license ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/LICENSE" ) ) ; end
+  def self.synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
 
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
@@ -50,7 +51,7 @@ module Waves
       Kernel.load( options[:startup] || 'startup.rb' )
     end
 
-    def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
+    def synchronize( &block ) ; Waves.synchronize( &block ) ; end
 
     # The 'mode' of the runtime determines which configuration it will run under.
     def mode ; Waves.mode ; end
@@ -64,9 +65,6 @@ module Waves
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end
 
-    # Returns the cache set for the current configuration
-    def cache ; config.cache ; end
-    
     # Start and / or access the Waves::Logger instance.
     def log ; @log ||= Waves::Logger.start ; end
 

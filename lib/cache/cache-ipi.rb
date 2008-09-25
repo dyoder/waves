@@ -1,4 +1,4 @@
-#!waves#########/0.8.0/##\|/4^35###
+###################################
 # a Waves Cache brought to you by ab5tract
 # :This is the Cache iPi. "Do as you will, return what verify expects."
 # :(In this case it's just a hash, but in the end who knows? Follow the iPi trail and see where it goes)
@@ -11,12 +11,14 @@ module Waves
     class KeyMissing < StandardError; end
     class KeyExpired < StandardError; end
 
+    def self.new
+      Waves::Cache::IPI.new
+    end
     
     class IPI
 
       def initialize
-        #Waves.synchronize { @cache = {} }
-        @cache = {}  #raise TriedBoth
+        @cache = {}  
       end
 
       # Universal to all cache objects.
@@ -29,28 +31,25 @@ module Waves
       end
 
       def exists?(key)
-        fetch(key)
-      rescue KeyMissing
-        return false
-      else
-        return true
+        true if fetch(key)
+      rescue KeyMissing, KeyExpired
+        false
       end
 
-      alias_method :exist?, :exists?
+      alias :exist? :exists?
 
       # Replicate the same capabilities in any descendent of Waves::Cache for API compatibility.
 
-      def store(key, value, ttl = {})
-        Waves.synchronize do
-        @cache[key] = {
-          :expires => ttl.kind_of?(Numeric) ? Time.now + ttl : nil,
-          :value => value
-        }
-        end
+      def store(key, value, ttl = nil)
+        item = { :value => value }
+        item[ :expires ] = Time.now + ttl if ttl
+        Waves.synchronize { @cache[key] = item }
+      rescue TypeError => e
+        raise e, "The ttl value was a wrong type"
       end
 
       def delete(*keys)
-       Waves.synchronize { keys.each {|key| @cache.delete(key) }}
+       Waves.synchronize { keys.each { |key| raise KeyMissing unless (@cache.has_key?(key) and @cache.delete(key)) }}
       end
 
       def clear
@@ -59,18 +58,13 @@ module Waves
 
       def fetch(key)    # :TODO: Should probably take a splat
         Waves.synchronize do
-
-          raise KeyMissing, "#{key} doesn't exist in cache" if @cache.has_key?(key) == false
-          return @cache[key][:value] if @cache[key][:expires].nil?
-
-          if @cache[key][:expires] > Time.now
-            @cache[key][:value]
-          else
-            delete key
-            raise KeyExpired, "#{key} expired before access attempt"
+          raise KeyMissing unless item = @cache[ key ]
+          if item[:expires] and item[:expires] < Time.now
+            @cache.delete( key ) and raise KeyExpired 
           end
-
+          item[:value]
         end
+
       end
 
     end

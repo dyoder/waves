@@ -6,44 +6,40 @@ module Waves
       def initialize(arg)
         raise ArgumentError, ":dir needs to not be nil" if arg[:dir].nil?
         @directory = arg[:dir]
-        @cache = {}
+        @keys = []
       end
 
-      def store(key, value, ttl = {})
+      def store(key, value, ttl = nil)            
+        key_file = @directory / key
+        item = {:value => value}
+        item[:expires] = Time.now + ttl   if ttl
+
         Waves.synchronize do
 
-          super(key, value, ttl)
           @keys << key
 
-          key_file = @directory / key
-
-          file = File.new(key_file,'w')
-          Marshal.dump(@cache[key], file)
+          file = ::File.new(key_file,'w')
+          Marshal.dump(item, file)
           file.close
-          @cache.delete key
 
         end
       end
 
       def delete(*keys)
         Waves.synchronize do
-
           keys.each do |key|
             if @keys.include? key
-              File.delete(@directory / key)
+              ::File.delete(@directory / key)
               @keys.delete key
-            else
-              raise KeyMissing, "no key #{key} to delete"
             end
           end
-
         end
       end
 
       def clear
         Waves.synchronize do
 
-          @keys.each {|key| File.delete(@directory / key) }
+          @keys.each {|key| ::File.delete(@directory / key) }
           @keys.clear
 
         end
@@ -52,18 +48,16 @@ module Waves
       def fetch(key)
         Waves.synchronize do
 
-          raise KeyMissing, "#{key} doesn't exist" unless File.exists?(@directory / key)
-          @cache[key] = Marshal.load File.new(@directory / key)
-          return @cache[key][:value] if @cache[key][:expires].nil?
+          item = ::Marshal.load(::File.new(@directory / key))
 
-          if @cache[key][:expires] > Time.now
-            @cache[key][:value]
-          else
-            delete key
-            raise KeyMissing, "#{key} expired before access attempt"
+          if item[:expires] and item[:expires] < Time.now
+            ::File.delete(@directory / key)
+            @keys.delete key and raise KeyExpired
           end
-
+          item[:value]
         end
+      rescue Errno::ENOENT
+        raise KeyMissing
       end
 
     end

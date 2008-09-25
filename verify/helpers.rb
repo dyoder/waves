@@ -14,6 +14,14 @@ module Waves
   module Verify
     module Helpers
       
+      def feature(desc, &block)
+        it(desc, &block) if defined?(VERIFY_FEATURES)
+      end
+      
+      def bug(desck, &block)
+        it(desc, &block) if defined?(VERIFY_BUGS)
+      end
+      
       def ugly_warning(why)
         if defined?(FIND_UGLY)
           warn "\n#{why} in:"

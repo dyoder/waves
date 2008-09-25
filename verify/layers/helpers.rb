@@ -1,1 +1,2 @@
-require File.join(File.dirname(__FILE__) , "..", "helpers")
+# Helpers for testing cache
+require "#{File.dirname(__FILE__)}/../helpers"

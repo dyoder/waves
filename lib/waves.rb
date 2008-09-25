@@ -54,6 +54,7 @@ require 'runtime/response'
 require 'runtime/response_mixin'
 require 'runtime/session'
 require 'runtime/configuration'
+require 'cache/cache'
 
 # waves URI mapping
 require 'matchers/base'
@@ -89,9 +90,6 @@ require 'helpers/built_in'
 
 
 require 'renderers/mixin'
-require 'renderers/erubis'
-require 'renderers/markaby'
-#require 'layers/renderers/haml'
 
 require 'foundations/default'
 require 'foundations/simple'
@@ -101,3 +99,7 @@ require 'layers/simple_errors'
 require 'layers/mvc'
 require 'layers/default_errors'
 require 'layers/inflect/english'
+require 'layers/renderers/markaby'
+require 'layers/renderers/erubis'
+require 'layers/renderers/haml'
+
