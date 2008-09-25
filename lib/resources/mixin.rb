@@ -70,7 +70,7 @@ module Waves
             on( method ) { not_found }
           end
           
-          handler( Waves::Dispatchers::NotFoundError ) do | e |
+          handler( Waves::Dispatchers::NotFoundError ) do
             response.status = 404; response.content_type = 'text/html'
             Waves::Views::Errors.process( request ) { not_found_404 }
           end

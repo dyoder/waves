@@ -2,51 +2,47 @@ module Waves
   module Views
     class Errors < Waves::Views::Base
       
-      module Helpers
-        def header( title )
-          head do
-            self.title title
-            style do
-              text 'body { background: #933; padding: 20px; font-family: verdana, sans-serif; }'
-              text 'h1 { font-size: 60px; font-weight: bold; }'
-              text 'p { font-size: 24px; }'
-            end
-          end
-        end
-      end
+      include Waves::Helpers::BuiltIn
       
-      def builder( &block )
-        builder = Markaby::Builder.new
-        builder.meta_eval { include Waves::Helpers::BuiltIn ; include Helpers }
-        builder.instance_eval( &block )
-        builder.to_s
+      def header( title )
+        <<-HTML
+        <head>
+          <title>#{title}</title>
+          <style>
+            body { background: #933; padding: 20px; font-family: verdana, sans-serif; }
+            h1 { font-size: 60px; font-weight: bold; }
+            p { font-size: 24px; }
+          </style>
+        </head>
+        HTML
       end
-      
+    
       def not_found_404
-        builder do
-          doctype( :html4_transitional )
-          html do
-            header( '404: Not Found' )
-            body do
-              h1 '404'
-              p %q( That URL does not exist on this server. )
-            end
-          end
-        end
+        DOCTYPES[ :html4_transitional ]
+        <<-HTML
+        <html>
+          #{ header( '404: Not Found' ) }
+          <body>
+            <h1>404</h1>
+            <p>That URL does not exist on this server.</p>
+          </body>
+        </html>
+        HTML
       end
-      
+    
       def server_error_500
-        builder do
-          doctype( :html4_transitional )
-          html do
-            header( '500: Server Error' )
-            body do
-              h1 '500'
-              p %q( Internal server error. Sorry, but your request could not be processed. )
-            end
-          end
-        end
+        DOCTYPES[ :html4_transitional ]
+        <<-HTML
+        <html>
+          #{ header( '500: Server Error' ) }
+          <body>
+            <h1>404</h1>
+            <p>Internal server error. Sorry, but your request could not be processed.</p>
+          </body>
+        </html>
+        HTML
       end
+
     end
   end
 end

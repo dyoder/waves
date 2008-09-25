@@ -79,14 +79,14 @@ require 'resources/mixin'
 # waves foundations / layers
 # waves mvc support
 require 'controllers/mixin'
-require 'views/mixin'
-require 'views/errors'
 require 'helpers/common'
 require 'helpers/form'
 require 'helpers/formatting'
 require 'helpers/model'
 require 'helpers/view'
 require 'helpers/built_in'
+require 'views/mixin'
+require 'views/errors'
 
 
 require 'renderers/mixin'
