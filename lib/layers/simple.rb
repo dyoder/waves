@@ -16,18 +16,16 @@ module Waves
 
         app.instance_eval { include AutoCode }
         
-        app.auto_create_module( :Configurations ) do
-          include AutoCode
-          auto_create_class true, Waves::Configurations::Default
-          auto_create_module( :Mapping ) { extend Waves::Mapping }
-          auto_load :Mapping, :directories => [:configurations]
-          auto_load true, :directories => [:configurations]
-        end
-          
-        app.auto_create_module( :Resources ) do
-          include AutoCode
-          auto_create_class true, Waves::Resources::Base
-        end
+        # app.auto_create_module( :Configurations ) do
+        #   include AutoCode
+        #   auto_create_class true, Waves::Configurations::Default
+        #   auto_load true, :directories => [:configurations]
+        # end
+        #   
+        # app.auto_create_module( :Resources ) do
+        #   include AutoCode
+        #   auto_create_class true, Waves::Resources::Base
+        # end
 
       end
     end

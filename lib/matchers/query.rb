@@ -8,7 +8,9 @@ module Waves
     
       def call( request )
         @pattern.all? do | key, val |
-          ( val.is_a? Proc and val.call( request.params[ key ] ) ) or val === request.params[ key ]
+          key = key.to_s
+          ( ( val.respond_to?(:call) and val.call( request.query[ key ] ) ) or 
+            ( request.query[ key ] and ( ( val == true ) or ( val === request.query[ key ] ) ) ) )
         end
       end
       
