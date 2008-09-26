@@ -9,7 +9,7 @@ module Waves
   
   def self.config; Waves.main::Configurations[ mode ]; end
   
-  def self.mode; ENV['mode'] || :development ; end
+  def self.mode; instance.mode ; end
 
   # The list of all loaded applications
   def self.applications ; @applications ||= Applications.new ; end
@@ -54,7 +54,7 @@ module Waves
     def synchronize( &block ) ; Waves.synchronize( &block ) ; end
 
     # The 'mode' of the runtime determines which configuration it will run under.
-    def mode ; Waves.mode ; end
+    def mode ; options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
     def debug? ; config.debug ; end

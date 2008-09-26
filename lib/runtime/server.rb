@@ -35,7 +35,7 @@ module Waves
       pwd = Dir.pwd
       Daemonize.daemonize( Waves::Logger.output )
       Dir.chdir(pwd)
-      File.write( :log / "#{port}.pid", $$ )
+      File.write( Waves.config.pid, $$ )
     end
 
     def trap(signal)
@@ -60,7 +60,7 @@ module Waves
     def stop
       log.info "Waves Server Stopping ..."
       if options[:daemon]
-        pid_file = :log / $$ + '.pid'; FileUtils.rm( pid_file ) if File.exist?( pid_file )
+        pid_file = Waves.config.pid ; FileUtils.rm( pid_file ) if File.exist?( pid_file )
       end
       @server.stop
       log.info "Waves Server Stopped"

@@ -142,7 +142,7 @@ module Waves
     #   reloadable []
     class Default < Base
 
-      %w( host port ports log reloadable resource database session 
+      %w( host port ports log reloadable resource database session pid
         debug root synchronize? dependencies cache ).each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
@@ -151,11 +151,8 @@ module Waves
       # When accessing the value
       # (calling with no arguments), returns an array of the handler and options.
       def self.handler(*args)
-        if args.length > 0
-          @rack_handler, @rack_handler_options = args
-        else
-          [ @rack_handler, @rack_handler_options ]
-        end
+        return self['handler'] if args.empty?
+        self['handler'] = args
       end
 
       # Provides access to the Waves::MimeTypes class via the configuration. You
@@ -181,6 +178,7 @@ module Waves
       reloadable []
       dependencies []
       cache :dir => 'cache'
+      pid "#{$$}.pid"
     end
   end
 end
