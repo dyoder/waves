@@ -18,7 +18,6 @@ require 'date'
 require 'benchmark'
 require 'base64'
 
-require 'autocode'
 gem 'dyoder-functor', '>= 0.5.0'
 require 'functor'
 gem 'dyoder-filebase', '>= 0.3.4'
@@ -65,29 +64,6 @@ require 'matchers/resource'
 require 'resources/paths'
 require 'resources/mixin'
 
-
-# TODO: if these are truly layers, they should not be included here
-# this includes the MVC support, the helpers, and the renderers
-# ... the inflector stuff should probably be in core, since the resources
-# actually depends on it ... otherwise the singular / plural stuff
-# should be removed and made a part of the inflector layer
-
-require 'helpers/common'
-require 'helpers/form'
-require 'helpers/formatting'
-require 'helpers/model'
-require 'helpers/view'
-require 'helpers/built_in'
 require 'views/mixin'
 require 'views/errors'
-
 require 'renderers/mixin'
-
-require 'foundations/default'
-require 'foundations/simple'
-
-require 'layers/inflect/english'
-require 'layers/renderers/markaby'
-require 'layers/renderers/erubis'
-require 'layers/renderers/haml'
-

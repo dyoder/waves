@@ -7,10 +7,8 @@ module Waves
     def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
   end
   
-  def self.config; Waves.main::Configurations[ mode ]; end
+  def self.config; instance.config ; end
   
-  def self.mode; instance.mode ; end
-
   # The list of all loaded applications
   def self.applications ; @applications ||= Applications.new ; end
 
@@ -47,8 +45,8 @@ module Waves
     def initialize( options={} )
       @options = options
       Dir.chdir options[:directory] if options[:directory]
-      Runtime.instance = self
       Kernel.load( options[:startup] || 'startup.rb' )
+      Runtime.instance = self
     end
 
     def synchronize( &block ) ; Waves.synchronize( &block ) ; end
@@ -60,7 +58,7 @@ module Waves
     def debug? ; config.debug ; end
 
     # Returns the current configuration.
-    def config ; Waves.config ; end
+    def config ; Waves.main::Configurations[ mode ] ; end
 
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end

@@ -1,8 +1,9 @@
+require 'helpers/doc_type'
 module Waves
   module Views
     class Errors < Waves::Views::Base
       
-      include Waves::Helpers::BuiltIn
+      include Waves::Helpers::DocType
       
       def header( title )
         <<-HTML

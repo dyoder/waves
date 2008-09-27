@@ -10,11 +10,6 @@ module Waves
       
       def initialize( request ) ; @request = request ; end
       
-      # TODO: this is an anonymous class ... need to get the resource name
-      # from the creation step for the class ...
-      def resource ; self.class.resource.singular ; end
-      def resources ; self.class.resource.plural ; end
-      
       def generate( template, args )
         return "/#{ args * '/' }" unless template.is_a?( Array ) and not template.empty?
         path = []
@@ -22,12 +17,7 @@ module Waves
           case want
           when true then path += args
           when String then path << want
-          when Symbol
-            case want
-            when :resource then path << resource
-            when :resources then path << resources
-            else path << args.shift
-            end
+          when Symbol then path << args.shift
           when Regexp then path << args.shift
           when Hash
             key, value = want.to_a.first

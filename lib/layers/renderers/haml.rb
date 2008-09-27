@@ -22,7 +22,8 @@ module Waves
       end
       
       class Scope
-        include Waves::Helpers::Common
+        include Waves::Helpers::DocType
+        include Waves::Helpers::Layouts
         include Waves::Helpers::Model
         include Waves::Helpers::View
 

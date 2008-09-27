@@ -24,8 +24,6 @@ module Waves
               @paths
             end
           end
-          def self.singular ; basename.downcase ; end
-          def self.plural ; basename.downcase.plural ; end
           def self.with( options ) ; @options = options ; yield ; @options = nil ; end
           def self.on( method, path = true, options = nil, &block )
             if path.is_a? Hash
@@ -70,18 +68,11 @@ module Waves
             on( method ) { not_found }
           end
           
-          handler( Waves::Dispatchers::NotFoundError ) do
-            response.status = 404; response.content_type = 'text/html'
-            Waves::Views::Errors.process( request ) { not_found_404 }
-          end
-
         end
       end
       
       # Resources are initialized with a Waves::Request
       def initialize( request ); @request = request ; end
-      def singular ; self.class.singular ; end
-      def plural ; self.class.plural ; end
       def to( resource )
         resource = case resource
         when Base
