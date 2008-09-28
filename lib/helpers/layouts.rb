@@ -29,7 +29,7 @@ module Waves
       #
       def layout( name, assigns = {}, &block )
         assigns[ :layout_content ] = capture(&block)
-        self << app::Views[:layouts].process( request ) do
+        self << Waves.main::Views[:layouts].process( request ) do
           send( name, assigns )
         end
       end

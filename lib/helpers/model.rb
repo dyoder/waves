@@ -18,17 +18,15 @@ module Waves
     #
     module Model
       
-      include ResponseMixin
-      
       def model( name )
-        models[ name ]
+        Waves.main::Models[ name ][ domain ]
       end
       
       # Just like model.all. Returns all the instances of that model.
       def all( model )
         model( model ).all( domain )
       end
-
+      
       # Finds a specific instance using the name field
       def find( model, name )
         model( model )[ :name => name ] rescue nil

@@ -3,6 +3,9 @@ module Waves
     module Basic
       attr_reader :request
       include Waves::ResponseMixin
+      
+      def app ; Waves.main ; end
+      
     end
   end
 end

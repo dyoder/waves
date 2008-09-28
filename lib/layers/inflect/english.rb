@@ -14,12 +14,17 @@ module Waves
             include Waves::Layers::Inflect::English::StringMethods
           end
           
-          Waves::Resources::Mixin.class_eval do
+          Waves::Resources::Mixin::ClassMethods.module_eval do
+            def singular ; basename.snake_case.singular ; end
+            def plural ; basename.snake_case.plural ; end
+          end
+            
+          Waves::Resources::Mixin.module_eval do
             def singular ; self.class.singular ; end
             def plural ; self.class.plural ; end
           end
           
-          Waves::Resources::Paths.class_eval do
+          Waves::Resources::Paths.module_eval do
             def resource ; self.class.resource.singular ; end
             def resources ; self.class.resource.plural ; end
 
