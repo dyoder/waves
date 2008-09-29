@@ -49,8 +49,7 @@ module Waves
       start_debugger if options[:debugger]
       log.info "Waves Runtime #{Waves.version}"
       log.info "Waves starting  on #{host}:#{port}"
-      handler, options = config.handler
-      handler.run( config.application.to_app, options ) do |server|
+      config.handler.run( config.application.to_app, { :Host => host, :Port => port } ) do |server|
         @server = server
         self.trap('INT') { puts; stop } if @server.respond_to? :stop
       end

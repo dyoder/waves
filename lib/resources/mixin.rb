@@ -11,7 +11,7 @@ module Waves
           include ResponseMixin, Functor::Method
           extend ClassMethods
           before {} ; after {} ; always {}
-          %w( post get put delete ).each do | method |
+          %w( post get put delete head ).each do | method |
             on( method ) { not_found }
           end
         end
