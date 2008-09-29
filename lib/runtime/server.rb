@@ -68,6 +68,8 @@ module Waves
 
     # Provides access to the server mutex for thread-safe operation.
     def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
+    def synchronize? ; !options[ :turbo ] ; end
+
 
     class << self
       private :new, :dup, :clone

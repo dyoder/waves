@@ -29,7 +29,7 @@ module Waves
       
       # Finds a specific instance using the name field
       def find( model, name )
-        model( model )[ :name => name ] rescue nil
+        model( model )[name ] rescue nil
       end
 
     end

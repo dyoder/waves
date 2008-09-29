@@ -31,8 +31,8 @@ module Waves
       # As with any Rack application, a Waves dispatcher must provide a call method
       # that takes an +env+ hash.
       def call( env )
-        if Waves.config.synchronize?
-          Waves::Runtime.instance.synchronize { _call( env ) }
+        if Waves.synchronize?
+          Waves.synchronize { _call( env ) }
         else
           _call( env )
         end

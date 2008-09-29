@@ -109,9 +109,9 @@ module Waves
     
     # this is a hack - need to incorporate browser variations for "accept" here ...
     # def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
-    def accept ; Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
-    def accept_charset ; Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
-    def accept_language ; Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
+    def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
+    def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
+    def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 
 
     module Utilities

@@ -39,6 +39,12 @@ Choice.options do
     desc 'Run as a daemon.'
   end
   separator ''
+  option :turbo do
+    short '-t'
+    long '--turbo'
+    desc 'For thread-safe applications, run without dispatch level mutex.'
+  end
+  separator ''
   option :debugger do
     short '-u'
     long '--debugger'
@@ -47,7 +53,7 @@ Choice.options do
   separator ''
   option :startup do
     short '-s'
-    long '--startup'
+    long '--startup=PATH'
     desc 'Startup file to load.'
     desc 'Defaults to "startup.rb"'
   end
