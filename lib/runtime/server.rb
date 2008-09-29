@@ -49,6 +49,9 @@ module Waves
       start_debugger if options[:debugger]
       log.info "Waves Runtime #{Waves.version}"
       log.info "Waves starting  on #{host}:#{port}"
+      # TODO: technically is this not really Rack-compatible, since the options / block
+      # stuff is custom to the underlying server implementation, an area where Rack surprisingly
+      # exposes server internals ... :(
       config.handler.run( config.application.to_app, { :Host => host, :Port => port } ) do |server|
         @server = server
         self.trap('INT') { puts; stop } if @server.respond_to? :stop
