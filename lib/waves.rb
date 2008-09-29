@@ -6,7 +6,6 @@ WAVES = "#{File.dirname(__FILE__)}/.." unless defined?(WAVES)
 
 require 'rack'
 require 'daemons'
-require 'live_console'
 
 # a bunch of handy stuff
 require 'extensions/io'
