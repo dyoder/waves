@@ -37,7 +37,8 @@ module Waves
         begin
           # invoke the request method, wrapped by the before and after methods
           resource.before
-          request.response.body = resource.send( request.method )
+          body = resource.send( request.method )
+          request.response.write( body ) if body.respond_to?( :to_s )
           resource.after
         rescue Exception => e
           # handle any exceptions using the resource handlers, if any
