@@ -3,7 +3,7 @@
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
-UTILITIES = "#{File.dirname(__FILE__)}/../../lib/ext"
+UTILITIES = "#{File.dirname(__FILE__)}/../../../lib/ext"
 
 require "#{UTILITIES}/module"
 require "#{UTILITIES}/inflect"

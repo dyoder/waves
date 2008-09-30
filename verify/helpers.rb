@@ -32,30 +32,7 @@ module Waves
       def clear_all_apps
         Waves.instance_variable_set(:@applications, nil)
       end
-      
-      # Stubs the configuration, to allow waves_request to work
-      # One reason this is needed is that a Waves::Request's session uses
-      # the current configuration to determine the file store directory and
-      # the session expiration time.
-      def fake_out_runtime
-        ugly_warning "Faking out runtime"
-        runtime = mock( "runtime")
-        runtime.stub!(:config).and_return( Waves.main[:configurations][:development] )
-        Waves::Runtime.stub!(:instance).and_return(runtime)
-      end
 
-      def mappings(&block)
-        m = ::Waves::Runtime.instance.mapping
-        if block
-          m.instance_eval(&block)
-        end
-        m
-      end
-      
-      # mapping helper methods (of dubious utility?)
-      %w{ path url always handle threaded generator}.each do |method|
-        module_eval "def #{method}(*args,&block); mappings.#{method}(*args,&block);end"
-      end
       
       # generate a mock Rack request against the default dispatcher.
       # this must change if we ever do different dispatchers
@@ -64,23 +41,18 @@ module Waves
         @request ||= ::Rack::MockRequest.new( ::Waves::Dispatchers::Default.new )
       end
 
-      def waves_request(*args)
-        Waves::Request.new(Rack::MockRequest.env_for(*args))
+      def waves_request( *args )
+        Waves::Request.new( Rack::MockRequest.env_for(*args) )
       end
 
-      def env_for(uri="/", options={})
+      def env_for( uri="/", options={} )
         Rack::MockRequest.env_for(uri,options)
       end
 
-      def get(uri, opts={})    mock_request.get(uri, opts)    end
-      def post(uri, opts={})   mock_request.post(uri, opts)   end
-      def put(uri, opts={})    mock_request.put(uri, opts)    end
-      def delete(uri, opts={}) mock_request.delete(uri, opts) end
-
-      def wrap(&block)
-        @before << block
-        @after << block
-      end
+      # def wrap(&block)
+      #   @before << block
+      #   @after << block
+      # end
 
       def rm_if_exist(name)
         FileUtils.rm name if File.exist? name

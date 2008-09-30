@@ -4,16 +4,12 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "A Waves request instance" do
   
   before do
-    @session = mock("session")
-    @response = mock("response")
-    Waves::Session.stub!(:new).and_return(@session)
-    Waves::Response.stub!(:new).and_return(@response)
     @request = Waves::Request.new(env_for("http://example.com/index.html", 'CONTENT_TYPE' => "text/html"))
   end
   
   it "has session and response objects" do
-    @request.session.should == @session
-    @request.response.should == @response
+    @request.session.should.be.a.kind_of Waves::Session
+    @request.response.should.be.a.kind_of Waves::Response
   end
   
   it "provides an accessor to the immutable Rack request" do
