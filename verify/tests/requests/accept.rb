@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "#accept, #accept_charset, and #accept_language" do
   
   before do
-    Waves::Session.stub!(:base_path).and_return(BasePath)
     @request = Waves::Request.new(env_for("/", 
       'HTTP_ACCEPT' => 'text/xml,application/xhtml+xml;q=0.9, text/plain ;q=0.8,image/png,audio/*;q=0.5,*/foo',
       'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7;q=0.7',
@@ -14,7 +13,7 @@ describe "#accept, #accept_charset, and #accept_language" do
   
   it "evaluates to an array of entries" do
     entries = ["text/xml", "application/xhtml+xml", "text/plain", "image/png", "audio/*", "*/foo"]
-    @request.accept.should == entries
+    Waves::Request::Accept.parse(@request.env['HTTP_ACCEPT']).should == entries
     
     charsets = [ "ISO-8859-1", "utf-8" ]
     @request.accept_charset.should == charsets
