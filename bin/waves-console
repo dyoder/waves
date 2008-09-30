@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-waves = ( ( WAVES if defined? WAVES ) || ENV['WAVES'] || 'waves' )
-$:.unshift(File.join( waves, "lib" )) if File.exist? waves
-require 'waves'
+waves = [
+    (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find(&File.method(:directory?))
+if waves
+    $: << waves
+else
+    waves = 'waves'
+end
+require waves
 require 'commands/waves-console'
