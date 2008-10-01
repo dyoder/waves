@@ -38,6 +38,13 @@ module Waves
     def paths( rname = nil )
       ( rname.nil? ? resource.class.paths : app::Resources[ rname ].paths ).new( request )
     end
+
+    def basename
+      @basename ||= path.sub(/\..*$/,"")
+    end
+    def extension
+      @extension ||= path.match(/\.*\./)?path.sub(/.*[\.$]/,""):""
+    end
     
   end
 
