@@ -63,6 +63,10 @@ module Waves
     # Start and / or access the Waves::Logger instance.
     def log ; @log ||= Waves::Logger.start ; end
 
+    # Provides access to the server mutex for thread-safe operation.
+    def synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
+    def synchronize? ; !options[ :turbo ] ; end
+
   end
 
 end
