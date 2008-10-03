@@ -1,5 +1,7 @@
 module Waves
 
+  # Bench is a runtime.  It's not inheriting from Waves::Runtime right now, 
+  # because I want to see how far we can strip it down.
   class Bench
     
     def self.runtime
@@ -15,6 +17,7 @@ module Waves
       @options = options
       Dir.chdir options[:directory] if options[:directory]
       Waves::Runtime.instance = self
+      GC.start
     end
     
     def config
