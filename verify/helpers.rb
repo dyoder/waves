@@ -1,14 +1,16 @@
-require 'rubygems'
-%w( bacon facon ).each { |f| require f }
+require 'rubygems'; %w{ bacon facon }.each { |dep| require dep }
 
-# Prepend the framework lib to the loadpath
+# Framework lib goes to the front of the loadpath
 $:.unshift( File.join(File.dirname(__FILE__), "..", "lib") )
 require 'waves'
 
+# Fire up the Bench runtime
+Waves::Bench.load
+
 Bacon.extend Bacon::TestUnitOutput
+# Bacon.extend Bacon::SpecDoxOutput
+# Bacon.extend Bacon::TapOutput
 Bacon.summary_on_exit
-
-
 
 module Waves
   module Verify
@@ -18,26 +20,34 @@ module Waves
         it(desc, &block) if defined?(VERIFY_FEATURES)
       end
       
-      def bug(desck, &block)
+      def bug(desc, &block)
         it(desc, &block) if defined?(VERIFY_BUGS)
       end
       
-      def ugly_warning(why)
-        if defined?(FIND_UGLY)
+      def ugly(why)
+        if defined?(VERIFY_UGLY)
           warn "\n#{why} in:"
           warn Kernel.caller(2).join("\n") 
         end
       end
       
+      # def wrap(&block)
+      #   @before << block
+      #   @after << block
+      # end
+            
       def clear_all_apps
         Waves.instance_variable_set(:@applications, nil)
       end
 
+      def rm_if_exist(name)
+        FileUtils.rm name if File.exist? name
+      end
       
       # generate a mock Rack request against the default dispatcher.
       # this must change if we ever do different dispatchers
       def mock_request
-        ugly_warning "Hard-coded use of Waves::Dispatchers::Default"
+        ugly "Hard-coded use of Waves::Dispatchers::Default"
         @request ||= ::Rack::MockRequest.new( ::Waves::Dispatchers::Default.new )
       end
 
@@ -49,14 +59,6 @@ module Waves
         Rack::MockRequest.env_for(uri,options)
       end
 
-      # def wrap(&block)
-      #   @before << block
-      #   @after << block
-      # end
-
-      def rm_if_exist(name)
-        FileUtils.rm name if File.exist? name
-      end
       
       # example rack environment
       def rack_env
@@ -96,10 +98,5 @@ Bacon::Context.module_eval do
   alias_method :specify, :it
 end
 
-module Kernel
-  private
-  # some people like to use "specification" instead of "describe"
-  def specification(name, &block)  Bacon::Context.new(name, &block) end
-end
 
 
