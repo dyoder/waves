@@ -7,6 +7,8 @@ module Waves
     # mappings.  The Simple foundation registers a minimal handler, while the Default foundation registers
     # a slightly fleshier one.
     class NotFoundError < RuntimeError ; end
+    class Unauthorized < RuntimeError; end
+    class BadRequest < RuntimeError; end
 
     # Redirect exceptions are rescued by the Waves dispatcher and used to set the 
     # response status and location.
@@ -56,6 +58,11 @@ module Waves
           rescue Dispatchers::Redirect => redirect
             response.status = redirect.status
             response.location = redirect.path
+          rescue Dispatchers::Unauthorized
+            response.status = 401
+            response['WWW-Authenticate'] = "Basic realm=Waves"
+          rescue Dispatchers::BadRequest
+            response.status = 400
           end
         end
         Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
