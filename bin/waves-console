@@ -5,6 +5,7 @@ waves = [
 ].compact.map { |dir| File.join(dir, 'lib') }.find(&File.method(:directory?))
 if waves
     $: << waves
+    waves = File.join( waves, 'waves' )
 else
     waves = 'waves'
 end
