@@ -80,7 +80,8 @@ module Waves
         when Symbol, String
           Waves.main::Resources[ resource ]
         end
-        traits.waves.resource = resource.new( request ).send( request.method )
+        traits.waves.resource = resource.new( request )
+        traits.waves.resource.send( request.method )
       end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
