@@ -4,8 +4,8 @@ class AddComments < Sequel::Migration
     create_table :comments do
       primary_key :id
       foreign_key :entry_id, :table => :entries
-      text :name
-      text :email
+      string :name
+      string :email
       text :content
       timestamp :updated_on
     end

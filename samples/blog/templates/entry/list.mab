@@ -1,11 +1,16 @@
 layout :default, :title => 'Blog Entries' do
-  h1 'My Blog'
-  form :action => '/entry', :method => 'post' do
-    label 'Name'
-    input :type => :text, :name => 'entry.name'
-    input :type => :submit, :value => 'Add'
+
+  div.create! do
+    h2 'Create a new entry'
+    form :action => '/entry', :method => 'post' do
+      label 'URL Name'
+      input :type => :text, :name => 'entry.name', :size => 25
+      input :type => :submit, :value => 'Add'
+    end
   end
+    
   @entries.each do |entry|
     view :entry, :summary, :entry => entry
   end
+  p { i "No entries yet.  Don't loiter." } if @entries.empty?
 end

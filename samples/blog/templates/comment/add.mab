@@ -1,11 +1,12 @@
 form :action => request.path, :method => 'POST' do
   input :type => :hidden, :name => 'comment.entry_id', :value => @entry.id
   label 'Name'; br
-  input :type => :text, :name => 'comment.name'; br
+  input :type => :text, :name => 'comment.name', :size => 35, :value => session[:commenter]
+  br
   label 'Email'; br
-  input :type => :text, :name => 'comment.email'; br
+  input :type => :text, :name => 'comment.email', :size => 35; br
   label 'Comment'; br
-  textarea :name => 'comment.content', :rows => 10, :cols => 80; br
+  textarea :name => 'comment.content', :rows => 6; br
   input :type => :submit, :value => 'Save'
 end
 

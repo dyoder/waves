@@ -9,6 +9,8 @@ module Blog
       reloadable [ Blog ]
 
       log :level => :debug
+      
+      session :duration => 45.minutes, :path => 'tmp/sessions'
 
       host '127.0.0.1'
 
@@ -20,7 +22,7 @@ module Blog
 
       application do
         use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => [ '/css', '/javascript', '/favicon.ico' ], :root => 'public'
+        use ::Rack::Static, :urls => [ '/images/', '/css/', '/javascript/', '/favicon.ico' ], :root => 'public'
         run ::Waves::Dispatchers::Default.new
       end
 

@@ -1,2 +1,7 @@
+style <<-STYLE
+  body { background: #933; padding: 20px; font-family: verdana, sans-serif; }
+  h1 { font-size: 60px; font-weight: bold; margin: 0px; }
+  p { font-size: 24px; margin: 0px; }
+STYLE
 h1 '404'
-p %q( That URL does not exist on this server. )
+p { 'That URL does<br> not exist on<br> this server.' }

@@ -4,14 +4,16 @@ html do
 
   head do
     title @title
-    script :src => '/javascript/jquery-1.2.6.min.js',
-      :type => 'text/javascript'
+    script :src => '/javascript/jquery-1.2.6.min.js', :type => 'text/javascript'
     script :src => '/javascript/site.js', :type => 'text/javascript'
     link :href => '/css/site.css', :rel => 'stylesheet', :type => 'text/css'
   end
 
   body do
-    layout_content
+    h1 { a 'I Blog Here', :href => '/entries' }
+    div.main! do
+      layout_content
+    end
   end
 
 end

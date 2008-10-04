@@ -1,9 +1,18 @@
 layout :default, :title => @entry.title do
-  a 'Show All Entries', :href => '/entry'
-  a 'Edit This Entry', :href => "/entry/#{@entry.name}/edit"
-  h1 @entry.title
-  textile @entry.content
-  h1 'Comments'
-  view :comment, :add, :entry => @entry
+  
+  div.entry! do
+    h4 @entry.date if @entry.updated_on
+    h2 { a @entry.title }
+    textile @entry.content
+    p do
+      a 'Edit', :href => "/entry/#{@entry.name}/edit"
+      text '&nbsp;'
+      a.delete 'Delete', :href => "/entry/#{@entry.name}"
+    end
+  end
+  
+  h3 @entry.comment_number
   view :comment, :list, :comments => @entry.comments
+  view :comment, :add, :entry => @entry
+  
 end

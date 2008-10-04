@@ -2,12 +2,13 @@ layout :default, :title => 'Edit Entry' do
   form :action => "/entry/#{@entry.name}", :method => 'POST' do
     input :name => '_method', :type => 'hidden', :value => 'put'
     label 'Title'; br
-    input :type => :text, :value => @entry.title, :name => 'entry.title'; br
-    label 'Summary'; br
-    textarea @entry.summary, :name => 'entry.summary', :rows => 10, :cols => 80; br
+    input :type => :text, :value => @entry.title, :name => 'entry.title', :size => 50; br
+    label 'URL name'; br
+    input :type => :text, :value => @entry.name, :name => 'entry.name', :size => 50; br
     label 'Content'; br
-    textarea @entry.content, :name => 'entry.content', :rows => 20, :cols => 80; br
+    textarea @entry.content, :name => 'entry.content', :rows => 20, :cols => 70; br
+    a 'Cancel', :href => "/entry/#{@entry.name}"
     input :type => :submit, :value => 'Save'
-    a.delete 'Delete', :href => "/entry/#{@entry.name}"
   end
 end
+
