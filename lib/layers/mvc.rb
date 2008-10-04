@@ -46,6 +46,10 @@ module Waves
               Waves::Request::Utilities.destructure( request.query ) )
           end
           
+          def attributes
+            query[ model_name ]
+          end
+          
         end
         
         app.auto_create_module( :Models ) do
