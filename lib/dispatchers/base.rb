@@ -6,7 +6,7 @@ module Waves
     # natively intercept this exception.  Instead an exception handler must be registered in the application
     # mappings.  The Simple foundation registers a minimal handler, while the Default foundation registers
     # a slightly fleshier one.
-    class NotFoundError < Exception ; end
+    class NotFoundError < RuntimeError ; end
 
     # Redirect exceptions are rescued by the Waves dispatcher and used to set the 
     # response status and location.
