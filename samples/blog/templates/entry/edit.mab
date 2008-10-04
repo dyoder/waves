@@ -7,8 +7,8 @@ layout :default, :title => 'Edit Entry' do
     input :type => :text, :value => @entry.name, :name => 'entry.name', :size => 50; br
     label 'Content'; br
     textarea @entry.content, :name => 'entry.content', :rows => 20, :cols => 70; br
-    a 'Cancel', :href => "/entry/#{@entry.name}"
     input :type => :submit, :value => 'Save'
+    a 'Cancel', :href => "/entry/#{@entry.name}"
   end
 end
 

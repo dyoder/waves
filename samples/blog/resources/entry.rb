@@ -3,6 +3,24 @@ module Blog
     class Entry < Default
       include Waves::Resources::Mixin
       
+      def basic_auth
+        raise Waves::Dispatchers::Unauthorized unless auth = @request.http_variable('Authorization')
+        scheme, credentials = auth.split(' ', 2)
+        raise Waves::Dispatchers::BadRequest unless scheme == "Basic"
+        credentials.unpack("m*").first.split(/:/, 2)
+      end
+      
+      before do
+        return if @request.method == :get
+        @user, @pass = basic_auth
+        authenticate(*basic_auth)
+      end
+      
+      def authenticate(user, password)
+        raise Waves::Dispatchers::Unauthorized unless user.reverse == password
+      end
+      
+      
       on :get, :list => [ /entry|entries/ ] do
         view.list( plural => controller.all )
       end
