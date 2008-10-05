@@ -49,11 +49,21 @@ module Waves
       @pids = [] ; ports.each do | port |
         @pids << fork do
           Server.trap( 'INT' ) { exit }
-          config.server.call( application, host, port ) do | server |
-            Waves::Logger.info "Waves server started on #{host}:#{port}."
-            Server.trap('INT') do
-              server.stop if server.respond_to? :stop
-              Waves::Logger.info "Waves server on #{host}:#{port} stopped."
+          connect = false
+          until connect do
+            begin
+              # TODO: This is NOT the right way to do this ...
+              Thread.new { sleep 15 ; Waves.reload if Waves.debug? }
+              config.server.call( application, host, port ) do | server |
+                Waves::Logger.info "Waves server started on #{host}:#{port}."
+                Server.trap('INT') do
+                  server.stop if server.respond_to? :stop
+                  Waves::Logger.info "Waves server on #{host}:#{port} stopped."
+                end
+                connect = true
+              end
+            rescue Exception => e
+              Waves::Logger.info e
             end
           end
         end
@@ -69,7 +79,7 @@ module Waves
     end
     
     unless RUBY_PLATFORM =~ /mswin32/
-      def reload ; restart ; end
+      def reload ; Process.kill('HUP', Process.ppid ) ; end
     end
     
     
