@@ -33,6 +33,8 @@ require 'ext/kernel'
 # waves Runtime
 require 'dispatchers/base'
 require 'dispatchers/default'
+require 'servers/webrick'
+require 'servers/mongrel'
 require 'runtime/logger'
 require 'runtime/mime_types'
 require 'runtime/runtime'

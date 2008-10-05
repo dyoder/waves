@@ -150,9 +150,12 @@ module Waves
       #
       # When accessing the value
       # (calling with no arguments), returns an array of the handler and options.
-      def self.handler( *args )
-        return self['handler'] if args.empty?
-        self['handler'] = args.first
+      def self.server( server = nil )
+        if server
+          self['server'] = server
+        else
+          self['server']
+        end
       end
 
       # Provides access to the Waves::MimeTypes class via the configuration. You
@@ -178,6 +181,12 @@ module Waves
       dependencies []
       cache :dir => 'cache'
       pid "#{$$}.pid"
+      server Waves::Servers::WEBrick.new
+      application {
+        use ::Rack::ShowExceptions
+        run ::Waves::Dispatchers::Default.new
+      }
+      
     end
   end
 end

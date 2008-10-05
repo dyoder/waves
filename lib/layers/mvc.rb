@@ -93,13 +93,6 @@ module Waves
           auto_load true, :directories => [ :helpers ]
         end
         
-        app.auto_eval :Resources do
-          auto_create_class :Default, Waves::Resources::Base
-          auto_load :Default, :directories => [ :resources ]
-          auto_create_class( true, app::Resources::Default )
-          auto_load( true, :directories => [ :resources ] )
-        end
-
       end
     end
   end

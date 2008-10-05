@@ -1,102 +1,78 @@
 module Waves
-  # You can run the Waves::Server via the +waves-server+ command or via <tt>rake cluster:start</tt>. Run <tt>waves-server --help</tt> for options on the <tt>waves-server</tt> command. The <tt>cluster:start</tt> task uses the +mode+ environment variable to determine the active configuration. You can define +port+ to run on a single port, or +ports+ (taking an array) to run on multiple ports.
-  #
-  # *Example*
-  #
-  # Assume that +ports+ is set in the development configuration like this:
-  #
-  #   ports [ 2020, 2021, 2022 ]
-  #
-  # Then you could start up instances on all three ports using:
-  #
-  #   rake cluster:start mode=development
-  #
-  # This is the equivalent of running:
-  #
-  #   waves-server -c development -p 2020 -d
-  #   waves-server -c development -p 2021 -d
-  #   waves-server -c development -p 2022 -d
-  #
-  # The +cluster:stop+ task stops all of the instances.
-  #
+  
   class Server < Runtime
-
-    # Access the server thread.
-    attr_reader :thread
-
-    # Access the host we're binding to (set via the configuration).
+    
     def host ; options[:host] || config.host ; end
-
-    # Access the port we're listening on (set via the configuration).
     def port ; options[:port] || config.port ; end
-
-    # Run the server as a daemon. Corresponds to the -d switch on +waves-server+.
+    def ports ; config.ports || [ port ] ; end
+    def application ; config.application.to_app ; end
+    
+    def Server.run( options )
+      @manager = new( options )
+      Server.trap( 'INT' ) { } 
+      Server.trap( 'HUP' ) { @manager.restart }
+      @manager.start
+    end
+    
+    def Server.trap(signal)
+      Kernel::trap(signal) { yield }
+      Thread.new { loop { sleep 1 } } if RUBY_PLATFORM =~ /mswin32/
+    end
+        
+    def start
+      daemonize if options[ :daemon ]
+      Waves::Logger.start
+      Waves::Logger.info "Waves version #{Waves.version} starting"
+      start_debugger if options[ :debugger ]
+      unless RUBY_PLATFORM =~ /mswin32/
+        start_servers
+      else
+        config.servers.call( application, host, port )
+      end
+      Process.waitall
+    end
+    
     def daemonize
       pwd = Dir.pwd
       Daemonize.daemonize( Waves::Logger.output )
       Dir.chdir(pwd)
-      File.write( Waves.config.pid, $$ )
     end
-
-    def trap(signal)
-      Kernel::trap(signal) { yield }
-      Thread.new { loop {sleep 1} } if RUBY_PLATFORM =~ /mswin32/
-    end
-
-    # Start the server.
-    def start
-      daemonize if options[:daemon]
-      start_debugger if options[:debugger]
-      log.info "Waves Runtime #{Waves.version}"
-      log.info "Waves starting  on #{host}:#{port}"
-      # TODO: technically is this not really Rack-compatible, since the options / block
-      # stuff is custom to the underlying server implementation, an area where Rack surprisingly
-      # exposes server internals ... :(
-      config.handler.run( config.application.to_app, { :Host => host, :Port => port } ) do |server|
-        @server = server
-        self.trap('INT') { puts; stop } if @server.respond_to? :stop
-      end
-    end
-
-    # Stop the server.
-    def stop
-      log.info "Waves Server Stopping ..."
-      if options[:daemon]
-        pid_file = Waves.config.pid ; FileUtils.rm( pid_file ) if File.exist?( pid_file )
-      end
-      @server.stop
-      log.info "Waves Server Stopped"
-    end
-
-    class << self
-      private :new, :dup, :clone
-      # Start or restart the server.
-      def run( options={} )
-        @server.stop if @server; @server = new( options ); @server.start
-      end
-      
-      # Allows us to access the Waves::Server instance.
-      def method_missing(*args)
-        @server.send(*args)
-      end
-      
-      #-- Probably wouldn't need this if I added a block parameter to method_missing.
-      def synchronize(&block) ; @server.synchronize(&block) ; end
-    end
-
-    private
-
+    
     def start_debugger
-      begin
-        require 'ruby-debug'
-        Debugger.start
-        Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
-        log.info "Debugger enabled"
-      rescue Exception
-        log.info "You need to install ruby-debug to run the server in debugging mode. With gems, use 'gem install ruby-debug'"
-        exit
+      require 'ruby-debug'
+      Debugger.start
+      Debugger.settings[:autoeval] = true if Debugger.respond_to?(:settings)
+      Waves::Logger.info "ruby-debug enabled"
+    end
+    
+    def start_servers
+      @pids = [] ; ports.each do | port |
+        @pids << fork do
+          Server.trap( 'INT' ) { exit }
+          config.server.call( application, host, port ) do | server |
+            Waves::Logger.info "Waves server started on #{host}:#{port}."
+            Server.trap('INT') do
+              server.stop if server.respond_to? :stop
+              Waves::Logger.info "Waves server on #{host}:#{port} stopped."
+            end
+          end
+        end
       end
     end
+        
+    def stop
+      @pids.each { | pid | Process.kill( 'INT', pid ) }
+    end
+    
+    def restart
+      stop ; start_servers
+    end
+    
+    unless RUBY_PLATFORM =~ /mswin32/
+      def reload ; restart ; end
+    end
+    
+    
   end
-
+  
 end

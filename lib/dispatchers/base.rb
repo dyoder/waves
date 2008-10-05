@@ -33,18 +33,19 @@ module Waves
       # As with any Rack application, a Waves dispatcher must provide a call method
       # that takes an +env+ hash.
       def call( env )
-        if Waves.synchronize?
-          Waves.synchronize { _call( env ) }
+        if Waves.synchronize? or Waves.debug?
+          Waves.synchronize { _call( env )  }
         else
           _call( env )
         end
+        # Thread.new { Waves.reload }
       end
 
       # Called by event driven servers like thin and ebb. Returns true if
       # the server should run the request in a separate thread, as determined by
       # Configurations::Mapping#threaded?
       def deferred?( env )
-        Waves::Runtime.instance.mapping.threaded?( env )
+        # TODO: impl.
       end
       
       private
