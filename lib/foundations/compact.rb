@@ -17,11 +17,7 @@ module Waves
               log :level => :debug
               host '127.0.0.1'
               port 3000
-              handler ::Rack::Handler::Mongrel
-              application {
-                use ::Rack::ShowExceptions
-                run ::Waves::Dispatchers::Default.new
-              }
+              server Waves::Servers::Mongrel.new
               resource app::Resources::Map
             })
             const_set( :Production, Class.new( self::Development ) {
