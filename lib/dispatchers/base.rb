@@ -31,12 +31,11 @@ module Waves
       # As with any Rack application, a Waves dispatcher must provide a call method
       # that takes an +env+ hash.
       def call( env )
-        if Waves.synchronize? or Waves.debug?
+        response = if Waves.synchronize? or Waves.debug?
           Waves.synchronize { _call( env )  }
         else
           _call( env )
         end
-        # Thread.new { Waves.reload }
       end
 
       # Called by event driven servers like thin and ebb. Returns true if
