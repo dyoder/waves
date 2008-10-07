@@ -52,8 +52,6 @@ module Waves
           connect = false
           until connect do
             begin
-              # TODO: This is NOT the right way to do this ...
-              Thread.new { sleep 15 ; Waves.reload if Waves.debug? }
               config.server.call( application, host, port ) do | server |
                 Waves::Logger.info "Waves server started on #{host}:#{port}."
                 Server.trap('INT') do
@@ -78,9 +76,9 @@ module Waves
       stop ; start_servers
     end
     
-    unless RUBY_PLATFORM =~ /mswin32/
-      def reload ; Process.kill('HUP', Process.ppid ) ; end
-    end
+    # unless RUBY_PLATFORM =~ /mswin32/
+    #   def reload ; Process.kill('HUP', Process.ppid ) ; end
+    # end
     
     
   end
