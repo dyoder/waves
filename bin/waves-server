@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+
+# WARNING: This is a bit of mess, but is needed to work with older versions of gem ...
+
 require 'rubygems'
 waves = [
     (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'

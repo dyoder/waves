@@ -24,7 +24,7 @@ module Waves
       
       # Just like model.all. Returns all the instances of that model.
       def all( model )
-        model( model ).all( domain )
+        model( model ).all
       end
       
       # Finds a specific instance using the name field
