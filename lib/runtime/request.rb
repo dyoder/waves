@@ -25,19 +25,18 @@ module Waves
     # Accessors not explicitly defined by Waves::Request or added dynamically to
     # traits.waves are delegated to Rack::Request.
     def method_missing( name, *args, &block )
-      if args.empty?
-        ( ( @request.respond_to?( name ) and @request.send( name ) ) or
-          ( http_variable( name ) or rack_variable( name ) ) or super ) 
-      else
-        @request.respond_to?( name ) and @request.send( name, *args, &block )
-      end
+      delegate( name, *args, &block ) or ( self[ name ] if args.empty? ) or super
     end
     
-    def rack_variable(name)
+    def []( key )
+      http_variable( key ) or rack_variable( name )
+    end
+    
+    def rack_variable( name )
       @request.env["rack.#{name.to_s.downcase}"]
     end
     
-    def http_variable(name)
+    def http_variable( name )
       @request.env[ "HTTP_#{name.to_s.upcase}" ]
     end
 
@@ -49,7 +48,6 @@ module Waves
 
     # The request content type.
     def content_type ; @request.env['CONTENT_TYPE'] ; end
-    
 
     # Request method predicates, defined in terms of #method.
     METHODS = %w{get post put delete head options trace}
@@ -113,7 +111,6 @@ module Waves
     def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 
-
     module Utilities
       
       def self.destructure( hash )
@@ -147,6 +144,12 @@ module Waves
         end
       end
       
+    end
+    
+    private
+    
+    def delegate( name, *args, &block )
+      @request.send( name, *args, &block ) if @request.respond_to? name
     end
 
   end

@@ -34,7 +34,7 @@ module Waves
       # that takes an +env+ hash.
       def call( env )
         response = if Waves.synchronize? or Waves.debug?
-          Waves.synchronize { _call( env )  }
+          Waves.synchronize { Waves.reload ; _call( env )  }
         else
           _call( env )
         end
