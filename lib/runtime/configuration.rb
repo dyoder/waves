@@ -143,7 +143,7 @@ module Waves
     class Default < Base
 
       %w( host port ports log reloadable resource database session pid
-        debug root dependencies cache console ).each { |name| attribute(name) }
+        debug root dependencies cache console monitor ).each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
       # that need to be passed to the handler's #run method. 
@@ -187,6 +187,7 @@ module Waves
         run ::Waves::Dispatchers::Default.new
       }
       console 3333
+      monitor Waves::Monitor.new( :interval => 60 )
       
     end
   end

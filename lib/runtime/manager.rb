@@ -17,14 +17,14 @@ module Waves
       return pid if pid
       start_logger ; set_traps
       start_debugger if options[ :debugger ]
-      start_servers ; start_console
+      start_servers ; start_monitor ; start_console
       sleep 60 while true
     end
     
     def stop
       Waves::Logger.info "Manager shutting down ..."
-      @console.stop ; stop_servers ; Process.waitall
-      exit
+      @console.stop ; @monitor.stop ; stop_servers
+      Process.waitall ; exit
     end
     
     def restart
@@ -37,6 +37,7 @@ module Waves
       pwd = Dir.pwd ; pid = fork ; return pid if pid ; Dir.chdir( pwd )
       File.umask 0000 ; STDIN.reopen( '/dev/null') ; 
       STDOUT.reopen( '/dev/null', 'a' ) ; STDERR.reopen( STDOUT )
+      nil # return nil for child process, just like fork does
     end
     
     def set_traps
@@ -53,6 +54,12 @@ module Waves
       @console = LiveConsole.new( config.console )
       @console.run
       Waves::Logger.info "Console started on port #{config.console}"
+    end
+    
+    def start_monitor
+      @monitor = Waves.config.monitor
+      pid = @monitor.start( self )
+      Waves::Logger.info "Monitor started with PID #{pid}"
     end
     
     def start_debugger
