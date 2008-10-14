@@ -2,7 +2,7 @@ namespace :manager do
 
   desc 'Start a cluster of waves applications.'
   task :start do |task|
-    File.write('.pid', fork { Waves::Server.run({}) } )
+    File.write('.pid', Waves::Manager.run( :daemonize => true ) )
   end
 
   desc 'Stop a cluster of waves applications.'
