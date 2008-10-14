@@ -51,25 +51,43 @@ TEXT
 end
 
 skip_rake = false
-case Choice.choices.template
-when 'classic'
-  template = "#{WAVES}/app/classic"
-when 'compact'
-  template = "#{WAVES}/app/compact"
-  skip_rake = true
+use_builtin = File.exist?(Choice.choices.template) ? false : true
+
+if use_builtin
+  case Choice.choices.template
+  when ('classic' and use_builtin == true)
+    template = "#{WAVES}/app/classic"
+  when 'compact'
+    compact_app = <<-COMPACT
+  require 'foundations/compact'
+
+  module #{app_name}
+    include Waves::Foundations::Compact
+
+    module Resources
+      class Map
+      end
+
+    end
+  end
+  COMPACT
+    skip_rake = true
+    File.open(app_path / app_name + '.rb', 'w') {|file| file.print compact_app}
+  end
 else
-  puts "I'm sorry, '#{Choice.choices.template}' is not an available option."
-  raise ArgumentError
+  template = Choice.choices.template
 end
 
-generator = Rakegen.new("waves:app") do |gen|
-  gen.source = template
-  gen.target = app_path
-  gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
+unless skip_rake 
+  generator = Rakegen.new("waves:app") do |gen|
+    gen.source = template
+    gen.target = app_path
+    gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
+  end
 end
 
 puts "** Creating new Waves application ..."
 
-Rake::Task["waves:app"].invoke
+Rake::Task["waves:app"].invoke unless skip_rake
 
 puts "** Application created!"
