@@ -5,7 +5,7 @@ module Waves
     
     def self.run( options )
       @manager ||= new( options )
-      @manager.start ; self
+      @manager.start
     end
     
     def self.instance ; @manager ; end
@@ -13,7 +13,8 @@ module Waves
     private :dup, :clone
     
     def start
-      daemonize if options[ :daemon ]
+      pid = daemonize if options[ :daemon ]
+      return pid if pid
       start_logger ; set_traps
       start_debugger if options[ :debugger ]
       start_servers ; start_console
@@ -33,7 +34,7 @@ module Waves
     private
     
     def daemonize
-      pwd = Dir.pwd ; exit if fork ; Dir.chdir( pwd )
+      pwd = Dir.pwd ; pid = fork ; return pid if pid ; Dir.chdir( pwd )
       File.umask 0000 ; STDIN.reopen( '/dev/null') ; 
       STDOUT.reopen( '/dev/null', 'a' ) ; STDERR.reopen( STDOUT )
     end

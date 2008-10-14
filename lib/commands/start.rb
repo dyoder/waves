@@ -59,4 +59,9 @@ Choice.options do
   end
   separator ''
 end
-Waves::Manager.run( Choice.choices )
+
+begin
+  Waves::Manager.run( Choice.choices )
+rescue LoadError => e
+  puts e.message
+end
