@@ -10,4 +10,11 @@ module Kernel
     # 'engine' exists to provide a quick and easy (and MRI-compatible!) interface to the RUBY_ENGINE constant
     def engine; defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'; end
   end
+  
+  def safe_trap(*signals)
+    trap(*signals) { yield }
+    Thread.new { loop { sleep 1 } } if RUBY_PLATFORM =~ /mswin32/
+  end
+      
+  
 end

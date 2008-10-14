@@ -143,7 +143,7 @@ module Waves
     class Default < Base
 
       %w( host port ports log reloadable resource database session pid
-        debug root dependencies cache ).each { |name| attribute(name) }
+        debug root dependencies cache console ).each { |name| attribute(name) }
 
       # Set the Rack handler, along with any specific options
       # that need to be passed to the handler's #run method. 
@@ -181,11 +181,12 @@ module Waves
       dependencies []
       cache :dir => 'cache'
       pid "#{$$}.pid"
-      server Waves::Servers::WEBrick.new
+      server Waves::Servers::WEBrick
       application {
         use ::Rack::ShowExceptions
         run ::Waves::Dispatchers::Default.new
       }
+      console 3333
       
     end
   end

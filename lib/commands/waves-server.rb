@@ -59,4 +59,4 @@ Choice.options do
   end
   separator ''
 end
-Waves::Server.run( Choice.choices )
+Waves::Manager.run( Choice.choices )
