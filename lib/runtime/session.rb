@@ -37,7 +37,7 @@ module Waves
         File.write( session_path, @data.to_yaml )
         @request.response.set_cookie( 'session_id',
           :value => session_id, :path => '/',
-          :expires => Time.now + Waves::Server.config.session[:duration] )
+          :expires => Time.now + Waves.config.session[:duration] )
       end
     end
 
