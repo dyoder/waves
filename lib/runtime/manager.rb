@@ -23,8 +23,8 @@ module Waves
     
     def stop
       Waves::Logger.info "Manager shutting down ..."
-      @console.stop ; @monitor.stop ; stop_servers
-      Process.waitall ; exit
+      @console.stop if @console ; @monitor.stop if @monitor
+      stop_servers ; Process.waitall ; exit
     end
     
     def restart
@@ -51,15 +51,18 @@ module Waves
     end
     
     def start_console
-      @console = LiveConsole.new( config.console )
-      @console.run
-      Waves::Logger.info "Console started on port #{config.console}"
+      if config.console
+        @console = config.console ; @console.run
+        Waves::Logger.info "Console started on port #{config.console}"
+      end
     end
     
     def start_monitor
-      @monitor = Waves.config.monitor
-      pid = @monitor.start( self )
-      Waves::Logger.info "Monitor started with PID #{pid}"
+      unless config.debug
+        @monitor = Waves.config.monitor
+        pid = @monitor.start( self )
+        Waves::Logger.info "Monitor started with PID #{pid}"
+      end
     end
     
     def start_debugger
