@@ -45,7 +45,7 @@ module Waves
     
     def start_logger
       Waves::Logger.start
-      Waves::Logger.info "Waves #{Waves.version} starting up ..."
+      Waves::Logger.info "Manager starting up ..."
     end
     
     def start_console

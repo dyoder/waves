@@ -1,70 +1,27 @@
 #!/usr/bin/env ruby
+
+# WARNING: This strange preamble might look easy to clean-up, but it is needed
+# to work with older versions of gems (< 1.2).
+
 require 'rubygems'
-require 'choice'
-require 'rakegen'
 
-# if we're in the waves source, prepend it to the load path
-# waves_lib = File.expand_path( "#{File.dirname(__FILE__)}/../../waves/lib" )
-# $:.unshift waves_lib if File.exist?(waves_lib)
-# require 'waves'
-
-WAVES = "#{File.dirname(__FILE__)}/.." 
-
-require File.join(WAVES, 'lib', 'ext', 'string')
-
-Choice.options do
-  banner 'Usage:  waves path/to/app [-h]'
-  option :help  do
-    long '--help'
-    desc 'Show this message'
-  end
-  
-  option :orm do
-    short '-o'
-    long '--orm=ORM'
-    desc "Select an ORM (e.g. active_record, sequel, none)"
-    default "sequel"
-  end
-    
-end
-
-puts "** Waves #{File.read("#{WAVES}/doc/VERSION")}"
-
-available_orms = [ 'sequel' ,  'active_record' , 'none' ]
-orm = Choice.choices.orm.snake_case
-orm_require, orm_include = case orm
-when 'sequel'
-  ["require 'layers/orm/sequel'", "include Waves::Layers::ORM::Sequel"]
-when /active([-_]*)record/
-  ["require 'layers/orm/active_record'", "include Waves::Layers::ORM::ActiveRecord"]
-when 'none'
-  ['', '# This app was generated without an ORM layer.']
+waves = [
+    (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find( &File.method( :directory? ) )
+if waves
+    $: << waves
+    waves = File.join( waves, 'waves' )
 else
-  puts "I'm sorry, '#{orm}' is not listed as an available option.\nTry: \t"
-  available_orms.each { |x| puts "\t\t#{x}" }
-  raise ArgumentError
+    waves = 'waves'
 end
+require waves
 
-app_path = ARGV[0]
-app_name = File.basename(app_path)
-if app_name =~ /[^\w\d_]/
-  raise ArgumentError, <<-TEXT
-  Unusable name: \"#{app_name}\"
-  Application names may contain only letters, numbers, and underscores."
-TEXT
+
+puts "** Waves #{Waves.version} **"
+
+
+begin
+  require "commands/#{ARGV.first}"
+rescue LoadError => e
+  require "commands/help"
 end
-
-template = "#{WAVES}/app"
-
-generator = Rakegen.new("waves:app") do |gen|
-  gen.source = template
-  gen.target = app_path
-  gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
-end
-
-puts "** Creating new Waves application ..."
-
-Rake::Task["waves:app"].invoke
-
-puts "** Application created!"
-
