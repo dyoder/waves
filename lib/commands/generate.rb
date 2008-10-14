@@ -14,7 +14,14 @@ Choice.options do
     desc "Select an ORM (e.g. active_record, sequel, none)"
     default "sequel"
   end
-    
+  
+  option :template do
+    short '-t'
+    long '--template=FOUNDATION'
+    desc "Select a template for app generation (Built-in options: 'classic', 'compact')."
+    default "classic"
+  end
+  
 end
 
 puts "** Waves #{File.read("#{WAVES}/doc/VERSION")}"
@@ -43,7 +50,17 @@ if app_name =~ /[^\w\d_]/
 TEXT
 end
 
-template = "#{WAVES}/app"
+skip_rake = false
+case Choice.choices.template
+when 'classic'
+  template = "#{WAVES}/app/classic"
+when 'compact'
+  template = "#{WAVES}/app/compact"
+  skip_rake = true
+else
+  puts "I'm sorry, '#{Choice.choices.template}' is not an available option."
+  raise ArgumentError
+end
 
 generator = Rakegen.new("waves:app") do |gen|
   gen.source = template
