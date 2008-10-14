@@ -5,8 +5,11 @@ module Blog
       
       def basic_auth
         raise Waves::Dispatchers::Unauthorized unless auth = @request.http_variable('Authorization')
+        # Header value should look like: "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="
         scheme, credentials = auth.split(' ', 2)
         raise Waves::Dispatchers::BadRequest unless scheme == "Basic"
+        # "m*" is the code for Base64
+        # decoded value looks like "user:password"
         credentials.unpack("m*").first.split(/:/, 2)
       end
       
