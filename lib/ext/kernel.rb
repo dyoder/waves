@@ -12,7 +12,7 @@ module Kernel
   end
   
   def safe_trap(*signals)
-    trap(*signals) { yield }
+    signals.each { |s| trap(s) { yield } }
     Thread.new { loop { sleep 1 } } if RUBY_PLATFORM =~ /mswin32/
   end
       

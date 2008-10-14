@@ -15,7 +15,7 @@ module Waves
         @application = application; @host = host ; @port = port
       end
       
-      # starts server, retrying every few seconds until it succeeds
+      # starts server, retrying every second until it succeeds
       def run
         connect = false
         until connect do
@@ -23,7 +23,7 @@ module Waves
             call { |server| @server = server ; start }
           rescue
             Waves::Logger.error e.to_s
-            sleep 4
+            sleep 1
           end
           connect = true
         end
@@ -31,7 +31,7 @@ module Waves
       
       def start
         Waves::Logger.info "Waves server started on #{host}:#{port}."
-        safe_trap('INT') { stop }
+        safe_trap('INT','TERM') { stop }
       end
       
       def stop
