@@ -8,24 +8,29 @@ module Waves
       @manager.start ; self
     end
     
-    class << self ; private :new, :dup, :clone ; end
     def self.instance ; @manager ; end
+    class << self ; private :new, :allocate ; end
+    private :dup, :clone
     
     def start
       daemonize if options[ :daemon ]
-      set_traps ; start_logger ; start_console
+      start_logger ; set_traps
       start_debugger if options[ :debugger ]
-      start_servers ; Process.waitall
+      start_servers ; start_console
+      sleep 60 while true
     end
     
     def stop
       Waves::Logger.info "Manager shutting down ..."
-      @console.stop ; stop_servers ; exit
+      @console.stop ; stop_servers ; Process.waitall
+      exit
     end
     
     def restart
-      stop_servers ; start_servers
+      stop_servers; start_servers
     end
+    
+    private
     
     def daemonize
       pwd = Dir.pwd ; exit if fork ; Dir.chdir( pwd )
@@ -35,7 +40,7 @@ module Waves
     
     def set_traps
       safe_trap( 'HUP' ) { restart }
-      safe_trap( 'INT' ) { stop }
+      safe_trap( 'TERM','INT' ) { stop }
     end
     
     def start_logger
@@ -46,6 +51,7 @@ module Waves
     def start_console
       @console = LiveConsole.new( config.console )
       @console.run
+      Waves::Logger.info "Console started on port #{config.console}"
     end
     
     def start_debugger
