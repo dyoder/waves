@@ -80,7 +80,7 @@ module Waves
     
     def start_servers
       @pids =  ports.map do | port | 
-        config.server.run( config.application, host, port )
+        config.server.run( config.application.to_app, host, port )
       end
     end
 
