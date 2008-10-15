@@ -23,13 +23,15 @@ describe "Waves::Configurations::Default" do
   class Default < Waves::Configurations::Default; end
   
   it "declares certain attributes necessary to run a Waves app" do
-    %w( host port ports log reloadable database session debug root synchronize? ).each do |attr|
+    %w( host port ports log reloadable resource database session pid
+      debug root dependencies cache console monitor ).each do |attr|
       Default.should.respond_to attr
     end
   end
   
   it "sets default values for important attributes" do
-    [ :debug, :synchronize?, :session, :log, :reloadable ].each do |attr|
+    [ :debug, :session, :log, :reloadable, :dependencies, :cache, :pid, :server,
+      :application, :monitor  ].each do |attr|
       Default[attr].should.not.be.nil
     end
   end
