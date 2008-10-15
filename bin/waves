@@ -5,8 +5,10 @@
 
 require 'rubygems'
 
+WAVES = "#{File.dirname(__FILE__)}/.." unless defined? WAVES
+
 waves = [
-    (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'
+    WAVES, ENV[ 'WAVES'], './waves'
 ].compact.map { |dir| File.join(dir, 'lib') }.find( &File.method( :directory? ) )
 if waves
     $: << waves

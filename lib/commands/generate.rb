@@ -8,23 +8,23 @@ Choice.options do
     desc 'Show this message'
   end
   
-  option :orm do
-    short '-o'
-    long '--orm=ORM'
-    desc "Select an ORM (e.g. active_record, sequel, none)"
-    default "sequel"
-  end
+#  option :generate do
+    option :orm do
+      short '-o'
+      long '--orm=ORM'
+      desc "Select an ORM (e.g. active_record, sequel, none)"
+      default "sequel"
+    end
   
-  option :template do
-    short '-t'
-    long '--template=FOUNDATION'
-    desc "Select a template for app generation (Built-in options: 'classic', 'compact')."
-    default "classic"
-  end
+    option :template do
+      short '-t'
+      long '--template=FOUNDATION'
+      desc "Select a template for app generation (Built-in options: 'classic', 'compact')."
+      default "classic"
+    end
+#  end
   
 end
-
-puts "** Waves #{File.read("#{WAVES}/doc/VERSION")}"
 
 available_orms = [ 'sequel' ,  'active_record' , 'none' ]
 orm = Choice.choices.orm.snake_case
@@ -41,7 +41,7 @@ else
   raise ArgumentError
 end
 
-app_path = ARGV[0]
+app_path = ARGV[1]
 app_name = File.basename(app_path)
 if app_name =~ /[^\w\d_]/
   raise ArgumentError, <<-TEXT
@@ -51,40 +51,35 @@ TEXT
 end
 
 skip_rake = false
-use_builtin = File.exist?(Choice.choices.template) ? false : true
 
-if use_builtin
-  case Choice.choices.template
-  when ('classic' and use_builtin == true)
-    template = "#{WAVES}/app/classic"
-  when 'compact'
-    compact_app = <<-COMPACT
-  require 'foundations/compact'
+case Choice.choices.template
+when 'classic'
+  template = File.exist?(Choice.choices.template) ? Choice.choices.template : "#{WAVES}/app/classic"
+when 'compact'
+  compact_app = <<-COMPACT
+require 'foundations/compact'
 
-  module #{app_name}
-    include Waves::Foundations::Compact
+module #{app_name}
+  include Waves::Foundations::Compact
 
-    module Resources
-      class Map
-      end
-
+  module Resources
+    class Map
     end
+
   end
-  COMPACT
-    skip_rake = true
-    File.open(app_path / app_name + '.rb', 'w') {|file| file.print compact_app}
-  end
+end
+COMPACT
+  skip_rake = true
+  File.open(app_path + '.rb', 'w') {|file| file.print compact_app}
 else
   template = Choice.choices.template
 end
 
-unless skip_rake 
-  generator = Rakegen.new("waves:app") do |gen|
-    gen.source = template
-    gen.target = app_path
-    gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
-  end
-end
+generator = Rakegen.new("waves:app") do |gen|
+  gen.source = template
+  gen.target = app_path
+  gen.template_assigns = {:name => app_name.camel_case, :orm_require => orm_require, :orm_include => orm_include }
+end unless skip_rake
 
 puts "** Creating new Waves application ..."
 
