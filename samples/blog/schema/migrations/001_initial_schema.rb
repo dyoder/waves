@@ -3,10 +3,10 @@ class InitialSchema < Sequel::Migration
   def up
     create_table :entries do
       primary_key :id
-      text :name
-      text :title
-      text :summary
+      string :name
+      string :title
       text :content
+      timestamp :updated_on
     end
   end
 

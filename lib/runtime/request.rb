@@ -64,7 +64,7 @@ module Waves
 
     # Raise a not found exception.
     def not_found
-      raise Waves::Dispatchers::NotFoundError.new( @request.url + ' not found.' )
+      raise Waves::Dispatchers::NotFoundError, "#{@request.url} not found." 
     end
 
     # Issue a redirect for the given path.

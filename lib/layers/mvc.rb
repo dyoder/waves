@@ -46,6 +46,10 @@ module Waves
               Waves::Request::Utilities.destructure( request.query ) )
           end
           
+          def attributes
+            query[ model_name ]
+          end
+          
         end
         
         app.auto_create_module( :Models ) do
@@ -83,7 +87,7 @@ module Waves
 
         app.auto_create_module( :Helpers ) do
           include AutoCode
-          auto_create_module( :Default ) { include Waves::Helpers::BuiltIn }
+          auto_create_module( :Default ) { include Waves::Helpers::Extended }
           auto_load :Default, :directories => [ :helpers ]
           auto_create_module( true ) { include app::Helpers::Default }
           auto_load true, :directories => [ :helpers ]

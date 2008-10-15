@@ -1,8 +1,18 @@
-#!/usr/bin/env ruby
-#
 # Warning:  This file is clobbered when you update your
 # application with the waves script.  Accordingly, you may
 # wish to keep your tasks in .rb or .rake files in lib/tasks
+require 'rubygems'
+waves = [
+    (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find(&File.method(:directory?))
+if waves
+    $: << waves
+    waves = File.join( waves, 'waves' )
+else
+    waves = 'waves'
+end
+require waves
+
 require 'startup'
 Waves::Console.load(:mode => ENV['mode'])
 

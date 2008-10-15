@@ -11,6 +11,8 @@ module Blog
       log :level => :info,
         :output => ( :log / "waves.production" )
 
+      session :duration => 45.minutes, :path => 'tmp/sessions'
+      
       host '0.0.0.0'
 
       port 3000

@@ -73,6 +73,24 @@ module Waves
       
       # Resources are initialized with a Waves::Request
       def initialize( request ); @request = request ; end
+      
+      def process
+        begin
+          # invoke the request method, wrapped by the before and after methods
+          before
+          body = send( request.method )
+          request.response.write( body ) if body.respond_to?( :to_s )
+          after
+        rescue Exception => e
+          # handle any exceptions using the resource handlers, if any
+          Waves::Logger.info e.to_s
+          ( request.response.body = handler( e ) ) rescue raise e
+        ensure
+          # no matter what happens, also run the resource's always method
+          always
+        end
+      end
+      
       def to( resource )
         resource = case resource
         when Base
@@ -80,7 +98,9 @@ module Waves
         when Symbol, String
           Waves.main::Resources[ resource ]
         end
-        traits.waves.resource = resource.new( request ).send( request.method )
+        r = traits.waves.resource = resource.new( request )
+        r.process
+        nil
       end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end

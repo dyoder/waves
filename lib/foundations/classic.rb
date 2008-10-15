@@ -42,6 +42,12 @@ module Waves
           app.auto_eval( :Resources ) do
             auto_create_class true, app::Resources::Default
             auto_load true, :directories => [ :resources ]
+            auto_eval :Map do
+              handler( Waves::Dispatchers::NotFoundError ) {
+                response.status = 404; response.content_type = 'text/html'
+                app::Views::Errors.process( request ) { not_found_404 }
+              }
+            end
           end
 
           include Waves::Layers::Inflect::English
