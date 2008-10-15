@@ -33,6 +33,13 @@ module Waves
     
     private
     
+    def ports
+      ( [ options[ :port ] ] if options[ :port ] ) or 
+        config.ports or [ config.port ]
+    end
+    
+    def host ; options[ :host ] or config.host ; end
+    
     def daemonize
       pwd = Dir.pwd ; pid = fork ; return pid if pid ; Dir.chdir( pwd )
       File.umask 0000 ; STDIN.reopen( '/dev/null') ; 
@@ -72,8 +79,8 @@ module Waves
     end
     
     def start_servers
-      @pids = ( config.ports or [ config.port ] ).map do | port | 
-        config.server.run( config.application, config.host, port )
+      @pids =  ports.map do | port | 
+        config.server.run( config.application, host, port )
       end
     end
 
