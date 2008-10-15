@@ -50,7 +50,7 @@ gem = Gem::Specification.new do |gem|
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
-  gem.executables = [ 'waves', 'waves-server', 'waves-console' ]
+  gem.executables = [ 'waves' ]
 end
 
 desc "Create the waves gem"
