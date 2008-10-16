@@ -12,7 +12,7 @@ module Waves
 
       def store( key, value )            
         @keys << key
-        ::File.write( @directory / key, Marshal.dump( item, file ) ) 
+        Marshal.dump( value, ::File.new( @directory / key, 'w') ) 
       end
 
       def delete( key )
@@ -28,6 +28,8 @@ module Waves
 
       def fetch( key )
         Marshal.load( ::File.read( @directory / key ) ) if @keys.include?( key )
+      rescue ArgumentError
+        nil
       end
       
     end

@@ -1,5 +1,5 @@
 # require 'test_helper' because RubyMate needs help
-require File.join(File.dirname(__FILE__) , "helpers")
+require "#{File.dirname(__FILE__)}/helpers"
 require 'foundations/compact'
 
 module DefaultErrorsApp

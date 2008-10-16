@@ -13,10 +13,10 @@ module Waves
       def initialize( hash = {} ) ; @cache = hash ; end
       def [](key) ; fetch(key) ; end
       def []=( key, value ) ; store( key, value ) ; end
-      def exists?( key ) ; @cache.has_key?( key ) ; end
+      def exists?( key ) ; fetch(key) == nil ? false : true ; end
       alias :exist? :exists?
       def store( key, val ) ; @cache[ key ] = val ; end
-      def fetch( keys ) ; @cache[ key ] ; end
+      def fetch( key ) ; @cache[ key ] ; end
       def delete( key ) ; @cache.delete( key ) ; end
       def clear ; @cache = {} ; end
       
