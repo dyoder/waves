@@ -17,14 +17,14 @@ module Waves
               log :level => :debug
               host '127.0.0.1'
               port 3000
-              server Waves::Servers::Mongrel.new
+              server Waves::Servers::Mongrel
               resource app::Resources::Map
             })
             const_set( :Production, Class.new( self::Development ) {
               log :level => :error, :output => ( "log.#{$$}" ), :rotation => :weekly
               port 80
               host '0.0.0.0'
-              handler ::Rack::Handler::Mongrel
+              server Waves::Servers::Mongrel
             })
           })
         }
