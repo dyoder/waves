@@ -1,8 +1,9 @@
 # require 'test_helper' because RubyMate needs help
 require File.join(File.dirname(__FILE__) , "helpers")
+require 'foundations/compact'
 
 module DefaultErrorsApp
-  include Waves::Foundations::Simple
+  include Waves::Foundations::Compact
   include Waves::Layers::DefaultErrors
   module Views
     class Errors
