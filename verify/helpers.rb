@@ -3,6 +3,7 @@ require 'rubygems'; %w{ bacon facon }.each { |dep| require dep }
 # Framework lib goes to the front of the loadpath
 $:.unshift( File.join(File.dirname(__FILE__), "..", "lib") )
 require 'waves'
+require 'runtime/bench'
 
 # Fire up the Bench runtime
 Waves::Bench.load

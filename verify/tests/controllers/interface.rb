@@ -13,38 +13,38 @@ describe "A Waves controller" do
     @dc.request.should == @request
   end
   
-  it "can access a destructured version of the request params" do
-    request_hash =      { 'beer.name' => 'Pale Rye Ale', 
-                          'beer.brew.kind' => 'mini-mash', 
-                          'beer.brew.yeast' => 'White Labs British Ale' ,
-                          'beer.brew.hops.variety' => 'Fuggles' }
-    destructured_hash = { :beer =>  
-                            { :name => 'Pale Rye Ale', 
-                              :brew => {  :kind => 'mini-mash', 
-                                          :yeast => 'White Labs British Ale',
-                                          :hops => { :variety => 'Fuggles' }}}}
-                              
-    @request.should.receive(:params).and_return(request_hash)
-    @dc.params.should == destructured_hash
-  end
-
-  
-  it "has reflective model helpers to allow generalizing" do
-    
-    @dc.model_name.should == 'default'
-    @dc.model.should == VerifyControllers::Models::Default
-  end  
+  # it "can access a destructured version of the request params" do
+  #   request_hash =      { 'beer.name' => 'Pale Rye Ale', 
+  #                         'beer.brew.kind' => 'mini-mash', 
+  #                         'beer.brew.yeast' => 'White Labs British Ale' ,
+  #                         'beer.brew.hops.variety' => 'Fuggles' }
+  #   destructured_hash = { :beer =>  
+  #                           { :name => 'Pale Rye Ale', 
+  #                             :brew => {  :kind => 'mini-mash', 
+  #                                         :yeast => 'White Labs British Ale',
+  #                                         :hops => { :variety => 'Fuggles' }}}}
+  #                             
+  #   @request.should.receive(:params).and_return(request_hash)
+  #   @dc.params.should == destructured_hash
+  # end
+  # 
+  # 
+  # it "has reflective model helpers to allow generalizing" do
+  #   
+  #   @dc.model_name.should == 'default'
+  #   @dc.model.should == VerifyControllers::Models::Default
+  # end  
   
 end
 
 describe "The process method of a Waves controller class" do
   
-  it "executes a block within the scope of a controller instance" do
-    @request = mock('request')
-    result = VerifyControllers::Controllers::Default.process(@request) do
-      self.class.name
-    end
-    result.should == "VerifyControllers::Controllers::Default"
-  end
+  # it "executes a block within the scope of a controller instance" do
+  #   @request = mock('request')
+  #   result = VerifyControllers::Controllers::Default.process(@request) do
+  #     self.class.name
+  #   end
+  #   result.should == "VerifyControllers::Controllers::Default"
+  # end
   
 end

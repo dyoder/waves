@@ -1,4 +1,5 @@
 require "#{File.dirname(__FILE__)}/../../helpers"
+require 'controllers/mixin'
 
 module VerifyControllers
   module Models
