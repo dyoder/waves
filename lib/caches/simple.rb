@@ -1,4 +1,3 @@
-
 module Waves
 
   module Caches

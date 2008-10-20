@@ -179,7 +179,6 @@ module Waves
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
-      cache :dir => 'cache'
       pid "#{$$}.pid"
       server Waves::Servers::WEBrick
       application {

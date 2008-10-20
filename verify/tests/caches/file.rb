@@ -5,35 +5,35 @@ require 'caches/file'
 
 module SimpleApp ; include Waves::Foundations::Compact ; end
 
-describe "can assign a Waves::Caches::File object to Waves.cache" do
-  module SimpleApp
-    
-    Waves.cache Waves::Caches::File.new( :directory => '/tmp/testeroni') 
+describe "Waves::Caches::File" do
+  
+  before do
+    @cache = Waves::Caches::File.new( :directory => '/tmp') 
   end
-end
-
-describe "can store and fetch, including implementation-wide methods" do
-  module SimpleApp
-    Waves.cache.store :frog, "hopping"
-    Waves.cache[:ball] = "dropping"
+  
+  it "can store and fetch, including implementation-wide methods" do
+    @cache.store :frog, "hopping"
+    @cache[:ball] = "dropping"
         
-    Waves.cache[:frog].should.==("hopping") and Waves.cache.fetch(:ball).should.==("dropping")
+    @cache[:frog].should.==("hopping")
+    @cache.fetch(:ball).should.==("dropping")
   end
-end
 
-describe "can delete and clear" do
-  module SimpleApp
-    Waves.cache.delete :frog
-    Waves.cache.fetch(:frog).should == nil
+  it "can delete and clear" do
+    @cache.store :frog, "hopping"
+    @cache.delete :frog
+    @cache.fetch(:frog).should == nil
     
-    Waves.cache.store :gravy, "bowl"
-    Waves.cache.fetch(:gravy).should.not.==(nil) and Waves.cache[:ball].should.not.==(nil)
+    @cache.delete(:monkey)
     
-    Waves.cache.clear   
-    Waves.cache.fetch(:frog).should.==(nil) and Waves.cache[:ball].should.==(nil)
+    @cache.store :gravy, "bowl"
+    @cache.fetch(:gravy).should.not.==(nil) and @cache[:ball].should.not.==(nil)
+    
+    @cache.clear   
+    @cache.fetch(:frog).should.==(nil) and @cache[:ball].should.==(nil)
     
     %w( :frog, :ball, :gravy, 'giving' ).each do |key|
-      File.exist?('/tmp/testeroni' + key).should == nil
+      File.exist?('/tmp/testeroni' + key).should == false
     end
   end
 end

@@ -12,7 +12,7 @@ module Waves
 
       def store( key, value )            
         @keys << key
-        Marshal.dump( value, ::File.new( @directory / key, 'w') ) 
+        ::File.open( @directory / key, 'w') { |f| Marshal.dump( value, f ) }
       end
 
       def delete( key )
