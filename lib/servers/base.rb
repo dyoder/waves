@@ -2,41 +2,39 @@ module Waves
   
   module Servers
     
+    # Inherit from this class and define the #call method to create Servers.
+    # Like Rack Handlers, except with an attempt at a more generic interface.
+    # The #call method should yield with the actual server object.
+    
     class Base
       
-      attr_accessor :application, :host, :port, :server
-      
-      # returns the PID of the server process
-      def self.run( application, host, port ) 
-        fork { new( application, host, port ).run }
-      end
-      
-      def initialize( application, host, port ) 
-        @application = application; @host = host ; @port = port
+      attr_reader :application, :host, :port
+      def initialize( application, host, port )
+        @application = application
+        @host = host ;@port = port
       end
       
       # starts server, retrying every second until it succeeds
-      def run
-        connect = false
-        until connect do
-          begin
-            call { |server| @server = server ; start }
-          rescue
-            Waves::Logger.error e.to_s
-            sleep 1
+      def start
+        Thread.new do
+          connect = false
+          until connect do
+            begin
+              call do |server| 
+                @server = server
+                Waves::Logger.info "#{self.class.basename} started on #{host}:#{port}."
+              end
+            rescue
+              Waves::Logger.error e.to_s
+              sleep 1
+            end
+            connect = true
           end
-          connect = true
         end
       end
       
-      def start
-        Waves::Logger.info "Waves server started on #{host}:#{port}."
-        safe_trap('INT','TERM') { stop }
-      end
-      
       def stop
-        server.stop if server.respond_to? :stop
-        Waves::Logger.info "Waves server on #{host}:#{port} stopped."
+        Waves::Logger.info "#{self.class.basename} on #{host}:#{port} stopped."
       end
       
     end

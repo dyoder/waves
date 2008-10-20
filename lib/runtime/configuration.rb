@@ -185,10 +185,7 @@ module Waves
       application {
         use ::Rack::ShowExceptions
         run ::Waves::Dispatchers::Default.new
-      }
-      # console LiveConsole.new( 3333 )
-      monitor Waves::Monitor.new( :interval => 60 )
-      
+      }      
     end
   end
 end

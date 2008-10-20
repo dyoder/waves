@@ -60,8 +60,9 @@ Choice.options do
   separator ''
 end
 
+require 'runtime/server'
 begin
-  Waves::Manager.run( Choice.choices )
+  Waves::Server.run( Choice.choices )
 rescue LoadError => e
   puts e.message
 end

@@ -39,6 +39,12 @@ module Waves
     def http_variable( name )
       @request.env[ "HTTP_#{name.to_s.upcase}" ]
     end
+    
+    def delegate( name, *args, &block )
+      @request.send( name, *args, &block ) if @request.respond_to? name
+    end
+    
+    private :delegate
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
     def path ; @request.path_info ; end
@@ -146,12 +152,6 @@ module Waves
       
     end
     
-    private
-    
-    def delegate( name, *args, &block )
-      @request.send( name, *args, &block ) if @request.respond_to? name
-    end
-
   end
 
 end

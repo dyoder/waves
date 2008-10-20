@@ -42,8 +42,11 @@ module Waves
     def basename
       @basename ||= path.sub(/\..*$/,"")
     end
+
     def extension
-      @extension ||= path.match(/\.*\./)?path.sub(/.*[\.$]/,""):""
+      @extension ||= if ( m = path.match(/\.([^\.]+)$/) ) 
+        m[1]
+      end
     end
     
   end

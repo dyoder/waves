@@ -20,6 +20,8 @@ Choice.options do
   separator ''
 end
 
+require 'runtime/console'
+
 begin
   console = Waves::Console.load( Choice.choices )
   Object.send(:define_method, :waves) { console }
