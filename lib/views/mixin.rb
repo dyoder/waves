@@ -13,7 +13,7 @@ module Waves
     end
     
     def self.render( path, assigns = {} )
-      template = Views.renderer_for(path) || Views.renderer_for( :generic / File.basename(path) )
+      template = Views.renderer_for(path) 
       raise NoTemplateError.new( path ) if template.nil?
       template.render( path, assigns )
     end
@@ -39,14 +39,14 @@ module Waves
 
       # Return the first renderer for which a template file can be found.
       # Uses Renderers::Mixin.filename to construct the filename for each renderer.
-      def renderer(path) ; Views.renderer_for(path) ; end
+      def renderer(path) ; Views.renderer_for(:templates / path) ; end
 
       # Render the template found in the directory named after this view (snake cased, of course)
       # E.g. App::Views::Gnome.new.render( "stink" ) would look for templates/gnome/stink.<ext>
       def render( path, assigns = {} )
         qpath = "#{self.class.basename.snake_case}/#{path}"
         Waves.log.debug "Rendering template: #{qpath}"
-        Views.render("#{qpath}", assigns.merge!( :request => request ))
+        Views.render(:templates / qpath, assigns.merge!( :request => request ))
       end
 
       # Render the template with the name of the missing method.

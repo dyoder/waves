@@ -18,7 +18,7 @@ module Waves
       end
 
       def filename(path)
-        :templates / "#{path}.#{self::Extension}"
+        "#{path}.#{self::Extension}"
       end
 
       def template( path )
