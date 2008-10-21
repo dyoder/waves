@@ -54,7 +54,7 @@ skip_rake = false
 
 case Choice.choices.template
 when 'classic'
-  template = File.exist?(Choice.choices.template) ? Choice.choices.template : "#{WAVES}/app/classic"
+  template = File.exist?(Choice.choices.template) ? Choice.choices.template : "#{WAVES}/templates/classic"
 when 'compact'
   compact_app = <<-COMPACT
 require 'foundations/compact'
