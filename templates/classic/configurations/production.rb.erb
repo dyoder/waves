@@ -17,16 +17,12 @@ module <%= @name %>
 
       port 80
 
-      handler ::Rack::Handler::Mongrel, :Host => host, :Port => port
-      # handler ::Rack::Handler::WEBrick, :BindAddress => host, :Port => port
-      # handler ::Rack::Handler::Thin, :Host => host, :Port => port
-
-      dependencies []
-
       application do
         use ::Rack::Static, :urls => [ '/css/', '/javascript/', '/favicon.ico' ], :root => 'public'
         run ::Waves::Dispatchers::Default.new
       end
+      
+      server Waves::Servers::Mongrel
 
     end
   end
