@@ -13,7 +13,7 @@ module Thingy
       attr_reader :request
 
       def initialize
-        @request = Waves::Request.new(Rack::MockRequest.env_for("/"))
+        @request = Waves::Request.new(rack_env)
       end
       
     end

@@ -10,6 +10,7 @@ module Waves
 
     def self.load( options={} )
       @runtime ||= self.new( options )
+      require 'runtime/mock_mixin'
     end
     
     # Create a new Waves runtime instance.

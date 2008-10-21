@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__) , "helpers")
 describe "#accept, #accept_charset, and #accept_language" do
   
   before do
-    @request = Waves::Request.new(env_for("/", 
+    @request = Waves::Request.new(rack_env("/", 
       'HTTP_ACCEPT' => 'text/xml,application/xhtml+xml;q=0.9, text/plain ;q=0.8,image/png,audio/*;q=0.5,*/foo',
       'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7;q=0.7',
       'HTTP_ACCEPT_LANGUAGE' => 'en-us,en;q=0.5'

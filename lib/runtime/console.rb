@@ -8,6 +8,7 @@ module Waves
 
       def load( options={} )
         @console ||= Waves::Console.new( options )
+        require 'runtime/mock_mixin'
       end
 
       # allow Waves::Console to act as The Console Instance

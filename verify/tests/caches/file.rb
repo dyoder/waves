@@ -1,3 +1,4 @@
+# require 'test_helper' because RubyMate needs help
 require "#{File.dirname(__FILE__)}/helpers"
 
 require 'foundations/compact'
