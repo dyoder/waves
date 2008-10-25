@@ -40,7 +40,8 @@ gem = Gem::Specification.new do |gem|
     when 'jruby'
     # JRuby compatible dependencies here...
     puts "You are running JRuby #{JRUBY_VERSION}"
-    gem.add_dependency('RedCloth', '= 3.0.4')
+    #gem.add_dependency('RedCloth', '= 3.0.4')
+    gem.add_dependency('RedCloth', '>= 4.0.0')
     else
     # Not sure what you're running, we're not sure. We'll just try the MRI specifics...
     puts "You are running #{RUBY_ENGINE} #{RUBY_VERSION}"

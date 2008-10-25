@@ -52,7 +52,7 @@ module Waves
     def mode ; options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
-    def debug? ; config.debug ; end
+    def debug? ; options[:debugger] or config.debug ; end
 
     # Returns the current configuration.
     def config ; Waves.main::Configurations[ mode ] ; end

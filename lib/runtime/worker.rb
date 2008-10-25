@@ -22,12 +22,10 @@ module Waves
       pid = daemonize if options[ :daemon ]
       return pid if pid
       # from here on in, we're in the daemon
-      start_logger
-      Waves::Logger.info "#{self.class} starting ..."
-      set_traps
-      start_debugger if options[ :debugger ]
-      start_console
-      start_interface
+      start_logger ; Waves::Logger.info "#{self.class} starting ..."
+      start_debugger if debug? unless Kernel.engine == 'jruby'
+      # various ways to talk to a worker
+      set_traps ; start_console ; start_drb
       start_tasks.join
     end
     
@@ -79,7 +77,7 @@ module Waves
     end
     
     # for management, monitoring
-    def start_interface
+    def start_drb
     end
     
   end

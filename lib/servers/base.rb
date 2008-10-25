@@ -24,7 +24,7 @@ module Waves
                 @server = server
                 Waves::Logger.info "#{self.class.basename} started on #{host}:#{port}."
               end
-            rescue
+            rescue RuntimeError => e
               Waves::Logger.error e.to_s
               sleep 1
             end
