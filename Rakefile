@@ -1,13 +1,8 @@
 begin
-  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask
-    ext/string ext/symbol ext/kernel extensions/all date ).each { |dep| require dep }
+  $: << 'lib'; %w( rubygems rake/testtask rake/rdoctask rake/gempackagetask ).each { |dep| require dep }
 rescue LoadError => e
-  if e.message == 'no such file to load -- extensions/all'
-    puts "Better do `rake setup` to get all the fancies you're missing"
-    puts
-  else
-    raise e
-  end
+  puts "LoadError: you might want to try running the setup task first."
+  raise e
 end
 
 deps = { :rack => '>= 0.4.0', 'rack-cache' => '>= 0.2.0',
@@ -26,7 +21,7 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  deps.each do | name, version | { gem.add_dependency( name.to_s, version ) }
+  deps.each { | name, version | gem.add_dependency( name.to_s, version ) }
   gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb',
     'lib/**/*.erb', "{doc,samples,templates,verify}/**/*" ]
   gem.has_rdoc = true
@@ -38,7 +33,7 @@ desc "Create the waves gem"
 task( :package => [ :clean, :rdoc, :gemspec ] ) { Gem::Builder.new( gem ).build }
 
 desc "Clean build artifacts"
-task( :clean ) { FileUtils.rm_rf Dir['*.gem'] }
+task( :clean ) { FileUtils.rm_rf Dir['*.gem', '*.gemspec'] }
 
 desc "Rebuild and Install Waves as a gem"
 task( :install => [ :package, :install_gem ] )
@@ -72,8 +67,8 @@ end
 
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'doc/rdoc'
-  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'README.rdoc'
-  rdoc.rdoc_files.add [ 'lib/**/*.rb', 'README.rdoc', 'doc/HISTORY' ]
+  rdoc.options << '--line-numbers' << '--inline-source' << '--main' << 'doc/README'
+  rdoc.rdoc_files.add [ 'lib/**/*.rb', 'doc/*' ]
 end
 
 # based on a blog post by Assaf Arkin
