@@ -7,13 +7,8 @@ module Waves
         
         def self.included(app)
           
-          require 'layers/inflect/english/rules'
-          require 'layers/inflect/english/string'
-          
-          String.class_eval do
-            include Waves::Layers::Inflect::English::StringMethods
-          end
-          
+          require 'english/inflect'
+                    
           Waves::Resources::Mixin::ClassMethods.module_eval do
             def singular ; basename.snake_case.singular ; end
             def plural ; basename.snake_case.plural ; end

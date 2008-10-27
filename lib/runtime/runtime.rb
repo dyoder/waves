@@ -1,4 +1,3 @@
-# See the README for an overview.
 module Waves
 
   # A temporary measure until the applications "array" becomes a hash.

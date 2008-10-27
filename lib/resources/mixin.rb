@@ -104,6 +104,10 @@ module Waves
       end
       def redirect( path ) ; request.redirect( path ) ; end
       def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
+      
+      # override for resources that may have long-running requests. this helps servers (esp. event-driven)
+      # determine how to handle the request
+      def deferred? ; false ; end
     end
       
     class Base ; include Mixin ; end 

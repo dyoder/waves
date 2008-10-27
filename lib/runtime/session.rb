@@ -3,6 +3,7 @@ module Waves
   # Encapsulates the session associated with a given request. A session has an expiration
   # and path, which must be provided in a Waves::Configuration. Sensible defaults are defined
   # in Waves::Configurations::Default
+  
   class Session
     
     # Concoct a (probably) unique session id

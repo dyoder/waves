@@ -22,33 +22,51 @@ module Waves
         end
         self[ name ] = nil
       end
+      
+      def self.attributes( *names )
+        names.each { |name| attribute( name ) }
+      end
 
     end
 
     # The Default configuration defines sensible defaults for attributes required by Waves.
-    #   debug true
-    #   synchronize? true
-    #   session :duration => 30.minutes, :path => '/tmp/sessions'
-    #   log :level => :info, :output => $stderr
-    #   reloadable []
     class Default < Base
-
-      %w( host port ports log reloadable resource database session pid
-        debug root dependencies cache console monitor ).each { |name| attribute(name) }
-
-      # Set the Rack handler, along with any specific options
-      # that need to be passed to the handler's #run method. 
-      #
-      # When accessing the value
-      # (calling with no arguments), returns an array of the handler and options.
-      def self.server( server = nil )
-        if server
-          self['server'] = server
-        else
-          self['server']
-        end
-      end
-
+      
+      # define where a server should listen
+      # can be overridden by -p and -h options
+      attributes( :host, :port )
+      
+      # which server to use, ex: Waves::Servers::Mongrel
+      attribute( :server )
+      
+      # where will the logger write to? can be a IO object or a pathname
+      # also can set the level here to :fatal, :debug, :warn, :info
+      attribute( :log )
+      
+      # which modules are going to be reloaded on each request?
+      attribute( :reloadable )
+      
+      # which resource to use as the "main" resource for this server
+      attribute( :resource ) 
+      
+      # parameters for the database connection, varies by database
+      attribute( :database )
+      
+      # options for the session: options for duration and path
+      attribute( :session )
+      
+      # set the debug mode flag; typically done in dev / test configurations
+      attribute( :debug )
+      
+      # what object to use as the main Waves cache
+      attribute( :cache )
+      
+      # do you want to run a console thread (ex: LiveConsole)
+      attribute( :console )
+      
+      # are there any gems we need to check for on startup?
+      attributes( :dependencies )
+      
       # Provides access to the Waves::MimeTypes class via the configuration. You
       # can override #mime_types to return your own MIME types repository class.
       def self.mime_types
@@ -65,12 +83,13 @@ module Waves
         end
       end
       
+      # default options
+      
       debug true
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
-      pid "#{$$}.pid"
       server Waves::Servers::WEBrick
       application {
         use ::Rack::ShowExceptions
@@ -79,5 +98,3 @@ module Waves
     end
   end
 end
-
-

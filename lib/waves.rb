@@ -18,16 +18,17 @@ gem 'dyoder-filebase', '>= 0.3.4'
 require 'filebase'
 require 'filebase/model'
 
+require 'english/style'
+
 # selected project-specific extensions
-require 'ext/module'
+require 'ext/integer'
+require 'ext/float'
 require 'ext/string'
 require 'ext/symbol'
-require 'ext/object'
-require 'ext/integer'
-require 'ext/inflect'
-require 'ext/proc'
 require 'ext/hash'
 require 'ext/tempfile'
+require 'ext/module'
+require 'ext/object'
 require 'ext/kernel'
 
 # waves Runtime

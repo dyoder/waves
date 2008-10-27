@@ -1,7 +1,7 @@
 module Waves
 
   # Waves::MimeTypes defines an interface for adding MIME types used in mapping requests
-  # to content types.z
+  # to content types. Originally taken from Mongrel.
 
   module MimeTypes
 

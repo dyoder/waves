@@ -10,8 +10,6 @@ module Waves
     # view) and returns the result of evaluating the view as content in the current
     # template.
     module View
-
-      include ResponseMixin
       
       # Invokes the view for the given model, passing the assigns as instance variables.
       def view( model, view, assigns = {} )

@@ -1,9 +1,9 @@
 module Waves
   module Foundations
-# The Default foundation supports the common MVC development pattern, a la Rails and Merb. Models, controllers, views, templates, and helpers live in the corresponding directories. When your code calls for a specific M, V, C, or H, Waves tries to load it from a file matching the snake-case of the constant name.  If the file does not exist, Waves creates the constant from a sensible (and customizable) default.
-#
-# This foundation does not include any ORM configuration.  You can include Waves::Layers::ORM::Sequel or custom configure your model.
-
+    
+    # Provides Sun MVC features for your application.
+    # Includes ERb-style templates. You can also include others via Renderer Layers.
+    # It does NOT include a default ORM. Use an ORM Layer for that.
     
     module Classic
 
@@ -13,10 +13,7 @@ module Waves
         require 'layers/mvc'
         require 'layers/inflect/english'
         require 'helpers/extended'
-        require 'layers/renderers/markaby'
         require 'layers/renderers/erubis'
-        require 'layers/renderers/haml'
-        require 'layers/default_errors'
         
         app.module_eval do
 
@@ -45,16 +42,13 @@ module Waves
             auto_eval :Map do
               handler( Waves::Dispatchers::NotFoundError ) {
                 response.status = 404; response.content_type = 'text/html'
-                app::Views::Errors.process( request ) { not_found_404 }
+                app::Views::Errors.new( request ).not_found_404
               }
             end
           end
 
           include Waves::Layers::Inflect::English
           include Waves::Layers::MVC
-          include Waves::Layers::DefaultErrors
-          
-          include Waves::Renderers::Markaby
           include Waves::Renderers::Erubis   
 
           

@@ -10,6 +10,12 @@ rescue LoadError => e
   end
 end
 
+deps = { :rack => '>= 0.4.0', 'rack-cache' => '>= 0.2.0',
+  :extensions => '>= 0.6.0', :english => '>= 0.3.0',
+  :live_console => '>= 0.2.0', :functor => '>= 0.5.0', 
+  :rakegen => '>= 0.6.6', :autocode => '>= 1.0.0', 
+  :filebase => '>= 0.3.4', :RedCloth => '>= 4.0.0' }
+
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
   gem.rubyforge_project = "waves"
@@ -20,48 +26,22 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  %w( mongrel rack markaby erubis haml metaid
-      extensions live_console choice daemons functor ).each do |dep|
-    gem.add_dependency dep
-  end
-  gem.add_dependency('rakegen', '>= 0.6.6')
-  gem.add_dependency('sequel', '>= 2.0.0')
-  gem.add_dependency('autocode', '>= 1.0.0')
-  gem.add_dependency('dyoder-filebase', '>= 0.3.4')
-  gem.add_dependency('dyoder-functor', '>= 0.5.0')
-
-
-  # Unfortunately there are some gems that don't work in JRuby, so...
-  case engine
-    when 'ruby'
-    # Matz' Ruby dependencies here...
-    puts "You are running MRI/Ruby #{RUBY_VERSION}"
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-    when 'jruby'
-    # JRuby compatible dependencies here...
-    puts "You are running JRuby #{JRUBY_VERSION}"
-    #gem.add_dependency('RedCloth', '= 3.0.4')
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-    else
-    # Not sure what you're running, we're not sure. We'll just try the MRI specifics...
-    puts "You are running #{RUBY_ENGINE} #{RUBY_VERSION}"
-    gem.add_dependency('RedCloth', '>= 4.0.0')
-  end
-  
-  gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb','lib/**/*.erb', "{doc,samples,verify}/**/*" ]
+  deps.each do | name, version | { gem.add_dependency( name.to_s, version ) }
+  gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb',
+    'lib/**/*.erb', "{doc,samples,templates,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves' ]
 end
 
 desc "Create the waves gem"
-task( :package => :clean ) { Gem::Builder.new( gem ).build }
+task( :package => [ :clean, :rdoc, :gemspec ] ) { Gem::Builder.new( gem ).build }
 
 desc "Clean build artifacts"
 task( :clean ) { FileUtils.rm_rf Dir['*.gem'] }
 
 desc "Rebuild and Install Waves as a gem"
-task( :install => [ :package, :rdoc, :install_gem ] )
+task( :install => [ :package, :install_gem ] )
 
 desc "Install Waves a local gem"
 task( :install_gem ) do

@@ -3,8 +3,8 @@ module Waves
   # Defines a set of methods that simplify accessing common request and response methods.
   # These include methods not necessarily associated with the Waves::Request and Waves::Response
   # objects, but which may still be useful for constructing a response.
-  #
   # This mixin assumes that a @request@ accessor already exists.
+  
   module ResponseMixin  
     
     # Access the response.

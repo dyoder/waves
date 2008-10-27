@@ -1,10 +1,11 @@
 class Symbol
-  # Does File.join on self and string, converting self to string before invocation.
-  # See String#/ for more.  
+
+  # Syntactic sugar for using File.join to concatenate the argument to the receiver.
   #
-  # Note:  This overrides any definitions done politely in modules, such as
-  # {Sequel::SQL::ComplexExpressionMethods}[http://sequel.rubyforge.org/classes/Sequel/SQL/ComplexExpressionMethods.html]
-  def / ( string )
-    self.to_s / string
-  end
+  #   require :lib / :utilities / :string
+  #
+  # The idea is not original, but we can't remember where we first saw it.
+  # Waves::Ext::Symbol defines the same method, allowing for :files / 'afilename.txt'
+
+  def / ( s ) ; File.join( self.to_s, s.to_s ) ; end
 end

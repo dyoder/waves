@@ -117,7 +117,7 @@ module Waves
     def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
 
-    module Utilities
+    module Ext
       
       def self.destructure( hash )
         destructured = {}

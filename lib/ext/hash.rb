@@ -1,5 +1,5 @@
 module Waves
-  module Utilities # :nodoc:
+  module Ext # :nodoc:
     
     # Utility methods mixed into Hash.
     module Hash
@@ -27,5 +27,5 @@ module Waves
 end
 
 class Hash # :nodoc:
-  include Waves::Utilities::Hash
+  include Waves::Ext::Hash
 end

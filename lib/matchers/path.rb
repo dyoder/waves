@@ -2,10 +2,6 @@ module Waves
 
   module Matchers
     
-    # In a Waves mapping, the Pattern is the structure used to match the path of the request URI.
-    # 
-    # A Pattern consists of an array where each element corresponds to a path component in a request URI.
-    
     class Path < Base
       
       # Takes an array of pattern elements ... coming soon, support for formatted strings!

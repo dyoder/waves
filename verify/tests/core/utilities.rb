@@ -15,7 +15,7 @@ require "#{UTILITIES}/proc"
 require "#{UTILITIES}/hash"
 
 
-describe "Waves::Utilities::Module" do
+describe "Waves::Ext::Module" do
   
   before do
     module Eenie; module Meenie; module Miney; end; end ; end
@@ -37,7 +37,7 @@ describe "Waves::Utilities::Module" do
     
 end
 
-describe "a language extended with Waves::Utilities::Inflect" do
+describe "a language extended with Waves::Ext::Inflect" do
   
   before do
     # Nominative only, of course.
@@ -76,7 +76,7 @@ describe "a language extended with Waves::Utilities::Inflect" do
   
 end
 
-describe "Waves::Utilities::String" do
+describe "Waves::Ext::String" do
 
   # ** API Change **
   # it "delegates singular and plural inflection methods" do
@@ -124,7 +124,7 @@ describe "A monkeypatch to Symbol" do
 end
 
 
-describe "Waves::Utilities::Object" do
+describe "Waves::Ext::Object" do
   
   before do |variable|
     @foo = [ :a, :b, :c ]
@@ -144,7 +144,7 @@ describe "Waves::Utilities::Object" do
   
 end
 
-describe "Waves::Utilities::Integer" do
+describe "Waves::Ext::Integer" do
   # pedantic, no?
   1.kilobytes.should == "1,024".to_i
   1.megabytes.should == "1,048,576".to_i
@@ -156,7 +156,7 @@ describe "Waves::Utilities::Integer" do
   1.yottabytes.should == "1,208,925,819,614,629,174,706,176".to_i
 end
 
-describe "Waves::Utilities::Proc" do
+describe "Waves::Ext::Proc" do
   
    it "defines | as syntactic sugar for passing the result of a proc to a lambda" do
      p = Proc.new { "smurf" }
@@ -167,7 +167,7 @@ describe "Waves::Utilities::Proc" do
    
 end
 
-describe "Waves::Utilities::Hash" do
+describe "Waves::Ext::Hash" do
   
   it "adds a non-destructive method for converting all hash keys to strings" do
     h = { :a => 1, 'b' => 2, 3 => 3}

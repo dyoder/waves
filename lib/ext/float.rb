@@ -1,5 +1,5 @@
 module Waves
-  module Utilities
+  module Ext
     module Float
       def to_delimited(delim=',')
         self.to_s.gsub(/(\d)(?=(\d\d\d)+\.)/, "\\1#{delim}")
@@ -9,5 +9,5 @@ module Waves
 end
 
 class Float # :nodoc:
-  include Waves::Utilities::Float
+  include Waves::Ext::Float
 end

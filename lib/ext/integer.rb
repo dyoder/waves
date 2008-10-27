@@ -1,5 +1,5 @@
 module Waves
-  module Utilities
+  module Ext
     module Integer
       def seconds ; self ; end
       def minutes ; self * 60 ; end
@@ -23,5 +23,5 @@ module Waves
 end
 
 class Integer # :nodoc:
-  include Waves::Utilities::Integer
+  include Waves::Ext::Integer
 end

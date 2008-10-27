@@ -1,4 +1,5 @@
 namespace :gem do
+  
   desc "freeze a gem using gem=<gem name> [version=<gem version>]"
   task :freeze do
     raise "No gem specified" unless gem_name = ENV['gem']
