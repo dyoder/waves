@@ -29,7 +29,7 @@ module Waves
     end
     
     def []( key )
-      http_variable( key ) or rack_variable( name )
+      @request.env[ key.to_s.upcase ] or http_variable( key ) or rack_variable( key )
     end
     
     def rack_variable( name )
