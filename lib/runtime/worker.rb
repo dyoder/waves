@@ -9,6 +9,7 @@ module Waves
     
     def self.run( options )
       @instance ||= new( options )
+      Kernel.load( options[:startup] || 'startup.rb' )
       @instance.start
     end
     

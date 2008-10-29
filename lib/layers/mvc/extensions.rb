@@ -31,7 +31,7 @@ module Waves
     # You can still access the original query by calling request.query
     def query
       @query ||= Waves::Request::Query.new( 
-        Waves::Request::Ext.destructure( request.query ) )
+        Waves::Request::Utilities.destructure( request.query ) )
     end
 
     # Attributes are just the query elements specific to the model associated with

@@ -99,53 +99,17 @@ task( :setup ) do
   puts "rake setup task completed... happy hacking!"
 end
 
-def verify_excludes
-  [
-    "**/obsolete_*/*",
-    "**/track_*.rb",
-    "**/helpers.rb"
-  ]
-end
+desc "Run all specifications and tests."
+task( :test => [ 'verify:specs','verify:tests'] )
 
-desc "Run the unit tests and specs"
-task :verify => [ :spec, :test ]
-
-Rake::TestTask.new(:spec) do |t|
-  t.test_files = FileList["verify/specs/**/*.rb"].exclude( 
-    *( verify_excludes + [ "**/app_generation/*.rb" ] )
-  )
-  t.verbose = true
-end
-
-Rake::TestTask.new(:test) do |t|
-  t.test_files = FileList["verify/tests/**/*.rb"].exclude( *verify_excludes )
-  t.verbose = true
-end
-
-# subset tasks, e.g. verify:mapping
-namespace :test do
+namespace :verify do
   
-  FileList["verify/tests/*/"].each do |area|
-    task = area.sub("verify/tests/", '').chomp("/")
-    Rake::TestTask.new(task) do |t|
-      t.test_files = FileList["#{area}**/*.rb"].exclude( *verify_excludes )
-      t.verbose = true
-    end
+  desc "Run all specifications."
+  task(:specs) do
+    paths = FileList['verify/specs/*/*.rb']
+    system "bacon #{paths.join(' ')}"
   end
-
-end
-
-namespace :spec do
-  
-  FileList["verify/specs/*/"].each do |area|
-    task = area.sub("verify/specs/", '').chomp("/")
-    Rake::TestTask.new(task) do |t|
-      t.test_files = FileList["#{area}**/*.rb"].exclude( *verify_excludes )
-      t.verbose = true
-    end
+  desc "Run all specifications."
+  task(:tests) do
   end
-  
 end
-
-
-

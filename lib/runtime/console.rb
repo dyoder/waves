@@ -1,3 +1,4 @@
+require 'runtime/mocks'
 module Waves
 
   class Console < Runtime
@@ -8,7 +9,8 @@ module Waves
 
       def load( options={} )
         @console ||= Waves::Console.new( options )
-        require 'runtime/mock_mixin'
+        Kernel.load( options[:startup] || 'startup.rb' )
+        Object.instance_eval { include Waves::Mocks }
       end
 
       # allow Waves::Console to act as The Console Instance

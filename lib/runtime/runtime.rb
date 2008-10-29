@@ -3,16 +3,13 @@ module Waves
   # A temporary measure until the applications "array" becomes a hash.
   # Currently used to keep track of all loaded Waves applications.
   class Applications < Array
-    def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
+    def []( name ) ; self.find { |app| app == name.to_s.camel_case } ; end
   end
   
   def self.config; instance.config ; end
   
   # The list of all loaded applications
   def self.applications ; @applications ||= Applications.new ; end
-
-  # Deprecated. Do not write new code against this.
-  def self.application ; warn "Waves.application is deprecated"; applications.last ; end
 
   # Access the principal Waves application.
   def self.main ; applications.first ; end
@@ -43,7 +40,6 @@ module Waves
     def initialize( options={} )
       @options = options
       Dir.chdir options[:directory] if options[:directory]
-      Kernel.load( options[:startup] || 'startup.rb' )
       Runtime.instance = self
     end
 

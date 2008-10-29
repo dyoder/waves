@@ -34,7 +34,7 @@ module Waves
       
       # define where a server should listen
       # can be overridden by -p and -h options
-      attributes( :host, :port )
+      attributes( :host, :port, :ports )
       
       # which server to use, ex: Waves::Servers::Mongrel
       attribute( :server )
