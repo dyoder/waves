@@ -2,7 +2,7 @@ require 'verify/helpers.rb'
 require 'autocode'
 require 'foundations/compact'
 
-describe "Request Matching" do
+describe "Matching Request Methods" do
     
   before do
     Test = Module.new { include Waves::Foundations::Compact }
