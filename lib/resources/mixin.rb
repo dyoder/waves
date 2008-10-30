@@ -83,10 +83,8 @@ module Waves
           after
         rescue Exception => e
           # handle any exceptions using the resource handlers, if any
-          Waves::Logger.info "process caught: #{e.type} : #{e.message}"
-          e.backtrace.each do |t|
-            Waves::Logger.info "    #{t}"
-          end
+          Waves::Logger.warn e.to_s
+          e.backtrace.each { |t| Waves::Logger.info "    #{t}" }
           if self.respond_to? :handler
             ( request.response.body = handler( e ) ) rescue raise e
           else
