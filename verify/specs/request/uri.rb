@@ -59,20 +59,34 @@ describe "Matching Request URIs" do
    ["zero or more", 0..-1, true, true, true],
    ["one or two", 1..2, false, true, true, false],
    ["one to three", 1..3, false, true, true, true, false]
-  ].each { |name, range, *tests|
-     feature "A Range path component can match #{name} components" do
-       Test::Resources::Map.module_eval { on(:get, ['foo', range]) { request.path } }
-       tests.size.times { |i|
-         get("/foo" * (i + 1)).status.should == (tests[i] ? 200 : 404)
-       }
-     end
-  }
+  ].each do |name, range, *tests|
+    feature "A Range path component can match #{name} components" do
+      Test::Resources::Map.module_eval { on(:get, ['foo', range]) { request.path } }
+      tests.size.times do |i|
+       get("/foo" * ( i + 1 ) ).status.should == (tests[i] ? 200 : 404)
+      end
+    end
+  end
   
   feature "A path component can use a hash with a value of true to capture the remaining path." do 
     Test::Resources::Map.module_eval { on( :get, [ 'foo', { :rest => true }  ] ) { captured[:rest] * ' ' } }
     get("/foo/bar/baz").body.should == 'bar baz'
   end
 
+  [["one or more", 1..-1, false, 'foo', 'foo foo'],
+   ["zero or more", 0..-1, '', 'foo', 'foo foo'],
+   ["one or two", 1..2, false, 'foo', 'foo foo', false],
+   ["one to three", 0..3, '', 'foo', 'foo foo', 'foo foo foo', false]
+  ].each do |name, range, *tests|
+    feature "A Range path component can match #{name} components" do
+      Test::Resources::Map.module_eval { on(:get, ['foo', { :rest => range }]) { captured.rest * ' ' } }
+      tests.size.times do |i|
+        response = get("/foo" * ( i + 1 ) )
+        tests[i] ? response.body.should == tests[i] : response.status.should == 404
+      end
+    end
+  end
+  
   feature "A path component can use a hash with a string value to provide a default." do 
     Test::Resources::Map.module_eval { on( :get, [ 'foo', { :bar => 'bar' }  ] ) { captured[:bar] } }
     get("/foo/baz").body.should == 'baz'
