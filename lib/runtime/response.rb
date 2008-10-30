@@ -31,7 +31,7 @@ module Waves
     # attempt to further modify the response once this method is called. You don't usually
     # need to call it yourself, since it is called by the dispatcher once request processing
     # is finished.
-    def finish ; request.session.save ; @response.finish ; end
+    def finish ;  @response.finish ; end
 
     # Methods not explicitly defined by Waves::Response are delegated to Rack::Response.
     # Check the Rack documentation for more informations

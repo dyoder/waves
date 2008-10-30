@@ -84,7 +84,6 @@ module Waves
       end
       
       # default options
-      
       debug true
       session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
@@ -93,8 +92,14 @@ module Waves
       server Waves::Servers::WEBrick
       application {
         use ::Rack::ShowExceptions
+        use Rack::Session::Cookie, :key => 'rack.session',
+        # :domain => 'foo.com',
+        :path => '/',
+        :expire_after => 2592000,
+        :secret => 'Change it'
+        
         run ::Waves::Dispatchers::Default.new
-      }      
+      }
     end
   end
 end

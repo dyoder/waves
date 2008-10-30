@@ -81,9 +81,13 @@ module Waves
           body = send( request.method )
           request.response.write( body ) if body.respond_to?( :to_s )
           after
+        rescue Waves::Dispatchers::NotFoundError 
+          request.response.status = 404
+          request.response.body = "Resource not found"
         rescue Exception => e
           # handle any exceptions using the resource handlers, if any
           Waves::Logger.warn e.to_s
+          Waves::Logger.info "#{e.class.name} : #{e.message}"
           e.backtrace.each { |t| Waves::Logger.info "    #{t}" }
           if self.respond_to? :handler
             ( request.response.body = handler( e ) ) rescue raise e
@@ -102,6 +106,11 @@ module Waves
         when Base
           resource
         when Symbol, String
+          begin 
+            Waves.main::Resources[ resource ]
+          rescue NameError
+            raise Waves::Dispatchers::NotFoundError 
+          end
           Waves.main::Resources[ resource ]
         end
         r = traits.waves.resource = resource.new( request )
