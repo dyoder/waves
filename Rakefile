@@ -109,7 +109,9 @@ namespace :verify do
     paths = FileList['verify/specs/*/*.rb']
     system "bacon #{paths.join(' ')}"
   end
-  desc "Run all specifications."
+  desc "Run all tests."
   task(:tests) do
+    paths = FileList['verify/tests/*/*.rb']
+    system "bacon #{paths.join(' ')}"
   end
 end

@@ -20,7 +20,9 @@ module Waves
       'HTTP_CONNECTION' => 'keep-alive',
       'HTTP_KEEP_ALIVE' => '300',
       'HTTP_REFERER' => 'http://localhost/',
-      'GATEWAY_INTERFACE' => 'CGI/1.1'
+      'GATEWAY_INTERFACE' => 'CGI/1.1', 
+      'REQUEST_METHOD' => 'Get',
+      'X-custom-header' => 'Custom'
     }
 
     def request( method, uri, env = {}, dispatcher = Waves::Dispatchers::Default )
