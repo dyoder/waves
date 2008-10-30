@@ -14,17 +14,27 @@ module Waves
         capture = {}
         match =  @pattern.all? do | want |
           case want
-          when true then path = []
+          when true # means 1..-1
+            path = [] unless path.empty?
+          when Range 
+            if want.end == -1
+              path = [] if path.length >= want.begin
+            else
+              path = [] if want.include? path.length
+            end
           when String then want == path.pop
           when Symbol then capture[ want ] = path.pop
           when Regexp then want === path.pop
           when Hash
             key, value = want.to_a.first
             case value
-            when true then
-              unless path.empty?
-                capture[ key ] = path.reverse
-                path = []
+            when true
+              ( capture[ key ], path = path.reverse, [] ) unless path.empty?
+            when Range
+              if value.end == -1
+                ( capture[ key ], path = path.reverse, [] ) if path.length >= value.begin
+              else
+                ( capture[ key ], path = path.reverse, [] ) if value.include? path.length
               end
             when String, Symbol
               got = path.pop

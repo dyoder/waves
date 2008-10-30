@@ -52,9 +52,22 @@ describe "Matching Request URIs" do
   feature "A path component of true matches the remaining path." do 
     Test::Resources::Map.module_eval { on( :get, [ 'foo', true ] ) { request.path } }
     get("/foo/bar/baz").body.should == '/foo/bar/baz'
-    get("/foobar").status.should == 404
+    get("/foo").status.should == 404
   end
 
+  [["one or more", 1..-1, false, true, true],
+   ["zero or more", 0..-1, true, true, true],
+   ["one or two", 1..2, false, true, true, false],
+   ["one to three", 1..3, false, true, true, true, false]
+  ].each { |name, range, *tests|
+     feature "A Range path component can match #{name} components" do
+       Test::Resources::Map.module_eval { on(:get, ['foo', range]) { request.path } }
+       tests.size.times { |i|
+         get("/foo" * (i + 1)).status.should == (tests[i] ? 200 : 404)
+       }
+     end
+  }
+  
   feature "A path component can use a hash with a value of true to capture the remaining path." do 
     Test::Resources::Map.module_eval { on( :get, [ 'foo', { :rest => true }  ] ) { captured[:rest] * ' ' } }
     get("/foo/bar/baz").body.should == 'bar baz'

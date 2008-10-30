@@ -3,10 +3,8 @@ module Blog
     class Map
       include Waves::Resources::Mixin
       
-      on( :get, [] ) { "This be root." }
-      
-      on( :get, [ /entry|entries/ ] ) { to(:entry) }
-      on( true, [ /entry|entries/, true ] ) { to(:entry) }
+      on( :get, [] ) { to( :entry ) }
+      on( true, [ /entr(y|ies)/, 0..-1 ] ) { to( :entry ) }
       
     end
   end
