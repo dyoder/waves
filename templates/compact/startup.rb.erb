@@ -1,0 +1,11 @@
+require 'foundations/compact'
+<% if @orm %>
+require 'layers/orm/<%= @orm %>
+<% end %>
+
+module <%= @name %>
+  include Waves::Foundations::Compact
+  <% if @orm %>
+  include Waves::Layers::ORM::<%= @orm.camel_case %>
+  <% end %>
+end

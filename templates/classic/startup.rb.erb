@@ -1,0 +1,11 @@
+require 'foundations/classic'
+<% if @orm %>
+require 'layers/orm/providers/<%= @orm %>
+<% end %>
+
+module <%= @name %>
+  include Waves::Foundations::Classic
+  <% if @orm %>
+  include Waves::Layers::ORM::<%= @orm.camel_case %>
+  <% end %>
+end
