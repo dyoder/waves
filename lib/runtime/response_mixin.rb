@@ -47,6 +47,10 @@ module Waves
       end
     end
     
+    def render( path, assigns = {} )
+      Waves::Views::Base.new( request ).render( path, assigns )
+    end
+    
   end
 
 end

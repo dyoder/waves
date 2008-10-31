@@ -4,8 +4,15 @@ module Waves
     
     module Mixin
       
-      def controller ; @controller ||= app::Controllers[ self.class.basename ].new( @request ) ; end
-      def view ; @view ||= app::Views[ self.class.basename ].new( @request ) ; end
+      def controller( resource = nil )
+        resource ||= self.class.basename
+        @controller ||= app::Controllers[ resource ].new( @request )
+      end
+      
+      def view( resource = nil )
+        resource ||= self.class.basename
+        @view ||= app::Views[ resource ].new( @request )
+      end
   
     end
     

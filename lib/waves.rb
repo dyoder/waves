@@ -12,9 +12,7 @@ require 'date'
 require 'benchmark'
 require 'base64'
 
-gem 'dyoder-functor', '>= 0.5.0'
 require 'functor'
-gem 'dyoder-filebase', '>= 0.3.4'
 require 'filebase'
 require 'filebase/model'
 

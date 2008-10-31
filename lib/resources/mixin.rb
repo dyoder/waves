@@ -6,17 +6,6 @@ module Waves
       
       attr_reader :request
       
-      def self.included( target )
-        target.module_eval do
-          include ResponseMixin, Functor::Method
-          extend ClassMethods
-          before {} ; after {} ; always {}
-          %w( post get put delete head ).each do | method |
-            on( method ) { not_found }
-          end
-        end
-      end
-      
       module ClassMethods
           
         def paths
@@ -70,59 +59,65 @@ module Waves
         def always( &block ) ; define_method( :always, &block ) ; end
         
       end
+
+      # this is necessary because you can't define functors within a module because the functor attempts
+      # to incorporate the superclass functor table into it's own
+      def self.included( resource )
+        
+        resource.module_eval do 
       
-      # Resources are initialized with a Waves::Request
-      def initialize( request ); @request = request ; end
+          include ResponseMixin, Functor::Method ; extend ClassMethods
+
+          # Resources are initialized with a Waves::Request
+          def initialize( request ); @request = request ; end
       
-      def process
-        begin
-          # invoke the request method, wrapped by the before and after methods
-          before
-          body = send( request.method )
-          request.response.write( body ) if body.respond_to?( :to_s )
-          after
-        rescue Waves::Dispatchers::NotFoundError 
-          request.response.status = 404
-          request.response.body = "Resource not found"
-        rescue Exception => e
-          # handle any exceptions using the resource handlers, if any
-          Waves::Logger.warn e.to_s
-          Waves::Logger.info "#{e.class.name} : #{e.message}"
-          e.backtrace.each { |t| Waves::Logger.info "    #{t}" }
-          if self.respond_to? :handler
-            ( request.response.body = handler( e ) ) rescue raise e
-          else
-            request.response.status = 500
-            request.response.body = "#{e.inspect}: \n#{e.backtrace[0..5].join("\n")}\n...\n"
+          def process
+            begin
+              # invoke the request method, wrapped by the before and after methods
+              before
+              response.body = send( request.method )
+              after
+            rescue Exception => e
+              ( response.body = handler( e ) ) rescue raise e
+            ensure
+              # no matter what happens, also run the resource's always method
+              always
+            end
           end
-        ensure
-          # no matter what happens, also run the resource's always method
-          always
-        end
-      end
       
-      def to( resource )
-        resource = case resource
-        when Base
-          resource
-        when Symbol, String
-          begin 
-            Waves.main::Resources[ resource ]
-          rescue NameError
-            raise Waves::Dispatchers::NotFoundError 
+          def to( resource )
+            resource = case resource
+            when Base
+              resource
+            when Symbol, String
+              begin 
+                Waves.main::Resources[ resource ]
+              rescue NameError
+                raise Waves::Dispatchers::NotFoundError 
+              end
+              Waves.main::Resources[ resource ]
+            end
+            r = traits.waves.resource = resource.new( request )
+            r.process
+            nil
           end
-          Waves.main::Resources[ resource ]
-        end
-        r = traits.waves.resource = resource.new( request )
-        r.process
-        nil
-      end
-      def redirect( path ) ; request.redirect( path ) ; end
-      def render( path, assigns = {} ) ; Waves::Views::Base.process( request ) { render( path, assigns ) }; end
+          
+          def redirect( path ) ; request.redirect( path ) ; end
       
-      # override for resources that may have long-running requests. this helps servers (esp. event-driven)
-      # determine how to handle the request
-      def deferred? ; false ; end
+          # override for resources that may have long-running requests. this helps servers 
+          # determine how to handle the request
+          def deferred? ; false ; end
+          
+          before {} ; after {} ; always {}
+      
+          %w( post get put delete head ).each do | method |
+            on( method ) { not_found }
+          end
+                
+        end
+        
+      end
+
     end
       
     class Base ; include Mixin ; end 

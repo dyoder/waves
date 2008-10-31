@@ -8,7 +8,7 @@ module Waves
               include Waves::Resources::Mixin
               handler( Waves::Dispatchers::NotFoundError ) {
                 response.status = 404; response.content_type = 'text/html'
-                Waves::Views::Errors.process( request ) { not_found_404 }
+                Waves::Views::Errors.new( request ).not_found_404
               }
             })
           })
@@ -25,6 +25,16 @@ module Waves
               port 80
               host '0.0.0.0'
               server Waves::Servers::Mongrel
+              application {
+                use Rack::Session::Cookie, :key => 'rack.session',
+                  # :domain => 'foo.com',
+                  :path => '/',
+                  :expire_after => 2592000,
+                  :secret => 'Change it'
+
+                run ::Waves::Dispatchers::Default.new
+              }
+              
             })
           })
         }
