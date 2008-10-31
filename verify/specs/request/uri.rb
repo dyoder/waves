@@ -14,10 +14,10 @@ describe "Matching Request URIs" do
     Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
   end
 
-  feature "No path matches an arbitrary path." do 
-    Test::Resources::Map.module_eval { on( :get ) { request.path } }
-    get("/foobar").body.should == '/foobar'
-    get("/foo/bar").body.should == '/foo/bar'
+  feature "By default, we match an arbitrary path." do 
+    Test::Resources::Map.module_eval { on( :get ) {} }
+    get("/foobar").status.should == 200
+    get("/foo/bar").status.should  == 200
   end
     
   feature "A path of true matches an arbitrary path." do 
@@ -57,8 +57,8 @@ describe "Matching Request URIs" do
 
   [["one or more", 1..-1, false, true, true],
    ["zero or more", 0..-1, true, true, true],
-   ["one or two", 1..2, false, true, true, false],
-   ["one to three", 1..3, false, true, true, true, false]
+   ["one to N (N=2)", 1..2, false, true, true, false],
+   ["one to N (N=3)", 1..3, false, true, true, true, false]
   ].each do |name, range, *tests|
     feature "A Range path component can match #{name} components" do
       Test::Resources::Map.module_eval { on(:get, ['foo', range]) { request.path } }
@@ -75,8 +75,8 @@ describe "Matching Request URIs" do
 
   [["one or more", 1..-1, false, 'foo', 'foo foo'],
    ["zero or more", 0..-1, '', 'foo', 'foo foo'],
-   ["one or two", 1..2, false, 'foo', 'foo foo', false],
-   ["one to three", 0..3, '', 'foo', 'foo foo', 'foo foo foo', false]
+   ["one to N (N=2)", 1..2, false, 'foo', 'foo foo', false],
+   ["one to N (N=3)", 0..3, '', 'foo', 'foo foo', 'foo foo foo', false]
   ].each do |name, range, *tests|
     feature "A Range path component can match #{name} components" do
       Test::Resources::Map.module_eval { on(:get, ['foo', { :rest => range }]) { captured.rest * ' ' } }

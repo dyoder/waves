@@ -15,8 +15,21 @@ describe "Matching The Accepts Header" do
   end
     
   feature "Match an implied accept header using the file extension" do 
-    Test::Resources::Map.module_eval { on( :get, true, :accepts => :js ) { request.path } }
-    get("/foo.js").body.should == '/foo.js'
+    Test::Resources::Map.module_eval { on( :get, true, :accept => :javascript ) {} }
+    get("/foo.js").status.should == 200
+    get("/foo").status.should == 404
   end
   
+  feature "Match against an array of options" do 
+    Test::Resources::Map.module_eval { on( :get, true, :accept => [ :javascript, :css ] ) {} }
+    get("/foo.js").status.should == 200
+    get("/foo").status.should == 404
+  end
+
+  feature "Match against a Mime type (rather than subtype)" do 
+    Test::Resources::Map.module_eval { on( :get, true, :accept => :image ) {} }
+    get("/foo.png").status.should == 200
+    get("/foo").status.should == 404
+  end
+
 end
