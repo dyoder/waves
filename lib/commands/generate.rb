@@ -21,9 +21,10 @@ Choice.options do
 
   option :template do
     short '-t'
-    long '--template=classic'
+    long '--template=TEMPLATE'
     desc "Select a template for your app (options: #{templates * ', '})."
     valid templates
+    default 'classic'
   end
 
   option :name, :required => true do
@@ -41,6 +42,7 @@ puts "** Creating new Waves application ..."
 
 # why do i have to do this?
 FileUtils.mkdir( File.expand_path( options.name ) )
+
 generator = Rakegen.new("generate") do |gen|
   gen.source = waves / :templates / options.template
   gen.target = File.expand_path( options.name )
