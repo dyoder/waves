@@ -1,7 +1,6 @@
 require 'verify/helpers.rb'
 require 'autocode'
 require 'foundations/compact'
-require 'ruby-debug'
 include Waves::Mocks
 describe "Application context should define request, response, params objects" do
   before do 
