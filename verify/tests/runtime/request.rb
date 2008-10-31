@@ -6,7 +6,7 @@ describe "Request object" do
   before do
     Test = Module.new { include Waves::Foundations::Compact }
     Waves << Test
-    @waves_request = Waves::Request.new(DEFAULT_ENV)
+    @waves_request = Waves::Request.new(DEFAULT_ENV.merge( 'REQUEST_METHOD' => 'GET', 'X_CUSTOM_HEADER' => 'foo' ))
   end
   
   after do
@@ -28,7 +28,7 @@ describe "Request object" do
   
   feature "should respond to method calls with header names" do
     @waves_request.gateway_interface.should == DEFAULT_ENV['GATEWAY_INTERFACE']
-    @waves_request.x_custom_header.should == DEFAULT_ENV['X-custom-header']
+    @waves_request.x_custom_header.should == 'foo'
   end
   
   feature "redirect should raise redirect exception" do
