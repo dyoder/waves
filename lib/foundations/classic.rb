@@ -40,10 +40,15 @@ module Waves
             auto_create_class true, app::Resources::Default
             auto_load true, :directories => [ :resources ]
             auto_eval :Map do
-              handler( Waves::Dispatchers::NotFoundError ) {
-                response.status = 404; response.content_type = 'text/html'
+              
+              handler( Exception ) do
+                app::Views::Errors.new( request ).server_error_500
+              end
+
+              handler( Waves::Dispatchers::NotFoundError ) do
                 app::Views::Errors.new( request ).not_found_404
-              }
+              end
+
             end
           end
 

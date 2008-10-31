@@ -4,8 +4,6 @@ module Blog
 
     class Development < Default
 
-      database :adapter => 'sqlite', :database => 'blog.db'
-
       reloadable [ Blog ]
       log :level => :debug
       host '127.0.0.1'

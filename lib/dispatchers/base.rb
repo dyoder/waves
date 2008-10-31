@@ -51,30 +51,12 @@ module Waves
           rescue Dispatchers::Redirect => redirect
             response.status = redirect.status
             response.location = redirect.path
-          rescue Dispatchers::Unauthorized => e
-            log( e )
-            response.status = 401
-            response['WWW-Authenticate'] = "Basic realm=Waves"
-          rescue Dispatchers::BadRequest => e
-            log( e )
-            response.status = 400
-          rescue Waves::Dispatchers::NotFoundError => e
-            log( e )
-            response.status = 404
-          rescue Exception
-            log( e )
           end
         end
         Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
         response.finish
       end
       
-      def log( e )
-        Waves::Logger.warn e.to_s
-        Waves::Logger.info "#{e.class.name} : #{e.message}"
-        e.backtrace.each { |t| Waves::Logger.info "    #{t}" }
-      end
-
     end
 
   end

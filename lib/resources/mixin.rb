@@ -2,6 +2,11 @@ module Waves
   
   module Resources
     
+    StatusCodes = {
+      Waves::Dispatchers::NotFoundError => 404
+    }
+    
+    
     module Mixin
       
       attr_reader :request
@@ -68,19 +73,18 @@ module Waves
       
           include ResponseMixin, Functor::Method ; extend ClassMethods
 
-          # Resources are initialized with a Waves::Request
           def initialize( request ); @request = request ; end
       
           def process
             begin
-              # invoke the request method, wrapped by the before and after methods
-              before
-              response.body = send( request.method )
-              after
+              before ; response.body = send( request.method ) ; after
             rescue Exception => e
               ( response.body = handler( e ) ) rescue raise e
+              response.status ||= StatusCodes[ e.class ] || 500
+              Waves::Logger.warn e.to_s
+              Waves::Logger.debug "#{e.class.name} : #{e.message}"
+              e.backtrace.each { |t| Waves::Logger.debug "    #{t}" }
             ensure
-              # no matter what happens, also run the resource's always method
               always
             end
           end
