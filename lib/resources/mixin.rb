@@ -77,16 +77,17 @@ module Waves
       
           def process
             begin
-              before ; response.body = send( request.method ) ; after
+              before ; body = send( request.method ) ; after
             rescue Exception => e
-              ( response.body = handler( e ) ) rescue raise e
-              response.status ||= StatusCodes[ e.class ] || 500
+              response.status = ( StatusCodes[ e.class ] || 500 )
+              ( body = handler( e ) ) rescue raise e
               Waves::Logger.warn e.to_s
               Waves::Logger.debug "#{e.class.name} : #{e.message}"
               e.backtrace.each { |t| Waves::Logger.debug "    #{t}" }
             ensure
               always
             end
+            return body
           end
       
           def to( resource )
@@ -103,7 +104,6 @@ module Waves
             end
             r = traits.waves.resource = resource.new( request )
             r.process
-            nil
           end
           
           def redirect( path ) ; request.redirect( path ) ; end

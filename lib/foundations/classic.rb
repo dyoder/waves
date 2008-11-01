@@ -41,10 +41,6 @@ module Waves
             auto_load true, :directories => [ :resources ]
             auto_eval :Map do
               
-              handler( Exception ) do
-                app::Views::Errors.new( request ).server_error_500
-              end
-
               handler( Waves::Dispatchers::NotFoundError ) do
                 app::Views::Errors.new( request ).not_found_404
               end
@@ -55,7 +51,6 @@ module Waves
           include Waves::Layers::Inflect::English
           include Waves::Layers::MVC
           include Waves::Renderers::Erubis   
-
           
         end
         

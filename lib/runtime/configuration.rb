@@ -49,7 +49,7 @@ module Waves
       # which resource to use as the "main" resource for this server
       attribute( :resource ) 
       
-      # parameters for the database connection, varies by database
+      # parameters for the database connection, varies by ORM
       attribute( :database )
       
       # options for the session: options for duration and path

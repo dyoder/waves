@@ -3,8 +3,8 @@
 # wish to keep your tasks in .rb or .rake files in lib/tasks
 require 'rubygems'
 waves = [
-    (WAVES if defined? WAVES), ENV[ 'WAVES'], './waves'
-].compact.map { |dir| File.join(dir, 'lib') }.find(&File.method(:directory?))
+    ( WAVES if defined? WAVES ), ENV[ 'WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find( &File.method( :directory? ) )
 if waves
     $: << waves
     waves = File.join( waves, 'waves' )
@@ -12,12 +12,13 @@ else
     waves = 'waves'
 end
 require waves
-
+require 'runtime/console'
 require 'startup'
 Waves::Console.load(:mode => ENV['mode'])
 
 # load tasks from waves framework
-%w( cluster generate gem ).each { |task| require "tasks/#{task}.rb" }
+require 'layers/orm/providers/sequel/tasks/schema'
+require 'layers/orm/providers/sequel/tasks/generate'
 
 # load tasks from this app's lib/tasks
 Dir["lib/tasks/*.{rb,rake}"].each { |task| require task }
