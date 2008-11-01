@@ -11,7 +11,12 @@ module Blog
 
       application do
         use ::Rack::ShowExceptions
-        use ::Rack::Static, :urls => [ '/images/', '/css/', '/javascript/', '/favicon.ico' ], :root => 'public'
+        use ::Rack::Static, 
+          :urls => %w( /css /javascript /favicon.ico ), 
+          :root => 'public'
+        use Rack::Session::Cookie, 
+          :key => 'blog.session', :path => '/',
+          :expire_after => 3.days
         run ::Waves::Dispatchers::Default.new
       end
       

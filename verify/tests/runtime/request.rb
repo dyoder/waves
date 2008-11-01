@@ -6,12 +6,14 @@ describe "Request object" do
   before do
     Test = Module.new { include Waves::Foundations::Compact }
     Waves << Test
-    @waves_request = Waves::Request.new(DEFAULT_ENV.merge( 'REQUEST_METHOD' => 'GET', 'X_CUSTOM_HEADER' => 'foo' ))
+    @waves_request = Waves::Request.new( 
+      DEFAULT_ENV.merge( 'REQUEST_METHOD' => 'GET', 
+        'X_CUSTOM_HEADER' => 'foo' ) )
   end
   
   after do
     Waves.applications.clear
-    Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
+    Object.instance_eval { remove_const( :Test ) if const_defined?( :Test ) }
   end
   
   feature "Should return right headers with http_variable" do

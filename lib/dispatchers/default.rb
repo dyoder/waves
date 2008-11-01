@@ -12,7 +12,6 @@ module Waves
       def safe( request  )
         # set a default content type -- this can be overridden by the resource
         request.response.content_type = request.accept.default
-        # grab the appropriate resource from those declared in the configuration, based on the request
         resource = Waves.config.resource.new( request )
         if request.response.body.empty?
           request.response.body << resource.process.to_s

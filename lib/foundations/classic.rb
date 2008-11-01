@@ -32,7 +32,7 @@ module Waves
 
           app.auto_create_module( :Resources ) do
             include AutoCode
-            auto_create_class :Default
+            auto_create_class :Default, Waves::Resources::Base
             auto_load :Default, :directories => [ :resources ]
           end
 

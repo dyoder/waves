@@ -19,11 +19,15 @@ module Waves
       end
     end
 
-    # Waves::Dispatchers::Base provides the basic request processing structure for a Rack application.
-    # It creates a Waves request, determines whether to enclose the request processing in a mutex
-    # benchmarks it, logs it, and handles redirects. Derived classes need only 
-    # process the request within the +safe+ method, which must take a Waves::Request and return a Waves::Response.
-
+    #
+    # Waves::Dispatchers::Base provides the basic request processing structure
+    # for a Rack application. It creates a Waves request, determines whether 
+    # to enclose the request processing in a mutex benchmarks it, logs it, 
+    # and handles redirects. Derived classes need only process the request 
+    # within the +safe+ method, which must take a Waves::Request and return 
+    # a Waves::Response.
+    #
+    
     class Base
 
       # As with any Rack application, a Waves dispatcher must provide a call method

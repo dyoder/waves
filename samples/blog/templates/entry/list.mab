@@ -1,8 +1,8 @@
 layout :default, :title => 'Blog Entries' do
 
-  div.create! do
+  div.create do
     h2 'Create a new entry'
-    form :action => '/entry', :method => 'post' do
+    form :action => paths.create, :method => 'post' do
       label 'URL Name'
       input :type => :text, :name => 'entry.name', :size => 25
       input :type => :submit, :value => 'Add'
@@ -12,5 +12,5 @@ layout :default, :title => 'Blog Entries' do
   @entries.each do |entry|
     view :entry, :summary, :entry => entry
   end
-  p { i "No entries yet.  Don't loiter." } if @entries.empty?
+  p { i "Nothing to see here, move along." } if @entries.empty?
 end

@@ -1,14 +1,13 @@
-body { font-size: 16px; line-height: 20px; font-family: Georgia, serif; background: #ddd; }
-a { color: #116; text-decoration: none; }
-h1, h2, h3, h4, p, hr, div#create { padding: 0px; margin-bottom: 20px; }
-h1, h2, h3, h4 { font-family: Optima, "CG Omega", "Zapf Humanist", Helvetica, Arial, sans-serif }
-h1 { font-size: 45px; line-height: 45px; padding-bottom: 13px; border-bottom: 2px solid #999;}
+body { font-size: 16px; line-height: 20px; font-family: Georgia, serif; background: white; margin: 0 10%;}
+a { color: green; text-decoration: none; }
+h1, h2, h3, h4, p, hr, div { padding: 0px; margin-bottom: 20px; }
+h1, h2, h3, h4, form * { font-family: sans-serif }
+h1 { font-size: 45px; line-height: 45px; padding-bottom: 13px; border-bottom: 2px solid black;}
 h2 { font-size: 20px; line-height: 20px;}
 h4 { padding: 0px; margin: 0px; }
-a.delete { color: #900;}
-div#main { margin: 20px; width: 55%;}
-div#create { position: absolute; left: 65%;}
-div#entry, div.entry { margin-bottom: 18px; border-bottom: 2px solid #999; }
-textarea { width: 100%; }
-div.comment { margin-bottom: 19px; border-bottom: 1px solid #999;}
+a.delete { color: maroon; }
+div.main { width: 100%;}
+div.create { margin-left: 20px; float: right; }
+div.entry { border-bottom: 2px solid silver; }
+div.comment { border-bottom: 1px solid silver;}
 div.comment p.info { font-style: italic;}

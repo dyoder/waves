@@ -1,13 +1,13 @@
-layout :default, :title => @entry.title do
+ layout :default, :title => @entry.title do
   
-  div.entry! do
+  div.entry do
     h4 @entry.date if @entry.updated_on
     h2 { a @entry.title }
     textile @entry.content
     p do
-      a 'Edit', :href => "/entry/#{@entry.name}/edit"
+      a 'Edit', :href => paths.edit( @entry.name )
       text '&nbsp;'
-      a.delete 'Delete', :href => "/entry/#{@entry.name}"
+      a.delete 'Delete', :href => paths.delete( @entry.name )
     end
   end
   

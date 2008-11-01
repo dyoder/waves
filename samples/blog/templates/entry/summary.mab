@@ -1,9 +1,9 @@
 div.entry do
   h4 @entry.date if @entry.updated_on
-  h2 { a @entry.title, :href => "/entry/#{@entry.name}" }
+  h2 { a @entry.title, :href => paths.show( @entry.name ) }
   textile @entry.content
   p do
-    a @entry.comment_number, :href => "/entry/#{@entry.name}"
+    a @entry.comment_number, :href => paths.show( @entry.name )
   end
 end
 

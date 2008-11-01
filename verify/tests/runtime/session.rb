@@ -10,9 +10,10 @@ describe "Specing Waves::Session object" do
     DEFAULT_ENV['rack.session'] = { }
     @waves_request = Waves::Request.new(DEFAULT_ENV)
   end
+
   after do
     Waves.applications.clear
-    Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
+    Object.instance_eval { remove_const( :Test ) if const_defined?( :Test ) }
   end
   
   feature "Session object should exist" do

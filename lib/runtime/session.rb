@@ -8,19 +8,14 @@ module Waves
     
 
     # Create a new session object using the given request. This is not necessarily the
-    # same as constructing a new session. The session_id cookie for the request domain
-    # is used to store a session id. The actual session data will be stored in a directory
-    # specified by the application's configuration file.
+    # same as constructing a new session. See Rack::Sesssion for more info.
     def initialize( request )
       @data = request.rack_request.env['rack.session']
     end
     
     # Return the session data as a hash
-    def to_hash
-      @data
-    end
+    def to_hash ; @data ; end
     
-
     # Access a given data element of the session using the given key.
     def [](key) ; @data[key] ; end
     # Set the given data element of the session using the given key and value.

@@ -10,8 +10,8 @@ html do
   end
 
   body do
-    h1 { a 'I Blog Here', :href => '/entries' }
-    div.main! do
+    h1 { a 'I Am Blog!', :href => '/entries' }
+    div.main do
       layout_content
     end
   end

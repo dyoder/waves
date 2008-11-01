@@ -4,4 +4,4 @@ style <<-STYLE
   p { font-size: 24px; margin: 0px; }
 STYLE
 h1 '404'
-p { 'That URL does<br> not exist on<br> this server.' }
+p { 'That URL does not exist on this server.' }

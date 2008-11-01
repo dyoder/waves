@@ -18,7 +18,8 @@ describe "Application context should define request, response, params objects" d
   end
   
   after do
-    
+    Waves.applications.clear
+    Object.instance_eval { remove_const( :Test ) if const_defined?( :Test ) }
   end
   
   feature "Should define request,response and params object" do
