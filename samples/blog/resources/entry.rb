@@ -16,11 +16,11 @@ module Blog
       
       on :put, :update => [ 'entry', :name ] do
         controller.update( captured.name )
-        redirect "/entry/#{captured.name}"
+        redirect( paths.show( captured.name ))
       end
       
       on :post, :create => [ 'entry' ] do
-        redirect "/entry/#{controller.create.name}/edit"
+        redirect( paths.edit( controller.create.name ) )
       end
       
       on :post, :comment => [ 'entry', :name ] do
