@@ -1,7 +1,5 @@
-require 'verify/helpers.rb'
-require 'autocode'
+require 'test/helpers.rb'
 require 'foundations/compact'
-include Waves::Mocks
 
 describe "Request Object" do
   before do

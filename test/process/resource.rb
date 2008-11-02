@@ -1,8 +1,5 @@
-require 'verify/helpers.rb'
-require 'autocode'
+require 'test/helpers.rb'
 require 'foundations/compact'
-
-include Waves::Mocks
 
 describe "Application Context" do
   before do 
