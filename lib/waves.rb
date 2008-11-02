@@ -11,7 +11,6 @@ require 'forwardable'
 require 'date'
 require 'benchmark'
 require 'base64'
-
 require 'functor'
 require 'filebase'
 require 'filebase/model'

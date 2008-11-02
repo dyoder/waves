@@ -21,42 +21,23 @@ module Waves
     end
     
     def rack_request; @request; end
-
-    # Accessors not explicitly defined by Waves::Request are delegated
-    def method_missing( name, *args, &block )
-      delegate( name, *args, &block ) or ( self[ name ] if args.empty? ) or super
-    end
     
-    def []( key )
-      @request.env[ key.to_s.upcase ] or http_variable( key ) or rack_variable( key )
+    # Methods delegated directly to rack
+    %w( url scheme host port body query_string content_type media_type content_length ).each do |m|
+      define_method( m ) { @request.send( m ) }
     end
-    
-    def rack_variable( name )
-      @request.env["rack.#{name.to_s.downcase}"]
-    end
-    
-    def http_variable( name )
-      @request.env[ "HTTP_#{name.to_s.upcase}" ]
-    end
-    
-    def delegate( name, *args, &block )
-      @request.send( name, *args, &block ) if @request.respond_to? name
-    end
-    
-    private :delegate
 
     # The request path (PATH_INFO). Ex: +/entry/2008-01-17+
     def path ; @request.path_info ; end
 
-    # The request domain. Ex: +www.fubar.com+
-    def domain ; @request.host ; end
-
-    # The request content type.
-    def content_type ; @request.env['CONTENT_TYPE'] ; end
+    # Access to "params" - aka the query string - as a hash
+    def query ; @request.params ; end
+    
+    alias_method :domain, :host
 
     # Request method predicates, defined in terms of #method.
-    METHODS = %w{get post put delete head options trace}
-    METHODS.each { |m| define_method( m ) { method == m } }
+    %w{get post put delete head options trace}.
+      each { |m| define_method( m ) { method.to_s == m } }
 
     # The request method. Because browsers can't send PUT or DELETE
     # requests this can be simulated by sending a POST with a hidden
@@ -65,6 +46,15 @@ module Waves
     def method
       @method ||= ( ( ( m = @request.request_method.downcase ) == 'post' and 
         ( n = @request['_method'] ) ) ? n.downcase : m ).intern
+    end
+    
+    def []( key ) ; @request.env[ key.to_s.upcase ] ; end
+    
+    # access HTTP headers as methods
+    def method_missing( name, *args, &body )
+      return super unless args.empty? and body.nil?
+      key = "HTTP_#{name.to_s.upcase}" 
+      @request.env[ key ] if @request.env.has_key?( key )
     end
 
     # Raise a not found exception.
@@ -77,9 +67,6 @@ module Waves
       raise Waves::Dispatchers::Redirect.new( path, status )
     end
         
-    # Access to "params" - aka the query string - as a hash
-    def query ; @request.params ; end
-    
     class Accept < Array
       
       def =~(arg) ; self.include? arg ; end
