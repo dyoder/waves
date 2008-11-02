@@ -1,13 +1,12 @@
 require 'verify/helpers.rb'
 require 'autocode'
 require 'foundations/compact'
+
 include Waves::Mocks
+
 describe "Application Context" do
   before do 
     Test = Module.new { include Waves::Foundations::Compact }
-    Test::Resources::Map.module_eval { on( :get ) { to(CallMe) } }
-    Test::Resources.module_eval { const_set( 'CallMe', Class.new { 
-      include Waves::Resources::Mixin ; on(:get) {} } ) }
     Waves << Test
   end
   
@@ -16,12 +15,42 @@ describe "Application Context" do
     Object.instance_eval { remove_const( :Test ) if const_defined?( :Test ) }
   end
   
-  feature "Provide acccess to request, response, params, and session objects" do
-    resource = Test::Resources::CallMe.new( Waves::Request.new( env('/', :method => 'GET' ) ) )
-    resource.instance_eval {  request.class }.should == Waves::Request
-    resource.instance_eval {  response.class }.should == Waves::Response
-    resource.instance_eval { query.class }.should == Waves::Request::Query
-    resource.instance_eval { session.class }.should == Waves::Session
+  feature "Provide acccess to request, response, and session objects" do
+    Test::Resources::Map.new( Waves::Request.new( env('/', :method => 'GET' ) ) ).
+      instance_eval do
+        { :request => Waves::Request, :response => Waves::Response, 
+          :session => Waves::Session, :query => Waves::Request::Query }.
+          each { |k,v| send( k ).class.should == v }
+      end
+  end
+  
+  feature "Shortcuts to the path, url, domain, and session" do
+    Test::Resources::Map.new( Waves::Request.new( 
+      env('http://localhost/foo/bar.js', :method => 'GET' ) ) ).
+      instance_eval do
+        { :url => request.url, :path => request.path, 
+          :domain => request.domain, :session => request.session }.
+          each { |k,v| send( k ).should == v }    
+      end
+  end
+
+  feature "Access to path and associated helpers" do
+    Test::Resources::Map.new( Waves::Request.new( 
+      env('http://localhost/foo/bar.js', :method => 'GET' ) ) ).
+      instance_eval do
+        { :url => 'http://localhost/foo/bar.js', :path => '/foo/bar.js', 
+          :basename => '/foo/bar', :extension => 'js' }.
+          each { |k,v| send( k ).should == v }
+      end
+  end
+
+  feature "Access to the application object and name" do
+    Test::Resources::Map.new( Waves::Request.new( 
+      env('http://localhost/foo/bar.js', :method => 'GET' ) ) ).
+      instance_eval do
+        { :app => Test, :app_name => :test }.
+          each { |k,v| send( k ).should == v }    
+      end
   end
   
 end

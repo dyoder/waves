@@ -23,7 +23,7 @@ module Waves
     def rack_request; @request; end
     
     # Methods delegated directly to rack
-    %w( url scheme host port body query_string content_type media_type content_length ).each do |m|
+    %w( url scheme host port body query_string content_type media_type content_length referer ).each do |m|
       define_method( m ) { @request.send( m ) }
     end
 
@@ -33,6 +33,7 @@ module Waves
     # Access to "params" - aka the query string - as a hash
     def query ; @request.params ; end
     
+    alias_method :params, :query
     alias_method :domain, :host
 
     # Request method predicates, defined in terms of #method.
