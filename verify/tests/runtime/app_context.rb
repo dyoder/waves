@@ -5,15 +5,9 @@ include Waves::Mocks
 describe "Application context should define request, response, params objects" do
   before do 
     Test = Module.new { include Waves::Foundations::Compact }
-    Test::Resources::Map.module_eval do
-      on( :get ) { to(CallMe) }
-    end
-    Test::Resources.module_eval do
-      const_set( 'CallMe', Class.new do
-                   include Waves::Resources::Mixin
-                   on(:get) { 'get' }
-                 end )
-    end
+    Test::Resources::Map.module_eval { on( :get ) { to(CallMe) } }
+    Test::Resources.module_eval { const_set( 'CallMe', Class.new { 
+      include Waves::Resources::Mixin ; on(:get) {} } ) }
     Waves << Test
   end
   
@@ -23,14 +17,11 @@ describe "Application context should define request, response, params objects" d
   end
   
   feature "Should define request,response and params object" do
-    DEFAULT_ENV['request_uri'] = 'http://localhost/'
-    DEFAULT_ENV['rack.request.query_string'] = 'a=1&b=2'
-    DEFAULT_ENV["rack.request.form_hash"] = DEFAULT_ENV['rack.input'] = DEFAULT_ENV['rack.request.form_input'] = { }
-    resource = Test::Resources::CallMe.new( Waves::Request.new( DEFAULT_ENV ) )
+    resource = Test::Resources::CallMe.new( Waves::Request.new( env('/', :method => 'GET' ) ) )
     resource.instance_eval {  request.class }.should == Waves::Request
     resource.instance_eval {  response.class }.should == Waves::Response
-    Test::Resources::Map.module_eval { on( :get, [ :foo ] ) { captured[:foo] } }
-    resource.instance_eval { params.nil? }.should == false
+    resource.instance_eval { params.class }.should == Waves::Request::Query
+    resource.instance_eval { session.class }.should == Waves::Session
   end
   
 end

@@ -5,7 +5,6 @@ module Waves
   # in Waves::Configurations::Default
   
   class Session
-    
 
     # Create a new session object using the given request. This is not necessarily the
     # same as constructing a new session. See Rack::Sesssion for more info.

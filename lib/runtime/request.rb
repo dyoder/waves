@@ -22,8 +22,7 @@ module Waves
     
     def rack_request; @request; end
 
-    # Accessors not explicitly defined by Waves::Request or added dynamically to
-    # traits.waves are delegated to Rack::Request.
+    # Accessors not explicitly defined by Waves::Request are delegated
     def method_missing( name, *args, &block )
       delegate( name, *args, &block ) or ( self[ name ] if args.empty? ) or super
     end

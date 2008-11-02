@@ -6,9 +6,8 @@ describe "Request object" do
   before do
     Test = Module.new { include Waves::Foundations::Compact }
     Waves << Test
-    @waves_request = Waves::Request.new( 
-      DEFAULT_ENV.merge( 'REQUEST_METHOD' => 'GET', 
-        'X_CUSTOM_HEADER' => 'foo' ) )
+    @waves_request = Waves::Request.new(  env( '/', :method => 'GET', 
+      'X_CUSTOM_HEADER' => 'foo', 'HTTP_ACCEPT_LANGUAGE' => 'en/us' ) )
   end
   
   after do
@@ -17,11 +16,11 @@ describe "Request object" do
   end
   
   feature "Should return right headers with http_variable" do
-    @waves_request.http_variable(:accept_language).should == DEFAULT_ENV['HTTP_ACCEPT_LANGUAGE']
+    @waves_request.http_variable(:accept_language).should == 'en/us'
   end
   
   feature "Should set right path" do
-    (@waves_request.path).should == ''
+    (@waves_request.path).should == '/'
   end
   
   feature "Request Method should match" do
@@ -29,7 +28,6 @@ describe "Request object" do
   end
   
   feature "should respond to method calls with header names" do
-    @waves_request.gateway_interface.should == DEFAULT_ENV['GATEWAY_INTERFACE']
     @waves_request.x_custom_header.should == 'foo'
   end
   
@@ -38,6 +36,6 @@ describe "Request object" do
   end
   
   feature "Should forward request to Rack::Request if that method is missing" do
-    @waves_request.referer.should == DEFAULT_ENV['HTTP_REFERER']
+    @waves_request.scheme.should == 'http'
   end
 end
