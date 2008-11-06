@@ -2,10 +2,6 @@ module Waves
 
   module Dispatchers
 
-    #
-    # Waves::Dispatchers::Default processes a Waves::Request and returns a Waves::Response as follows:
-    #
-
     class Default < Base
 
       # Takes a Waves::Request and returns a Waves::Response    

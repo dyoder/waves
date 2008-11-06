@@ -21,7 +21,7 @@ module Waves
           
           app.auto_create_module( :Configurations ) do
             include AutoCode
-            auto_create_class :Default
+            auto_create_class :Default, Waves::Configurations::Default
             auto_load :Default, :directories => [ :configurations ]
           end
 

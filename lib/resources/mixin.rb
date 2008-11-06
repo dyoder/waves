@@ -82,7 +82,6 @@ module Waves
               response.status = ( StatusCodes[ e.class ] || 500 )
               ( body = handler( e ) ) rescue raise e
               Waves::Logger.warn e.to_s
-              Waves::Logger.debug "#{e.class.name} : #{e.message}"
               e.backtrace.each { |t| Waves::Logger.debug "    #{t}" }
             ensure
               always
