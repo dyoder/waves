@@ -31,8 +31,8 @@ module Waves
   
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
-  # A Waves::Runtime takes an inert application module and gives it concrete, pokeable form.
-  # Waves::Server and Waves::Console are types of runtime.
+  # A Waves::Runtime takes an inert application module and gives it concrete,
+  # pokeable form.  Waves::Server and Waves::Console are types of runtime.
   class Runtime
 
     class << self; attr_accessor :instance; end
@@ -48,7 +48,7 @@ module Waves
       Runtime.instance = self
     end
 
-    # The 'mode' of the runtime determines which configuration it will run under.
+    # The 'mode' of the runtime determines the configuration it will run under.
     def mode ; options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
