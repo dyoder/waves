@@ -5,11 +5,12 @@ rescue LoadError => e
   raise e
 end
 
-deps = { :rack => '>= 0.4.0', 'rack-cache' => '>= 0.2.0',
-  :extensions => '>= 0.6.0', :english => '>= 0.3.0',
-  :live_console => '>= 0.2.0', :functor => '>= 0.5.0', 
-  :rakegen => '>= 0.6.6', :autocode => '>= 1.0.0', 
-  :filebase => '>= 0.3.5', :RedCloth => '>= 4.0.0' }
+deps = { :rack => '~> 0.4', 'rack-cache' => '~> 0.2',
+  :extensions => '~> 0.6', :english => '~> 0.3',
+  :live_console => '~> 0.2', :functor => '>= 0.5.0', 
+  :rakegen => '~> 0.6', :autocode => '>= 1.0.0', 
+  :filebase => '>= 0.3.5', :RedCloth => '~> 4.0',
+  :choice => '~> 0.1' }
 
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
