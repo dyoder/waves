@@ -4,81 +4,41 @@
 # application with the waves script.  Accordingly, you may
 # wish to keep your tasks in .rb or .rake files in lib/tasks
 
+require 'rubygems'
+
+WAVES = "#{File.dirname(__FILE__)}/.." unless defined? WAVES
+
+waves = [
+  WAVES, ENV['WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find { |d|
+  File.exist? File.join( d, 'waves.rb' )
+}
+if waves
+  $: << waves
+  waves = File.join( waves, 'waves' )
+else
+  waves = 'waves'
+end
+
+require waves
+require 'runtime/console'
+
 begin
-  require 'startup'
   Waves::Console.load(:mode => ENV['mode'])
 
   # load tasks from waves framework
-  %w( cluster generate gem ).each { |task| require "tasks/#{task}.rb" }
+  %w( generate gem ).each { |task| require "tasks/#{task}.rb" }
 
   # load tasks from this app's lib/tasks
   Dir["lib/tasks/*.{rb,rake}"].each { |task| require task }
   
 rescue LoadError => e
   if e.message == 'no such file to load -- waves'
-    puts "Can't find Waves source.  Install gem, freeze Waves, or define WAVES in startup.rb"
+    puts "Can't find Waves source.  Install gem, freeze Waves, or define WAVES at the top of the Rakefile"
     puts
   else
     raise e
   end
-end
-
-namespace :dep do
-
-  desc "check if all the dependencies specified in the configuration"
-  task :check do
-
-    gems = Gem::SourceIndex.from_installed_gems.to_a.to_s
-    missing = Array.new
-
-    puts "\nApplication-level dependencies:"
-    puts " ('*' means gem is installed and available)"
-    
-    Waves.config.dependencies.each do |dep|
-      pattern = /=#{dep}\s/
-      print "\t#{dep}:\t\t"
-      print "\t" if dep.length < 7  # keep our formatting pretty, please.
-      unless pattern.match(gems).nil?
-        print "[*]\n"
-      else
-        print "[ ]\n"
-      end
-    end    
-  end
-  
-  desc "install any missing dependencies specified in the configuration"
-  task :install do
-
-    gems = Gem::SourceIndex.from_installed_gems.to_a.to_s
-    missing = Array.new
-
-    Waves.config.dependencies.each do |dep|
-      pattern = /=#{dep}\s/
-      missing << dep if pattern.match(gems).nil?
-    end
-
-    missing.each do |m|
-      dep,ver = m.is_a?(String) ? [m,''] : m
-      puts "Installing dependency: #{dep}"
-      puts ver
-      begin
-        require 'rubygems/dependency_installer'
-        if Gem::RubyGemsVersion =~ /^1\.0\./
-          Gem::DependencyInstaller.new(dep).install
-        else
-          # as of 1.1.0
-          Gem::DependencyInstaller.new.install(dep)
-        end
-      rescue LoadError # < rubygems 1.0.1
-        require 'rubygems/remote_installer'
-        Gem::RemoteInstaller.new.install(dep)
-      end
-    end
-
-    puts "Environment complete. Nothing to install." if missing.empty?
-
-  end
-
 end
 
 namespace :waves do
