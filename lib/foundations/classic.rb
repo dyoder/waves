@@ -14,6 +14,7 @@ module Waves
         require 'layers/inflect/english'
         require 'helpers/extended'
         require 'layers/renderers/erubis'
+        require 'layers/renderers/markaby'
         
         app.module_eval do
 
@@ -51,6 +52,7 @@ module Waves
           include Waves::Layers::Inflect::English
           include Waves::Layers::MVC
           include Waves::Renderers::Erubis   
+          include Waves::Renderers::Markaby   
           
         end
         
