@@ -97,7 +97,7 @@ module Waves
               begin 
                 Waves.main::Resources[ resource ]
               rescue NameError
-                raise Waves::Dispatchers::NotFoundError 
+                raise Waves::Dispatchers::NotFoundError
               end
               Waves.main::Resources[ resource ]
             end
@@ -112,6 +112,7 @@ module Waves
           def deferred? ; false ; end
           
           before {} ; after {} ; always {}
+          handler( Waves::Dispatchers::Redirect ) { |e| raise e }
       
           %w( post get put delete head ).each do | method |
             on( method ) { not_found }

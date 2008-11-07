@@ -8,7 +8,7 @@ module Waves
 
     # Redirect exceptions are rescued by the Waves dispatcher and used to set the 
     # response status and location.
-    class Redirect < Exception
+    class Redirect < SignalException
       attr_reader :path, :status
       def initialize( path, status = '302' )
         @path = path
