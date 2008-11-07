@@ -56,7 +56,7 @@ module Waves
       # <em>orm</em> can be a symbol or string
       def self.migration_template(orm, name=nil)
         file = ( name || 'empty' ) + '.rb.erb'
-        source = File.dirname(__FILE__) / orm / :migrations / file
+        source = File.dirname(__FILE__) / :providers / orm / :migrations / file
       end
 
       # Given a migration name, returns the path of the file that would be created.
