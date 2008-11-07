@@ -82,7 +82,6 @@ module Waves
       
       # default options
       debug true
-      session :duration => 30.minutes, :path => '/tmp/sessions'
       log :level => :info, :output => $stderr
       reloadable []
       dependencies []
