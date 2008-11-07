@@ -8,19 +8,20 @@ require 'rubygems'
 WAVES = "#{File.dirname(__FILE__)}/.." unless defined? WAVES
 
 waves = [
-    WAVES, ENV['WAVES'], './waves'
-].compact.map { |dir| File.join(dir, 'lib') }.find( &File.method( :directory? ) )
+  WAVES, ENV['WAVES'], './waves'
+].compact.map { |dir| File.join(dir, 'lib') }.find { |d|
+  File.exist? File.join( d, 'waves.rb' )
+}
 if waves
-    $: << waves
-    waves = File.join( waves, 'waves' )
+  $: << waves
+  waves = File.join( waves, 'waves' )
 else
-    waves = 'waves'
+  waves = 'waves'
 end
+
 require waves
 
-
 puts "** Waves #{Waves.version} **"
-
 
 begin
   require "commands/#{ARGV.first}"
