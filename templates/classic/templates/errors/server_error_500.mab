@@ -1,2 +1,7 @@
+style <<-STYLE
+  body { background: #c93; padding: 20px; font-family: verdana, sans-serif; }
+  h1 { font-size: 60px; font-weight: bold; margin: 0px; }
+  p { font-size: 24px; margin: 0px; }
+STYLE
 h1 '500'
 p %q( Internal server error. Sorry, but your request could not be processed. )
