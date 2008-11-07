@@ -23,7 +23,7 @@ gem = Gem::Specification.new do |gem|
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
   deps.each { | name, version | gem.add_dependency( name.to_s, version ) }
-  gem.files = FileList[ 'app/**/*', 'app/**/.gitignore', 'lib/**/*.rb',
+  gem.files = FileList[ 'templates/**/*', 'templates/**/.gitignore', 'lib/**/*.rb',
     'lib/**/*.erb', "{doc,samples,templates,verify}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
