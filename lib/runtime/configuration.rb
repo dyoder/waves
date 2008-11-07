@@ -52,9 +52,6 @@ module Waves
       # parameters for the database connection, varies by ORM
       attribute( :database )
       
-      # options for the session: options for duration and path
-      attribute( :session )
-      
       # set the debug mode flag; typically done in dev / test configurations
       attribute( :debug )
       
@@ -97,7 +94,6 @@ module Waves
         :path => '/',
         :expire_after => 2592000,
         :secret => 'Change it'
-        
         run ::Waves::Dispatchers::Default.new
       }
     end
