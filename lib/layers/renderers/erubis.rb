@@ -17,7 +17,7 @@ module Erubis # :nodoc:
       result
     end
     
-    def render(eruby)
+    def to_s(eruby)
       unless @binding
         @binding = binding
         eval("_buf = ''; _context = []", @binding)
@@ -49,7 +49,7 @@ module Waves
             instance_variable_set("@#{key}",val)
           end
         end
-        context.render(eruby)
+        context.to_s(eruby)
       end
 
 

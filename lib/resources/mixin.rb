@@ -78,6 +78,8 @@ module Waves
           def process
             begin
               before ; body = send( request.method ) ; after
+            rescue Waves::Dispatchers::Redirect => e
+              raise e
             rescue Exception => e
               response.status = ( StatusCodes[ e.class ] || 500 )
               ( body = handler( e ) ) rescue raise e
@@ -112,7 +114,7 @@ module Waves
           def deferred? ; false ; end
           
           before {} ; after {} ; always {}
-          handler( Waves::Dispatchers::Redirect ) { |e| raise e }
+          # handler( Waves::Dispatchers::Redirect ) { |e| raise e }
       
           %w( post get put delete head ).each do | method |
             on( method ) { not_found }

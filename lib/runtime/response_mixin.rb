@@ -42,18 +42,16 @@ module Waves
       ( rname.nil? ? resource.class.paths : app::Resources[ rname ].paths ).new( request )
     end
 
-    def basename ; @basename ||= path.sub(/\.([^\.]+)$/,'') ; end
+    # these take strings or operate on the path by default
+    def basename( str = nil ) ; ( str or path ).sub(/\.([^\.]+)$/,'') ; end
 
-    def extension
-      @extension ||= if ( m = path.match(/\.([^\.]+)$/) ) 
-        m[1]
-      end
+    def extension( str = nil )
+      ( m = ( str or path ).match(/\.([^\.]+)$/) ) ? m[1] : nil
     end
     
     def render( path, assigns = {} )
       Waves::Views::Base.new( request ).render( path, assigns )
     end
-    
   end
 
 end
