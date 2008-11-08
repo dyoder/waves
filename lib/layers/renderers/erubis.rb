@@ -7,7 +7,7 @@ module Erubis # :nodoc:
   class Context
     
     def <<(s) 
-      eval("_buf", @binding).concat s # add to rendered output
+      eval("_buf << '#{s}'", @binding)
     end
     
     def capture
