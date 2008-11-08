@@ -4,4 +4,5 @@ tmp/**/*
 doc/rdoc
 *.db
 log
-waves-0.8.0.gem
+*.gem
+*.gemspec
