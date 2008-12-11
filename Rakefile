@@ -83,7 +83,7 @@ task( :setup ) do
   dependencies = gem.dependencies
   # Add build-time dependencies, like this:
   dependencies.each do |dep|
-    if gems.search(dep.name, dep.version_requirements).empty?
+    if gems.find_name(dep.name, dep.version_requirements).empty?
       puts "Installing dependency: #{dep}"
       begin
         require 'rubygems/dependency_installer'
