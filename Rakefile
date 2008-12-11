@@ -5,12 +5,14 @@ rescue LoadError => e
   raise e
 end
 
-deps = { :rack => '~> 0.4', 'rack-cache' => '~> 0.2',
+runtime_deps = { :rack => '~> 0.4', 'rack-cache' => '~> 0.2',
   :extensions => '~> 0.6', :english => '~> 0.3',
   :live_console => '~> 0.2', :functor => '>= 0.5.0', 
   :rakegen => '~> 0.6', :autocode => '>= 1.0.0', 
   :filebase => '>= 0.3.5', :RedCloth => '~> 4.0',
   :choice => '~> 0.1' }
+  
+developer_deps = { :bacon => '~> 1.0', :facon => '~> 0.4' }
 
 gem = Gem::Specification.new do |gem|
   gem.name = "waves"
@@ -22,9 +24,10 @@ gem = Gem::Specification.new do |gem|
   gem.email = 'dan@zeraweb.com'
   gem.platform = Gem::Platform::RUBY
   gem.required_ruby_version = '>= 1.8.6'
-  deps.each { | name, version | gem.add_dependency( name.to_s, version ) }
+  runtime_deps.each { | name, version | gem.add_runtime_dependency( name.to_s, version ) }
+  developer_deps.each { |name, version| gem.add_development_dependency( name.to_s, version ) }
   gem.files = FileList[ 'templates/**/*', 'templates/**/.gitignore', 'lib/**/*.rb',
-    'lib/**/*.erb', "{doc,samples,templates,verify}/**/*" ]
+    'lib/**/*.erb', "{doc,samples,templates,test}/**/*" ]
   gem.has_rdoc = true
   gem.bindir = 'bin'
   gem.executables = [ 'waves' ]
@@ -39,7 +42,7 @@ task( :clean ) { FileUtils.rm_rf Dir['*.gem', '*.gemspec'] }
 desc "Rebuild and Install Waves as a gem"
 task( :install => [ :package, :install_gem ] )
 
-desc "Install Waves a local gem"
+desc "Install Waves as a local gem"
 task( :install_gem ) do
     require 'rubygems/installer'
     Dir['*.gem'].each do |gem|
