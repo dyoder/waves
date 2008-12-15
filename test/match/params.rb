@@ -1,5 +1,5 @@
 require 'test/helpers.rb'
-require 'foundations/compact'
+require 'waves/foundations/compact'
 
 describe "Query, Captured, and Params" do
     

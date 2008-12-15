@@ -1,4 +1,5 @@
-require 'helpers/doc_type'
+require 'waves/helpers/doc_type'
+
 module Waves
   module Views
     class Errors < Waves::Views::Base

@@ -24,7 +24,7 @@ require waves
 puts "** Waves #{Waves.version} **"
 
 begin
-  require "commands/#{ARGV.first}"
+  require "waves/commands/#{ARGV.first}"
 rescue LoadError => e
   require "commands/help"
 end

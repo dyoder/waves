@@ -1,4 +1,4 @@
-require 'caches/synchronized'
+require 'waves/caches/synchronized'
 
 module Waves
   module Caches

@@ -4,8 +4,8 @@ module Waves
 
       def self.included( app )
         
-        require 'layers/mvc/extensions'
-        require 'layers/mvc/controllers'
+        require 'waves/layers/mvc/extensions'
+        require 'waves/layers/mvc/controllers'
         
         app.auto_create_module( :Models ) do
           include AutoCode
