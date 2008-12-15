@@ -1,4 +1,5 @@
-require 'runtime/mocks'
+require 'waves/runtime/mocks'
+
 module Waves
 
   class Console < Runtime

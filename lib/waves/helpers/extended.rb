@@ -1,10 +1,10 @@
-require 'helpers/basic'
-require 'helpers/doc_type'
-require 'helpers/layouts'
-require 'helpers/formatting'
-require 'helpers/model'
-require 'helpers/view'
-require 'helpers/form'
+require 'waves/helpers/basic'
+require 'waves/helpers/doc_type'
+require 'waves/helpers/layouts'
+require 'waves/helpers/formatting'
+require 'waves/helpers/model'
+require 'waves/helpers/view'
+require 'waves/helpers/form'
 
 module Waves
   module Helpers

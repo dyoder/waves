@@ -3,7 +3,7 @@ require 'rubygems'; %w{ bacon facon }.each { |dep| require dep }
 # Framework lib goes to the front of the loadpath
 $:.unshift('lib')
 require 'waves'
-require 'runtime/mocks'
+require 'waves/runtime/mocks'
 
 Waves::Runtime.instance = Waves::Runtime.new
 
