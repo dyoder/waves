@@ -8,7 +8,7 @@ namespace :generate do
 
       raise "Cannot generate Default yet" if model_name == 'Default'
 
-      filename = File.expand_path "models/#{name}.rb"
+      filename = File.expand_path "models/#{model_name}.rb"
       if File.exist?(filename)
         $stderr.puts "#{filename} already exists" 
         exit
