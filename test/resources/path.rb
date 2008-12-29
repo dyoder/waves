@@ -13,6 +13,12 @@ describe "A path generation method" do
     Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
   end
   
+  it "turns an empty template into '/'" do
+    @resource_class.on(:get, :list => [] ) { nil }
+    @paths.list.should == "/"
+    @paths.list("foo").should == "/"
+  end
+  
   it "reproduces strings from the path template" do
     @resource_class.on(:get, :list => [ 'taller', 'ghost', 'walt' ] ) { nil }
     @paths.list.should == "/taller/ghost/walt"
@@ -28,7 +34,7 @@ describe "A path generation method" do
     @paths.edit( 'markdown' ).should == "/form/markdown"
   end
   
-  it "uses a hash with regex for arg interpolation only when the arg matches the regex" do
+  it "interpolates for a hash-with-regex only when the arg matches the regex" do
     @resource_class.on(:get, :edit => [ 'form', { :filter => /^(textile|markdown|plain)$/ } ] ) { nil }
     @paths.edit( 'markdown' ).should == "/form/markdown"
     
@@ -54,5 +60,60 @@ describe "A path generation method" do
     
     lambda { path = @paths.list( "boar" ) }.should.raise ArgumentError
   end
+  
+  describe "given an (implicit) array of args" do
+    
+    it "interpolates its arguments in order" do
+      @resource_class.on(:get, :list => [ :one, :two, :three ] ) { nil }
+      @paths.list( 'one', 'two', 'three').should == '/one/two/three'
+    end
+    
+  end
+  
+  describe "given an argument hash" do
+    
+    it "interpolates arg pairs that match symbols in the template" do
+      @resource_class.on(:get, :list => [ :one, :two, :three ] ) { nil }
+      @paths.list( :three => 'three', :one => 'one', :two => 'two').should == '/one/two/three'
+    end
+    
+    it "interpolates arg pairs that match the keys of hashes in the template" do
+      @resource_class.on(:get, :show => [ {:foo => 'bar'} ] ) { nil }
+      @paths.show( :foo => 'bear' ).should == "/bear"
+    end
+    
+    it "interpolates an arg pair for a hash-with-regex only when the arg matches the regex" do
+      @resource_class.on(:get, :show => [ {:foo => /^ba(r|z|t)$/ } ] ) { nil }
+      @paths.show( :foo => 'baz' ).should == "/baz"
+    end
+
+    it "raises when not all necessary interpolations can be performed" do
+      @resource_class.on(:get, :list => [ :one, :two, :three ] ) { nil }
+      lambda { @paths.list( :three => 'three', :one => 'one') }.should.raise ArgumentError
+    end
+
+    it "raises an ArgumentError if the template contains a regex" do
+      @resource_class.on(:get, :list => [ /anything/ ] ) { nil }
+      lambda { @paths.list( :one => 'one' ) }.should.raise ArgumentError
+    end
+    
+    it "appends value/s of arg pair matching a template hash-with-true" do
+      @resource_class.on(:get, :list => [ :kind, { :parts => true } ]) { nil }
+      lambda { @paths.list( :kind => 'ghost') }.should.raise ArgumentError
+      @paths.list( :kind => 'ghost', :parts => "walt" ).should == "/ghost/walt"
+      @paths.list( :kind => 'ghost', :parts => ["walt", "boone"]).should == "/ghost/walt/boone"
+    end
+    
+    it "raises an ArgumentError if the template contains a true" do
+      @resource_class.on(:get, :list => [ :kind, true ]) { nil }
+      lambda { @paths.list( :kind => 'whuh?' ) }.should.raise ArgumentError
+      
+    end
+    
+  end
+
+  
+
+
   
 end
