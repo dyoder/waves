@@ -48,9 +48,10 @@ module Waves
         Waves.log.debug "Rendering template: #{qpath}"
         Views.render( :templates / qpath, assigns.merge!( :request => request ))
       end
-
-      # Render the template with the name of the missing method.
-      def method_missing(name,*args) ; render( name, *args ) ; end
+      
+      def method_missing(name, *args)
+        cache_method_missing name, "self.render(:#{name}, *args)", *args 
+      end
 
     end
 

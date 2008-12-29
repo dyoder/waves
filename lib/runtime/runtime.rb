@@ -25,7 +25,9 @@ module Waves
   def self.version ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/VERSION" ) ) ; end
   def self.license ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/LICENSE" ) ) ; end
   
-  def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
+  def self.method_missing(name,*args,&block)
+    cache_method_missing name, "instance.#{name}( *args, &block)", *args, &block
+  end
 
   # A Waves::Runtime takes an inert application module and gives it concrete, pokeable form.
   # Waves::Server and Waves::Console are types of runtime.

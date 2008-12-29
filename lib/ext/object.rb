@@ -14,6 +14,16 @@ module Waves
         end
         ret
       end
+      
+      def cache_method_missing(name, method_body, *args, &block)
+        self.class.module_eval <<-METHOD
+          def #{name}(*args, &block)
+            #{method_body}
+          end
+        METHOD
+        self.send(name, *args, &block)
+      end
+      
     end
   end
 end
