@@ -1,5 +1,5 @@
-require 'test/helpers.rb'
-require 'foundations/compact'
+require "#{File.dirname(__FILE__)}/../../test/helpers.rb"
+require "foundations/compact"
 
 describe "Matching Request URIs" do
     
@@ -96,6 +96,11 @@ describe "Matching Request URIs" do
     Test::Resources::Map.module_eval { on( :get, [ 'foo', { :bar => /\d+/ }  ] ) { captured[:bar] } }
     get("/foo/123").body.should == '123'
     get("/foo").status.should == 404
+  end
+  
+  it "Path components match against unescaped values" do
+    Test::Resources::Map.on(:get, [ 'polar bear']) { 'bang' }
+    get("/polar%20bear").body.should == 'bang'
   end
   
 end
