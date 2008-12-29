@@ -39,7 +39,7 @@ module Waves
     def app_name ; self.class.rootname.snake_case.to_sym ; end
     def app ; eval(  "::#{app_name.to_s.camel_case}" ) ; end    
     def paths( rname = nil )
-      ( rname.nil? ? resource.class.paths : app::Resources[ rname ].paths ).new( request )
+      ( rname ? app::Resources[ rname ].paths : resource.class.paths ).new( request )
     end
 
     # these take strings or operate on the path by default
