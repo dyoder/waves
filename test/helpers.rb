@@ -12,3 +12,5 @@ Bacon::Context.module_eval do
   alias_method :specification, :describe
   alias_method :feature, :it
 end
+
+Bacon.summary_on_exit
