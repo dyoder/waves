@@ -10,7 +10,7 @@ module Waves
     # Access the response.
     def response; request.response; end
     
-    def resource ; traits.waves.resource ; end
+    def resource; traits.waves.resource || ( self if self.kind_of? Waves::Resources::Mixin ) ; end
 
     def traits ; request.traits ; end
     
