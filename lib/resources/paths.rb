@@ -4,12 +4,6 @@ module Waves
     
     class Paths
       
-      attr_accessor :request
-      
-      include Waves::ResponseMixin
-      
-      def initialize( request ) ; @request = request ; end
-      
       def generate( template, args )
         if template.is_a? Array and not template.empty?
           path = []
