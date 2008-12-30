@@ -4,7 +4,10 @@ module Waves
     
     class Paths
       
+      attr_accessor :compiled
+      
       def generate( template, args )
+        return "/" if template.empty?
         if template.is_a? Array
           if args.size == 1 and args.first.is_a? Hash
             process_hash( template, args.first )
@@ -14,34 +17,50 @@ module Waves
         else
           "/#{ args * '/' }"
         end
-        
       end
       
       def process_array( template, args )
-        path = []
-        ( "/#{ path * '/' }" ) if template.all? do | want |
+        @compiled ||= {}
+        template_key = ([template, args.size]).hash
+        compiled = @compiled[template_key]
+        return ( compiled % args ) if compiled 
+        compilable = true
+        path = []; cpath, interpolations = "", []
+        result = ( cpath % interpolations ) if template.all? do | want |
           case want
-          when Symbol then path << args.shift
-          when String then path << want
-          when true then path += args
+          when Symbol
+            cpath << "/%s" ; interpolations << args.shift
+          when String
+            cpath << "/#{want}"
+          when true
+            compilable = false
+            cpath += "/#{args.join("/")}"; args = []
           when Hash
+            compilable = false
             key, value = want.to_a.first
             case value
-            when true then path += args
+            when true
+              cpath += "/#{args.join("/")}"; args = []
             when String, Symbol
-              args.empty? ? path << value : path << args.shift
+              compilable = true
+              component = args.shift
+              cpath << "/%s"
+              component ? interpolations << component : interpolations << value 
             when Regexp
               component = args.shift.to_s
               raise ArgumentError, "#{component} does not match #{want.inspect}" unless component =~ value
-              path << component
+              cpath << "/%s"; interpolations << component
             end
           when Regexp
+            compilable = false
             component = args.shift.to_s
             raise ArgumentError, "#{component} does not match #{want.inspect}" unless component =~ want
-            path << component
+            cpath << "/%s"; interpolations << component
           end
-          
         end
+        raise ArgumentError, "Too many args" unless args.empty?
+        @compiled[template_key] = cpath if compilable
+        result
       end
       
       def process_hash( template, hash )

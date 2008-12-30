@@ -27,10 +27,14 @@ describe "A path generation method" do
   it "treats symbols as locations for arg interpolation" do
     @resource_class.on(:get, :show => [ 'hi', 'there', :nickname ]) { nil }
     @paths.show( 'freckles' ).should == "/hi/there/freckles"
+    @paths.compiled.values.should == ["/hi/there/%s"]
   end
+  
   
   it "treats a hash with string or symbol value as location for arg interpolations" do
     @resource_class.on(:get, :edit => [ 'form', { :filter => 'textile' } ] ) { nil }
+    @paths.edit( 'markdown' ).should == "/form/markdown"
+    @paths.compiled.values.should == ["/form/%s"] 
     @paths.edit( 'markdown' ).should == "/form/markdown"
   end
   
@@ -68,6 +72,11 @@ describe "A path generation method" do
       @paths.list( 'one', 'two', 'three').should == '/one/two/three'
     end
     
+    it "raises an ArgumentError if given more args than interpolables" do
+      @resource_class.on(:get, :list => [ :one ] ) { nil }
+      lambda { @paths.list( "x", "y") }.should.raise ArgumentError
+    end
+    
   end
   
   describe "given an argument hash" do
@@ -86,12 +95,17 @@ describe "A path generation method" do
       @resource_class.on(:get, :show => [ {:foo => /^ba(r|z|t)$/ } ] ) { nil }
       @paths.show( :foo => 'baz' ).should == "/baz"
     end
-
+    
+    it "uses hash element value as default in absence of an arg pair" do
+      @resource_class.on(:get, :list => [ :one, { :two => 'two' }, :three ] ) { nil }
+      @paths.list( :three => 'three', :one => 'one').should == "/one/two/three"
+    end
+  
     it "raises when not all necessary interpolations can be performed" do
       @resource_class.on(:get, :list => [ :one, :two, :three ] ) { nil }
       lambda { @paths.list( :three => 'three', :one => 'one') }.should.raise ArgumentError
     end
-
+  
     it "raises an ArgumentError if the template contains a regex" do
       @resource_class.on(:get, :list => [ /anything/ ] ) { nil }
       lambda { @paths.list( :one => 'one' ) }.should.raise ArgumentError
@@ -112,7 +126,41 @@ describe "A path generation method" do
     
   end
 
-  
+  describe "A path template" do
+    
+    it "is compilable when it contains Strings, Symbols, and Hashes with Strings or Symbols" do
+      @resource_class.on(:get, :one => [ 'taller', 'ghost', 'walt' ] ) { nil }
+      @paths.one
+      
+      @resource_class.on(:get, :two => [ 'hi', 'there', :nickname ]) { nil }
+      @paths.two( 'freckles' )
+      
+      @resource_class.on(:get, :three => [ 'form', { :filter => 'textile' } ] ) { nil }
+      @paths.three( 'markdown' )
+      
+      @resource_class.on(:get, :four => [ 'other_form', { :filter => :textile } ] ) { nil }
+      @paths.four( 'markdown' )
+      
+      @paths.compiled.values.sort.should == ["/taller/ghost/walt", "/hi/there/%s", "/form/%s", "/other_form/%s"].sort
+    end
+    
+    it "is not compilable if it contains Regexps, true, or Hashes with Regexp or true" do
+      @resource_class.on(:get, :one => [ "episode", /\d+/ ] ) { nil }
+      @paths.one( 815 )
+      
+      @resource_class.on(:get, :two => [ true ])
+      @paths.two( "foo" )
+      
+      @resource_class.on(:get, :three => [ {:foo => /^ba(r|z|t)$/ } ] ) { nil }
+      @paths.three( :foo => 'baz' )
+      
+      @resource_class.on(:get, :four => [ 'first', { :whatever => true } ]) { nil }
+      @paths.four
+      
+      @paths.compiled.values.should == []
+    end
+    
+  end
 
 
   
