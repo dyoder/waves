@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/../../test/helpers.rb"
+require "#{File.dirname(__FILE__)}/../helpers.rb"
 
 describe "Object#cache_method_missing" do
   
