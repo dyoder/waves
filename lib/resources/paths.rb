@@ -4,7 +4,9 @@ module Waves
     
     class Paths
       
-      attr_accessor :compiled
+      def self.compiled; @compiled ||= {} ; end
+      
+      def compiled_paths; self.class.compiled ; end
       
       def generate( template, args )
         return "/" if template.empty?
@@ -20,12 +22,13 @@ module Waves
       end
       
       def process_array( template, args )
-        @compiled ||= {}
-        template_key = ([template, args.size]).hash
-        compiled = @compiled[template_key]
-        return ( compiled % args ) if compiled 
+        template_key = template
+        compiled = compiled_paths[template_key]
+        if compiled
+          return ( compiled % args ) 
+        end
         compilable = true
-        path = []; cpath, interpolations = "", []
+        cpath, interpolations = "", []
         result = ( cpath % interpolations ) if template.all? do | want |
           case want
           when Symbol
@@ -59,7 +62,7 @@ module Waves
           end
         end
         raise ArgumentError, "Too many args" unless args.empty?
-        @compiled[template_key] = cpath if compilable
+        compiled_paths[template_key] = cpath if compilable
         result
       end
       

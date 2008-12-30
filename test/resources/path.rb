@@ -1,10 +1,10 @@
-require "#{File.dirname(__FILE__)}/../../test/helpers.rb"
+require "#{File.dirname(__FILE__)}/../helpers.rb"
 require "foundations/compact"
 
 describe "A path generation method" do
   
   before do
-    Test = Module.new { include Waves::Foundations::Compact } unless defined? Test
+    Test = Module.new { include Waves::Foundations::Compact }
     @resource_class = Test::Resources::Map
     @paths = @resource_class.new( Waves::Request.new( env( '/', :method => 'GET' ) ) ).paths
   end
@@ -27,14 +27,12 @@ describe "A path generation method" do
   it "treats symbols as locations for arg interpolation" do
     @resource_class.on(:get, :show => [ 'hi', 'there', :nickname ]) { nil }
     @paths.show( 'freckles' ).should == "/hi/there/freckles"
-    @paths.compiled.values.should == ["/hi/there/%s"]
   end
   
   
   it "treats a hash with string or symbol value as location for arg interpolations" do
     @resource_class.on(:get, :edit => [ 'form', { :filter => 'textile' } ] ) { nil }
     @paths.edit( 'markdown' ).should == "/form/markdown"
-    @paths.compiled.values.should == ["/form/%s"] 
     @paths.edit( 'markdown' ).should == "/form/markdown"
   end
   
@@ -141,7 +139,7 @@ describe "A path generation method" do
       @resource_class.on(:get, :four => [ 'other_form', { :filter => :textile } ] ) { nil }
       @paths.four( 'markdown' )
       
-      @paths.compiled.values.sort.should == ["/taller/ghost/walt", "/hi/there/%s", "/form/%s", "/other_form/%s"].sort
+      @paths.compiled_paths.values.sort.should == ["/taller/ghost/walt", "/hi/there/%s", "/form/%s", "/other_form/%s"].sort
     end
     
     it "is not compilable if it contains Regexps, true, or Hashes with Regexp or true" do
@@ -157,7 +155,7 @@ describe "A path generation method" do
       @resource_class.on(:get, :four => [ 'first', { :whatever => true } ]) { nil }
       @paths.four
       
-      @paths.compiled.values.should == []
+      @paths.compiled_paths.values.should == []
     end
     
   end
