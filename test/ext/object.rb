@@ -41,3 +41,15 @@ describe "Object#cache_method_missing" do
   end  
   
 end
+
+describe "Object#instance_exec" do
+  
+  before do
+    @block = lambda { |guy| "Howdy, #{guy}!" }
+  end
+  
+  it "works like instance_eval, but it takes args and gives them to the block" do
+    instance_exec( "Steve", &@block ).should == "Howdy, Steve!"
+  end
+  
+end
