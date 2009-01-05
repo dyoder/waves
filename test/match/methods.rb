@@ -1,4 +1,4 @@
-require 'test/helpers.rb'
+require "#{File.dirname(__FILE__)}/../../test/helpers.rb"
 require 'foundations/compact'
 
 describe "Matching Request Methods" do

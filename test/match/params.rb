@@ -1,4 +1,4 @@
-require 'test/helpers.rb'
+require "#{File.dirname(__FILE__)}/../../test/helpers.rb"
 require 'foundations/compact'
 
 describe "Query, Captured, and Params" do
@@ -14,7 +14,7 @@ describe "Query, Captured, and Params" do
   end
     
   feature "Params should combined captured and query" do 
-    Test::Resources::Map.module_eval { on( :get, [ :foo ] ) {} }
+    Test::Resources::Map.on( :get, [ :foo ] ) {}
     r = Test::Resources::Map.new( Waves::Request.new( env('http://localhost/baz?bar=7', :method => 'GET' ) ) )
     r.get ; r.captured.to_h.should == { 'foo' => 'baz' }; r.query.to_h.should == { 'bar' => '7' }
     r.params.to_h.should == { 'foo' => 'baz', 'bar' => '7' }
