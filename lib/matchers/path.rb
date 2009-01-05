@@ -48,15 +48,19 @@ module Waves
         capture if match && path.empty?
       end
 
-      private 
+      # private 
 
       # just a little helper method
-      def extract_path( request )
+      def original_extract_path( request )
         path = request.traits.waves.path
         return path if path
         path = request.path.split('/').map { |e| Rack::Utils.unescape(e) }
         path.shift unless path.empty?
         request.traits.waves.path = path
+      end
+      
+      def extract_path( request )
+        request.traits.waves.path ||= request.path.scan(/[^\/]+/).map { |e| Rack::Utils.unescape(e) }
       end
 
     end
