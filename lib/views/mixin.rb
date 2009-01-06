@@ -30,28 +30,38 @@ module Waves
       include Waves::ResponseMixin
 
       def self.included( target )
+        target.send(:include, Ext) unless target.instance_methods.include?("render")  #Don't redefine render
         def target.process( request, *args, &block )
           self.new( request ).instance_exec( *args, &block )
         end
       end
 
-      def initialize( request ) ; @request = request ; @layout = :default ; end
+      def initialize( request )
+        @request = request
+        @layout = :default
+        clear! if respond_to?(:clear!)  #For Hoshi compatibility
+      end
 
       # Return the first renderer for which a template file can be found.
       # Uses Renderers::Mixin.filename to construct the filename for each renderer.
       def renderer(path) ; Views.renderer_for( :templates / path) ; end
 
-      # Render the template found in the directory named after this view (snake cased, of course)
-      # E.g. App::Views::Gnome.new.render( "stink" ) would look for templates/gnome/stink.<ext>
-      def render( path, assigns = {} )
-        qpath = "#{self.class.basename.snake_case}/#{path}"
-        Waves.log.debug "Rendering template: #{qpath}"
-        Views.render( :templates / qpath, assigns.merge!( :request => request ))
+      # The View mixin extension includes functionality that may be incompatible
+      # with some template engines.  It is included when the Mixin is included
+      # unless the target class is incompatible
+      module Ext
+        # Render the template found in the directory named after this view (snake cased, of course)
+        # E.g. App::Views::Gnome.new.render( "stink" ) would look for templates/gnome/stink.<ext>
+        def render( path, assigns = {} )
+          qpath = "#{self.class.basename.snake_case}/#{path}"
+          Waves.log.debug "Rendering template: #{qpath}"
+          Views.render( :templates / qpath, assigns.merge!( :request => request ))
+        end
+
+        # Render the template with the name of the missing method.
+        def method_missing(name,*args) ; render( name, *args ) ; end
       end
-
-      # Render the template with the name of the missing method.
-      def method_missing(name,*args) ; render( name, *args ) ; end
-
+      
     end
 
     class Base ; include Mixin ; end

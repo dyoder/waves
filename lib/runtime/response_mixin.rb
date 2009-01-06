@@ -49,9 +49,6 @@ module Waves
       ( m = ( str or path ).match(/\.([^\.]+)$/) ) ? m[1] : nil
     end
     
-    def render( path, assigns = {} )
-      Waves::Views::Base.new( request ).render( path, assigns )
-    end
   end
 
 end
