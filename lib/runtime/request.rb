@@ -53,10 +53,16 @@ module Waves
     
     # access HTTP headers as methods
     def method_missing( name, *args, &body )
-      return super unless args.empty? and body.nil?
-      key = "HTTP_#{name.to_s.upcase}" 
-      @request.env[ key ] if @request.env.has_key?( key )
+      if args.empty? and not body
+        cache_method_missing name, <<-CODE, *args, &body
+          key = "HTTP_#{name.to_s.upcase}"
+          @request.env[ key ] if @request.env.has_key?( key )
+        CODE
+      else
+        super
+      end
     end
+    
 
     # Raise a not found exception.
     def not_found

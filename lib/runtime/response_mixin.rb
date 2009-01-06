@@ -10,7 +10,7 @@ module Waves
     # Access the response.
     def response; request.response; end
     
-    def resource ; traits.waves.resource ; end
+    def resource; traits.waves.resource || ( self if self.kind_of? Waves::Resources::Mixin ) ; end
 
     def traits ; request.traits ; end
     
@@ -39,7 +39,7 @@ module Waves
     def app_name ; self.class.rootname.snake_case.to_sym ; end
     def app ; eval(  "::#{app_name.to_s.camel_case}" ) ; end    
     def paths( rname = nil )
-      ( rname.nil? ? resource.class.paths : app::Resources[ rname ].paths ).new( request )
+      ( rname ? app::Resources[ rname ].paths : resource.class.paths ).new
     end
 
     # these take strings or operate on the path by default

@@ -26,7 +26,7 @@ module Waves
     
     # Forwards logging methods to the logger.
     def self.method_missing(name,*args,&block)
-      @log.send name,*args, &block if @log
+      cache_method_missing name, "@log.#{name} *args, &block if @log", *args, &block
     end
 
   end

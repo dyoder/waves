@@ -98,7 +98,9 @@ module Waves
             when Symbol, String
               begin 
                 Waves.main::Resources[ resource ]
-              rescue NameError
+              rescue NameError => e
+                Waves::Logger.debug e.to_s
+                e.backtrace.each { |t| Waves::Logger.debug "    #{t}" }
                 raise Waves::Dispatchers::NotFoundError
               end
               Waves.main::Resources[ resource ]

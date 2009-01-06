@@ -54,7 +54,7 @@ module Waves
       def extract_path( request )
         path = request.traits.waves.path
         return path if path
-        path = request.path.split('/')
+        path = request.path.split('/').map { |e| Rack::Utils.unescape(e) }
         path.shift unless path.empty?
         request.traits.waves.path = path
       end
