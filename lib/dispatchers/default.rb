@@ -10,7 +10,7 @@ module Waves
         request.response.content_type = request.accept.default
         resource = Waves.config.resource.new( request )
         if request.response.body.empty?
-          request.response.body << resource.process.to_s
+          request.response.write resource.process.to_s
         else
           resource.process
         end
