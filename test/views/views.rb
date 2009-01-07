@@ -2,32 +2,31 @@ require "#{here = File.dirname(__FILE__)}/../helpers.rb"
 require 'foundations/classic'
 require 'layers/renderers/erubis'
 require 'layers/renderers/markaby'
-
-Dir.chdir(here) do
-  
-  Test = Module.new { include Waves::Foundations::Classic }
-  Waves << Test
-
+require 'fileutils'
 
   
+Test = Module.new { include Waves::Foundations::Classic }
+Waves << Test
 
-  describe "A class which has included Waves::Views::Mixin" do
+
+
+
+describe "A class which has included Waves::Views::Mixin" do
+  Dir.chdir(here) do
 
     before do
       @view = Test::Views::Test.new( Waves::Request.new(env( '/', :method => 'GET' ) ))
+      FileUtils.rm_rf "templates" if File.exist? "templates"
+      FileUtils.mkdir_p "templates/test"
+      File.write "templates/test/smurf.mab", "span 'Smurf'"
     end
-    
+  
+  
     it "works" do
       @view.render("smurf").should == "<span>Smurf</span>\n"
       @view.smurf.should == "<span>Smurf</span>\n"
     end
 
-    it "new stuff works" do
-      @view.template_file("gnome").should == "templates/test/gnome.erb"
-      @view.render("smurf").should == "<span>Smurf</span>\n"
-      @view.mab("span 'Toe'").should == "<span>Toe</span>\n"
-    end
-
   end
-
 end
+
