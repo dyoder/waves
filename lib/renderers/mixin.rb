@@ -13,21 +13,21 @@ module Waves
       # - helper: return a helper module that corresponds to the given logical path.
       #
 
-      def included( app )
-        Waves::Views.renderers << self
-      end
-
-      def filename(path)
-        "#{path}.#{self::Extension}"
-      end
-
-      def template( path )
-        File.read( filename( path ) )
-      end
-
-      def helper( path )
-        Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
-      end
+      # def included( app )
+      #   Waves::Views.renderers << self
+      # end
+      # 
+      # def filename(path)
+      #   "#{path}.#{self::Extension}"
+      # end
+      # 
+      # def template( path )
+      #   File.read( filename( path ) )
+      # end
+      # 
+      # def helper( path )
+      #   Waves.main[ :helpers ][ File.basename( File.dirname( path ) ).camel_case ]
+      # end
 
     end
 
