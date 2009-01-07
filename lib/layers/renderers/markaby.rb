@@ -12,16 +12,13 @@ module Waves
         require 'markaby'
         ::Markaby::Builder.set( :indent, 2 )
         Waves::Views.renderers << self
-        Waves::Views::Base.send(:include, self::ViewMethods)
+        # Waves::Views::Base.send(:include, self::ViewMethods)
+        app.auto_eval :Views do
+          auto_eval :Default do
+            include ViewMethods
+          end
+        end
       end
-      
-      # def self.render( path, assigns )
-      #   builder = ::Markaby::Builder.new( assigns )
-      #   helper = helper( path )
-      #   builder.meta_eval { include( helper ) }
-      #   builder.instance_eval( template( path ) )
-      #   builder.to_s
-      # end
       
       module ViewMethods
         

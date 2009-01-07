@@ -36,7 +36,7 @@ module Waves
           end
           
           app.auto_eval :Models do
-            auto_create_class true, app::Models::Default
+            auto_create_class true, :Default
             auto_load true, :directories => [ :models ]
             # set the Sequel dataset based on the model class name
             # note that this is not done for app::Models::Default, as it isn't 

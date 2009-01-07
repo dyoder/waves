@@ -35,7 +35,7 @@ module Waves
         file
       end
 
-      # The Views::Ext includes functionality that may be incompatible
+      # The Views::Mixin::Ext includes functionality that may be incompatible
       # with some template engines.  It is included when the Mixin is included
       # unless the target class is incompatible
       module Ext

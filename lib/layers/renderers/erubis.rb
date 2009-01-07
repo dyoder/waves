@@ -12,7 +12,11 @@ module Waves
       
       def self.included( app )
         Waves::Views.renderers << self
-        Waves::Views::Base.send(:include, self::ViewMethods)
+        app.auto_eval :Views do
+          auto_eval true do
+            include ViewMethods
+          end
+        end
       end
       
       # def self.render( path, assigns={} )

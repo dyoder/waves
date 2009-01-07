@@ -11,10 +11,7 @@ module Waves
           include AutoCode
           auto_create_class :Default
           auto_load :Default, :directories => [ :models ]
-        end
-        
-        app.auto_eval( :Models ) do
-          auto_create_class true, app::Models::Default
+          auto_create_class true, :Default
           auto_load true, :directories => [ :models ]
         end
 
@@ -25,7 +22,7 @@ module Waves
         end
         
         app.auto_eval( :Views ) do
-          auto_create_class true, app::Views::Default
+          auto_create_class true, :Default
           auto_load true, :directories => [ :views ]
         end
 
@@ -33,10 +30,7 @@ module Waves
           include AutoCode
           auto_create_class :Default, Waves::Controllers::Base
           auto_load :Default, :directories => [ :controllers ]
-        end
-        
-        app.auto_eval( :Controllers ) do
-          auto_create_class true, app::Controllers::Default
+          auto_create_class true, :Default
           auto_load true, :directories => [ :controllers ]          
         end
 
@@ -44,6 +38,9 @@ module Waves
           include AutoCode
           auto_create_module( :Default ) { include Waves::Helpers::Extended }
           auto_load :Default, :directories => [ :helpers ]
+        end
+        
+        app.auto_eval( :Helpers ) do
           auto_create_module( true ) { include app::Helpers::Default }
           auto_load true, :directories => [ :helpers ]
         end
