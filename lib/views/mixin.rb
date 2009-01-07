@@ -6,6 +6,7 @@ module Waves
     end
 
     def self.renderers ; @renderers ||= [] ; end
+    def self.extensions; @extensions ||= renderers.map { |r| r::Extension }; end
 
     module Mixin
 
@@ -25,23 +26,16 @@ module Waves
         @layout = :default
         clear! if respond_to?(:clear!)  #For Hoshi compatibility
       end
-      
-      def renderer_extensions
-        Views.renderers.map { |r| r::Extension }
-      end
-      
-      def template_path(name)
-        "templates/#{self.class.basename.snake_case}/#{name}"
-      end
 
       def template_file(name)
+        template = "templates/#{self.class.basename.snake_case}/#{name}"
+        extensions = Views.extensions.join(',')
         # globbing on a {x,y,z} group returns the found files in x,y,z order
-        template = Dir["#{template_path(name)}.{#{renderer_extensions.join(',')}}"].first
-        raise NoTemplateError.new( path ) unless template
-        template
+        raise NoTemplateError.new( path ) unless file = Dir["#{template}.{#{extensions}}"].first
+        file
       end
 
-      # The View mixin extension includes functionality that may be incompatible
+      # The Views::Ext includes functionality that may be incompatible
       # with some template engines.  It is included when the Mixin is included
       # unless the target class is incompatible
       module Ext
@@ -51,10 +45,12 @@ module Waves
         def render( name, assigns={})
           file = template_file(name)
           ext = File.extname(file).slice(1..-1)
+          Waves.log.debug "Rendering: #{file}"
           self.send( ext, File.read(file), assigns.merge!( :request => request ))
         end
 
         # Render the template with the name of the missing method.
+        # E.g. App::Views::Gnome.new.stink would look for templates/gnome/stink
         def method_missing(name,*args) ; render( name, *args ) ; end
       end
       
