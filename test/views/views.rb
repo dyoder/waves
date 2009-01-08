@@ -4,15 +4,19 @@ require 'layers/renderers/erubis'
 require 'layers/renderers/markaby'
 require 'fileutils'
 
-  
-Test = Module.new { include Waves::Foundations::Classic }
-Waves << Test
-
-
-
 
 describe "A class which has included Waves::Views::Mixin" do
   Dir.chdir(here) do
+    
+    before do
+      Test = Module.new { include Waves::Foundations::Classic }
+      Waves << Test
+    end
+
+    after do
+      Waves.applications.clear
+      Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
+    end
 
     before do
       @view = Test::Views::Test.new( Waves::Request.new(env( '/', :method => 'GET' ) ))
