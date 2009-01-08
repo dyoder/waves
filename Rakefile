@@ -106,5 +106,6 @@ end
 desc "Run all specifications and tests."
 task( :test ) do
   paths = FileList['test/**/*.rb']
-  system "bacon #{paths.join(' ')}"
+  puts command = "bacon #{paths.join(' ')}"
+  system command
 end
