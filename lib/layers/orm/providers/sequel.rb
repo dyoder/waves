@@ -30,27 +30,24 @@ module Waves
           def app.database ; @sequel ||= ::Sequel.open( Waves.config.database ) ; end
                       
           app.auto_create_module( :Models ) do
-            include AutoCode
             auto_create_class :Default, ::Sequel::Model
             auto_load :Default, :directories => [ :models ]
-          end
-          
-          app.auto_eval :Models do
             auto_create_class true, :Default
             auto_load true, :directories => [ :models ]
+            
             # set the Sequel dataset based on the model class name
             # note that this is not done for app::Models::Default, as it isn't 
             # supposed to represent a table
             auto_eval true do
-              default = superclass.basename.snake_case.pluralize.intern
+              next if self.basename == "Default"
+              default = self.superclass.basename.snake_case.pluralize.intern
               if @dataset && @dataset.opts[:from] != [ default ]
                 # don't clobber dataset from autoloaded file
-              else
-                if respond_to? :set_dataset
-                  set_dataset Waves.main.database[ basename.snake_case.pluralize.intern ]
-                end
+              elsif respond_to? :set_dataset
+                set_dataset Waves.main.database[ basename.snake_case.pluralize.intern ]
               end
             end
+            
           end
             
           Waves::Controllers::Base.instance_eval do

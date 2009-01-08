@@ -34,18 +34,15 @@ module Waves
           end
                       
           app.auto_create_module( :Models ) do
-            include AutoCode
             auto_create_class :Default, ::ActiveRecord::Base
             auto_load :Default, :directories => [ :models ]
-          end
-          
-          app.auto_eval :Models do
             auto_create_class true, app::Models::Default
             auto_load true, :directories => [ :models ]
 
             auto_eval true do
+              next if self.basename == "Default"
               app.database
-              set_table_name basename.snake_case.pluralize.intern
+              set_table_name self.basename.snake_case.pluralize.intern
             end
           end
           
