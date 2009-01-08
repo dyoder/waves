@@ -48,7 +48,7 @@ module Waves
                   else 
                     case value
                     when true then path += args
-                    when String, Symbol, RegExp then path << args.unshift
+                    when String, Symbol, Regexp then path << args.unshift
                     end
                   end
                 end
