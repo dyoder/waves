@@ -13,4 +13,5 @@ Bacon::Context.module_eval do
   alias_method :feature, :it
 end
 
+Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
