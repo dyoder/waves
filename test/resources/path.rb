@@ -10,6 +10,7 @@ describe "A path generation method" do
   end
   
   after do
+    Waves.applications.clear
     Object.instance_eval { remove_const(:Test) if const_defined?(:Test) }
   end
   
