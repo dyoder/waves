@@ -10,7 +10,6 @@ describe "A class which has included Waves::Views::Mixin" do
     
     before do
       Test = Module.new { include Waves::Foundations::Classic }
-      Waves << Test
       Dir.chdir(here) do      
         FileUtils.rm_rf "templates" if File.exist? "templates"
         FileUtils.mkdir_p "templates/test"
