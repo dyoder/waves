@@ -10,7 +10,8 @@ runtime_deps = { :rack => '~> 0.4', 'rack-cache' => '~> 0.2',
   :live_console => '~> 0.2', :functor => '>= 0.5.0', 
   :rakegen => '~> 0.6', :autocode => '>= 1.0.0', 
   :filebase => '>= 0.3.5', :RedCloth => '~> 4.0',
-  :choice => '~> 0.1', :metaid => '~> 1.0' }
+  :choice => '~> 0.1', :metaid => '~> 1.0', :daemons => '~>1.0.10',
+}
   
 developer_deps = { :bacon => '~> 1.0', :facon => '~> 0.4' }
 
