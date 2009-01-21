@@ -1,4 +1,4 @@
-require "#{File.dirname(__FILE__)}/../../migration"
+require "#{File.dirname(__FILE__)}/../../../migration"
 
 namespace :schema do
 
