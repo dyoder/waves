@@ -26,7 +26,7 @@ module Waves
       new options
       Kernel.load(options[:startup] || "startup.rb")
 
-      Waves.config.application
+      Waves.config.application.to_app
     end
 
   end
