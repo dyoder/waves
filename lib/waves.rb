@@ -1,22 +1,26 @@
+# TODO: Move ALL of this stuff where it is needed to avoid
+#       unnecessary dependencies.
+
 # External Dependencies
-require 'rack'
-require 'rack/cache'
-require 'daemons'
+require "rubygems"
+  require 'rack'
+  require 'rack/cache'
+  require 'daemons'
 
-# a bunch of handy stuff
-require 'extensions/io'
-require 'extensions/symbol' unless Symbol.instance_methods.include? 'to_proc'
-require 'fileutils'
-require 'metaid'
-require 'forwardable'
-require 'date'
-require 'benchmark'
-require 'base64'
-require 'functor'
-require 'filebase'
-require 'filebase/model'
+  # a bunch of handy stuff
+  require 'extensions/io'
+  require 'extensions/symbol' unless Symbol.instance_methods.include? 'to_proc'
+  require 'fileutils'
+  require 'metaid'
+  require 'forwardable'
+  require 'date'
+  require 'benchmark'
+  require 'base64'
+  require 'functor'
+  require 'filebase'
+  require 'filebase/model'
+  require 'english/style'
 
-require 'english/style'
 
 # selected project-specific extensions
 require 'waves/ext/integer'
