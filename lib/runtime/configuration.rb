@@ -86,7 +86,6 @@ module Waves
       reloadable []
       dependencies []
       server Waves::Servers::WEBrick
-
       application.use ::Rack::ShowExceptions
 
     end
