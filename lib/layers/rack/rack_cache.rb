@@ -1,13 +1,13 @@
 require 'rack/cache'
 
 module Waves
-  
+
   module Cache
 
     module RackCache
-      
+
       def self.included(app)
-        
+
         #registering the default configuration for rack-cache
           app.application.use Rack::Cache do
             #set cache related options
@@ -22,11 +22,11 @@ module Waves
             # instead of overriding this config, you may choose to use the header 'Vary' in your application.
             set :private_headers, ['Authorization']
           end
-        
+
       end
-      
+
     end
-  
+
   end
 
 end
