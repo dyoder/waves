@@ -6,3 +6,5 @@ doc/rdoc
 log
 *.gem
 *.gemspec
+
+*.swp
