@@ -70,15 +70,6 @@ module Waves
         Waves::MimeTypes
       end
 
-      # Register rack middleware using this method.
-      #@registered_middleware = []
-      #def self.register_rack_middleware(&block)
-      #  @registered_middleware << block
-      #end
-      #def self.registered_rack_middleware
-      #  @registered_middleware
-      #end
-
       # Defines the application for use with Rack.  Treat this method like an
       # instance of Rack::Builder
       def self.application( &block )
@@ -95,17 +86,8 @@ module Waves
       reloadable []
       dependencies []
       server Waves::Servers::WEBrick
-      #middleware = registered_rack_middleware
-
-        #require 'ruby-debug'; debugger
-        #middleware.each { |mw| puts "calling"; mw.call }
-
-
 
       application.use ::Rack::ShowExceptions
-
-
-
 
     end
   end
