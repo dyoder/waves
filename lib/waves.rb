@@ -1,5 +1,6 @@
 # External Dependencies
 require 'rack'
+require 'rack/cache'
 require 'daemons'
 
 # a bunch of handy stuff
