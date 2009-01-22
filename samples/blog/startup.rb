@@ -1,6 +1,7 @@
-require 'foundations/classic'
-require 'layers/orm/providers/sequel'
-require 'layers/renderers/markaby'
+require 'waves/foundations/classic'
+require 'waves/layers/orm/providers/sequel'
+require 'waves/layers/renderers/markaby'
+
 module Blog
   include Waves::Foundations::Classic
   include Waves::Layers::ORM::Sequel

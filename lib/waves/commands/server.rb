@@ -60,7 +60,7 @@ Choice.options do
   separator ''
 end
 
-require 'runtime/server'
+require 'waves/runtime/server'
 begin
   Waves::Server.run( Choice.choices )
 rescue LoadError => e

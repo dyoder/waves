@@ -11,11 +11,12 @@ module Waves
 
         gem 'dyoder-autocode', '~> 1.0.1'
         require 'autocode'
-        require 'layers/mvc'
-        require 'layers/inflect/english'
-        require 'helpers/extended'
-        require 'layers/renderers/erubis'
-        require 'layers/renderers/markaby'
+
+        require 'waves/layers/mvc'
+        require 'waves/layers/inflect/english'
+        require 'waves/helpers/extended'
+        require 'waves/layers/renderers/erubis'
+        require 'waves/layers/renderers/markaby'
         
         app.module_eval do
 

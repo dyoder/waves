@@ -21,13 +21,13 @@ else
 end
 
 require waves
-require 'runtime/console'
+require 'waves/runtime/console'
 
 begin
   Waves::Console.load(:mode => ENV['mode'])
 
   # load tasks from waves framework
-  %w( generate gem ).each { |task| require "tasks/#{task}.rb" }
+  %w( generate gem ).each { |task| require "waves/tasks/#{task}.rb" }
 
   # load tasks from this app's lib/tasks
   Dir["lib/tasks/*.{rb,rake}"].each { |task| require task }
