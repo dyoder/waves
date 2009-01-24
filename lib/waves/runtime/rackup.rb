@@ -16,7 +16,7 @@ module Waves
   #   require "waves"
   #   require "waves/runtime/rackup"
   #
-  #   run Waves::Rackup.load(:startup => "run_giraffe_run.rb")
+  #   run Waves::Rackup.load(:startup => "my_startup.rb")
   #
   class Rackup < Runtime
 

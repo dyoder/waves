@@ -32,34 +32,34 @@ module Waves
 
       # As with any Rack application, a Waves dispatcher must provide a call method
       # that takes an +env+ hash.
-      def call( env )
-        response = if Waves.synchronize? or Waves.debug?
-          Waves.synchronize { Waves.reload ; _call( env )  }
-        else
-          _call( env )
-        end
-      end
+#      def call( env )
+#        response = if Waves.synchronize? or Waves.debug?
+#          Waves.synchronize { Waves.reload ; _call( env )  }
+#        else
+#          _call( env )
+#        end
+#      end
 
       # Called by event driven servers like thin and ebb. Returns true if
       # the server should run the request in a separate thread.
       def deferred?( env ) ; Waves.config.resource.new( Waves::Request.new( env ) ).deferred? ; end
       
-      private
-      
-      def _call( env )
-        request = Waves::Request.new( env )
-        response = request.response
-        t = Benchmark.realtime do
-          begin
-            safe( request )
-          rescue Dispatchers::Redirect => redirect
-            response.status = redirect.status
-            response.location = redirect.path
-          end
-        end
-        Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
-        response.finish
-      end
+#      private
+#      
+#      def _call( env )
+#        request = Waves::Request.new( env )
+#        response = request.response
+#        t = Benchmark.realtime do
+#          begin
+#            safe( request )
+#          rescue Dispatchers::Redirect => redirect
+#            response.status = redirect.status
+#            response.location = redirect.path
+#          end
+#        end
+#        Waves::Logger.info "#{request.method}: #{request.url} handled in #{(t*1000).round} ms."
+#        response.finish
+#      end
       
     end
 
