@@ -1,4 +1,5 @@
 require 'drb'
+require 'runtime/tuplespace/worker'
 module Waves
 
   # "Workers" are just dedicated processes. Managers, Servers, and Monitors are all
@@ -29,17 +30,24 @@ module Waves
       start_logger ; Waves::Logger.info "#{self.class} starting ..."
       start_debugger if debug? unless Kernel.engine == 'jruby'
       # various ways to talk to a worker
-      set_traps ; start_console ; start_drb
+      set_traps ; start_console ;
+      drb_thread = Thread.new{ start_drb };
       start_tasks.join
+      drb_thread.join
     end
 
     def stop
       Waves::Logger.info "#{self.class} shutting down ..."
       @console.stop if @console
       stop_tasks
+      stop_drb
     end
 
-    def restart ; stop ; start ; end
+    def restart(job = nil)
+      puts 'Called restart...'
+      stop
+      start
+    end
 
     def daemonize
       pwd = Dir.pwd ; pid = fork ; return pid if pid ; Dir.chdir( pwd )
@@ -82,8 +90,13 @@ module Waves
 
     # for management, monitoring
     def start_drb
+      @drb = TupleSpace::Worker.new(self)
+      @drb.run
     end
 
+    def stop_drb
+      @drb.stop if @drb
+    end
   end
 
 end

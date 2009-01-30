@@ -1,14 +1,20 @@
+require 'live_console'
 module Waves
-  
+
   class Server < Worker
-    
+
     def start_tasks
       @server = config.server.new( application, host, port )
       @server.start
     end
-    
+
     def stop_tasks ; @server.stop ; end
-    
+
+    def status(job)
+      puts "Healthy!"
+    end
+
+
     private
 
     def application ; @app ||= config.application.to_app ; end
