@@ -93,22 +93,51 @@ module Waves
         end
       end
       
-      def self.parse(string)
-        string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
-      end
+      def self.parse(str)
+    	regexp =  Regexp.new(/([^;]*[^,]*)/)
+    	terms = (str.split(regexp) - [''])
+    	terms = terms.map{ |t| extract_term_and_value(((ts = t.split(/^, /)).size == 2)? ts[1].strip: ts[0].strip)}
+    	sorted_terms = terms.sort do |term1, term2|
+      		term2[1] <=> term1[1]
+      	end
+    	(sorted_terms.inject(self.new){ |fin, nex| fin << nex[0].split(',').map{|te| te.strip}}).flatten.uniq
+  	  end
+  
+  	  def self.extract_term_and_value(txt)
+    	res = txt.split(';')
+    	q = (res.select{ |param| param =~ /q=/})[0]
+    	q = q ? q.gsub(/[a-zA-Z =]*/, '').to_f : 1.0
+    	[res[0], q]
+  	  end
+
+      #def self.parse(string)
+      #  string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
+      #end
       
       def default
-        return 'text/html' if self.include?('text/html')
-        find { |entry| ! entry.match(/\*/) } || 'text/html'
+        #require 'ruby-debug' ; debugger
+        #return 'text/html' if self.include?('text/html')
+        #find { |entry| ! entry.match(/\*/) } || 'text/html'
+        return 'text/html' if self.size == 0
+        return self.first
       end
       
     end
     
-    # this is a hack - need to incorporate browser variations for "accept" here ...
-    # def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
-    def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
-    def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
-    def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
+    ## this is a hack - need to incorporate browser variations for "accept" here ...
+    ## def accept ; @accept ||= Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
+    ## def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
+    def accept 	
+    	@accept ||= Accept.parse(@request.env['HTTP_ACCEPT'])
+    	ext = Waves.config.mime_types[ path ]
+    	return @accept.unshift( ext ) if !ext.nil?
+    	@accept 
+    end
+    def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; puts @charset ; end
+    def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; puts @lang ; end
+    
+    # adding accept_encoding
+    def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; puts @enc ; end
 
     module Utilities
       
