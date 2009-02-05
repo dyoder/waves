@@ -93,10 +93,11 @@ module Waves
         end
       end
       
+      # TODO parsing must be optimized.
       def self.parse(str)
     	regexp =  Regexp.new(/([^;]*[^,]*)/)
     	terms = (str.split(regexp) - [''])
-    	terms = terms.map{ |t| extract_term_and_value(((ts = t.split(/^, /)).size == 2)? ts[1].strip: ts[0].strip)}
+    	terms = terms.map{ |t| extract_term_and_value(((ts = t.strip.split(/^,/)).size == 2)? ts[1].strip: ts[0].strip)}
     	sorted_terms = terms.sort do |term1, term2|
       		term2[1] <=> term1[1]
       	end
@@ -115,7 +116,6 @@ module Waves
       #end
       
       def default
-        #require 'ruby-debug' ; debugger
         #return 'text/html' if self.include?('text/html')
         #find { |entry| ! entry.match(/\*/) } || 'text/html'
         return 'text/html' if self.size == 0
@@ -127,17 +127,20 @@ module Waves
     ## this is a hack - need to incorporate browser variations for "accept" here ...
     ## def accept ; @accept ||= Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
     ## def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
+    
+    # parsing accept header based on rfc2616 - A-BNF in section 14.1
     def accept 	
     	@accept ||= Accept.parse(@request.env['HTTP_ACCEPT'])
     	ext = Waves.config.mime_types[ path ]
-    	return @accept.unshift( ext ) if !ext.nil?
+    	@accept.unshift( ext ) if !ext.nil? and !(@accept=~( ext ))
     	@accept 
     end
-    def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; puts @charset ; end
-    def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; puts @lang ; end
     
+    # TODO verify the parsing of these accept-headers.
+    def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
+    def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
     # adding accept_encoding
-    def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; puts @enc ; end
+    def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; end
 
     module Utilities
       
