@@ -15,7 +15,6 @@ module Waves
     end
 
 
-    private
 
     def application ; @app ||= config.application.to_app ; end
     def port ; @port ||= options[:port] or config.port ; end
