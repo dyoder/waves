@@ -9,7 +9,7 @@ module Waves
 
       def run
         begin
-          DRb.start_service
+          @drb_server = DRb.start_service
           ring_server = Rinda::RingFinger.primary
           ts = ring_server.read([:name, :TupleSpace, nil, nil])[2]
           @ts = Rinda::TupleSpaceProxy.new ts
@@ -34,11 +34,11 @@ module Waves
 
       def stop
         #unregister itself.
-        @ts.take([:worker, app_name, uri])
-        DRb.stop_service
+        @ts.write([:worker, app_name, uri, :unregister])
+        @drb_server.stop_service
       end
       def uri
-        @uri ||= "#{ @worker.config.host }:#{ @worker.config.port }"
+        @uri ||= "#{ @worker.host }:#{ @worker.port }"
       end
 
       def app_name
