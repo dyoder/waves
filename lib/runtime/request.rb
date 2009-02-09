@@ -95,13 +95,14 @@ module Waves
       
       # TODO parsing must be optimized.
       def self.parse(str)
-    	regexp =  Regexp.new(/([^;]*[^,]*)/)
-    	terms = (str.split(regexp) - [''])
-    	terms = terms.map{ |t| extract_term_and_value(((ts = t.strip.split(/^,/)).size == 2)? ts[1].strip: ts[0].strip)}
+    	regexp_1 = Regexp.new(/([^,][^;]*[^,]*)/)
+
+    	terms = str.scan(regexp_1)
+    	terms = terms.map{ |t| extract_term_and_value(t.to_s) }
     	sorted_terms = terms.sort do |term1, term2|
       		term2[1] <=> term1[1]
-      	end
-    	(sorted_terms.inject(self.new){ |fin, nex| fin << nex[0].split(',').map{|te| te.strip}}).flatten.uniq
+    	end
+    	sorted_terms.inject([]){|value, terms| value << terms[0].split(',').map{|x| x.strip} }.flatten.uniq
   	  end
   
   	  def self.extract_term_and_value(txt)
