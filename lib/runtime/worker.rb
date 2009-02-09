@@ -36,7 +36,7 @@ module Waves
       drb_thread.join
     end
 
-    def stop
+    def stop(job = nil)
       Waves::Logger.info "#{self.class} shutting down ..."
       @console.stop if @console
       stop_tasks
