@@ -102,7 +102,7 @@ module Waves
     	sorted_terms = terms.sort do |term1, term2|
       		term2[1] <=> term1[1]
     	end
-    	sorted_terms.inject([]){|value, terms| value << terms[0].split(',').map{|x| x.strip} }.flatten.uniq
+    	sorted_terms.inject(self.new){|value, terms| value << terms[0].split(',').map{|x| x.strip} }.flatten.uniq
   	  end
   
   	  def self.extract_term_and_value(txt)
