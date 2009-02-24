@@ -137,11 +137,10 @@ module Waves
     	@accept 
     end
     
-    # TODO verify the parsing of these accept-headers.
     def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
     # adding accept_encoding
-    def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; end
+    # def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; end
 
     module Utilities
       
