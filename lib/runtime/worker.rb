@@ -23,7 +23,7 @@ module Waves
     def start
       # Start the rack application built throughout configuration, Look in configuration.rb
       # for checking how Rack::Builder is used.
-      Waves::Configurations::Default.application.run ::Waves::Dispatchers::Default.new
+      config.application.run ::Waves::Dispatchers::Default.new
       pid = daemonize if options[ :daemon ]
       return pid if pid
       # from here on in, we're in the daemon

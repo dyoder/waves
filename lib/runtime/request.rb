@@ -93,22 +93,55 @@ module Waves
         end
       end
       
-      def self.parse(string)
-        string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
-      end
+      # TODO parsing must be optimized.
+      def self.parse(str)
+    	regexp_1 = Regexp.new(/([^,][^;]*[^,]*)/)
+
+    	terms = str.scan(regexp_1)
+    	terms = terms.map{ |t| extract_term_and_value(t.to_s) }
+    	sorted_terms = terms.sort do |term1, term2|
+      		term2[1] <=> term1[1]
+    	end
+    	sorted_terms.inject(self.new){|value, terms| value << terms[0].split(',').map{|x| x.strip} }.flatten.uniq
+  	  end
+  
+  	  def self.extract_term_and_value(txt)
+    	res = txt.split(';')
+    	q = (res.select{ |param| param =~ /q=/})[0]
+    	q = q ? q.gsub(/[a-zA-Z =]*/, '').to_f : 1.0
+    	[res[0], q]
+  	  end
+
+      #def self.parse(string)
+      #  string.split(',').inject(self.new) { |a, entry| a << entry.split( ';' ).first.strip; a }
+      #end
       
       def default
-        return 'text/html' if self.include?('text/html')
-        find { |entry| ! entry.match(/\*/) } || 'text/html'
+        #return 'text/html' if self.include?('text/html')
+        #find { |entry| ! entry.match(/\*/) } || 'text/html'
+        return 'text/html' if self.size == 0
+        return self.first
       end
       
     end
     
-    # this is a hack - need to incorporate browser variations for "accept" here ...
-    # def accept ; Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
-    def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
+    ## this is a hack - need to incorporate browser variations for "accept" here ...
+    ## def accept ; @accept ||= Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
+    ## def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
+    
+    # parsing accept header based on rfc2616 - A-BNF in section 14.1
+    def accept 	
+    	@accept ||= Accept.parse(@request.env['HTTP_ACCEPT'])
+    	ext = Waves.config.mime_types[ path ]
+    	@accept.unshift( ext ) if !ext.nil? and !(@accept=~( ext ))
+    	@accept 
+    end
+    
+    # TODO verify the parsing of these accept-headers.
     def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
+    # adding accept_encoding
+    def accept_encoding ; @enc ||= Accept.parse(@request.env['HTTP_ACCEPT_ENCODING']) ; end
 
     module Utilities
       

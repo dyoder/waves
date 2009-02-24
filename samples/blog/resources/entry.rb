@@ -6,8 +6,8 @@ module Blog
         view.list( plural => controller.all )
       end
             
-      on :get, :show => [ 'entry', :name ] do
-        view.show( :entry => controller.find( captured.name ) )
+      on :get, :show => [ 'entry', :name ] do 
+  		  view.show( :entry => controller.find( captured.name ) )
       end
       
       on :get, :edit => [ 'entry', :name, 'edit' ] do
@@ -16,7 +16,7 @@ module Blog
       
       on :put, :update => [ 'entry', :name ] do
         controller.update( captured.name )
-        redirect( paths.show( captured.name ))
+        redirect( paths.show( captured  .name ))
       end
       
       on :post, :create => [ 'entry' ] do
