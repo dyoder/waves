@@ -48,6 +48,7 @@ require 'caches/simple'
 
 # waves URI mapping
 require 'matchers/base'
+require 'matchers/ext'
 require 'matchers/accept'
 require 'matchers/content_type'
 require 'matchers/path'
