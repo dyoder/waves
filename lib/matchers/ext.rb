@@ -17,7 +17,7 @@ module Waves
         if(@constraints[:ext].class == Array)
           return @constraints[:ext].any?{ |ext|  Waves.config.mime_types.mapping[ '.' + ext.to_s ] == request.ext }
         else 
-          return Waves.config.mime_types.mapping[ '.' + @constraints[:ext] ] == request.ext
+          return Waves.config.mime_types.mapping[ '.' + @constraints[:ext].to_s ] == request.ext
         end
       end
 
