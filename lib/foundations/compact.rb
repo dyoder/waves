@@ -6,13 +6,15 @@ module Waves
           const_set( :Resources, Module.new {
             const_set( :Map, Class.new { 
               include Waves::Resources::Mixin
-              handler( Exception ) {
-                Waves::Views::Errors.new( request ).server_error_500
-              }
-
-              handler( Waves::Dispatchers::NotFoundError ) {
-                Waves::Views::Errors.new( request ).not_found_404
-              }
+              
+              handler( Exception ) do |e|
+                Waves.debug? ? raise( e ) : Waves::Views::Errors.new( request ).server_error_500
+              end
+              
+              handler( Waves::Dispatchers::NotFoundError ) do |e|
+                Waves.debug? ? raise( e ) : Waves::Views::Errors.new( request ).not_found_404
+              end
+              
             })
           })
           const_set( :Configurations, Module.new {
