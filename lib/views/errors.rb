@@ -37,7 +37,7 @@ module Waves
         <html>
           #{ header( '500: Server Error' ) }
           <body>
-            <h1>404</h1>
+            <h1>500</h1>
             <p>Internal server error. Sorry, but your request could not be processed.</p>
           </body>
         </html>
