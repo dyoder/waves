@@ -59,6 +59,34 @@ task :gemspec do
   end
 end
 
+desc "create the gemspec for waves-stable"
+task "stable:gemspec" => :gemspec do
+  version = Time.now.strftime('%Y.%m.%d')
+  File.open("waves.gemspec", "r") do |w|
+    File.open("stable.gemspec", "w") do |s|
+      w.each_line do |line|
+        line.sub!('s.name = %q{waves}', 's.name = %q{stable}')
+        line.sub!(/s.version = \"[\d.]+\"/, "s.version = \"#{version}\"")
+        s.print line
+      end
+    end
+  end
+end
+
+desc "create the gemspec for waves-edge"
+task "edge:gemspec" => :gemspec do
+  version = Time.now.strftime('%Y.%m.%d.%H.%M')
+  File.open("waves.gemspec", "r") do |w|
+    File.open("edge.gemspec", "w") do |s|
+      w.each_line do |line|
+        line.sub!('s.name = %q{waves}', 's.name = %q{edge}')
+        line.sub!(/s.version = \"[\d.]+\"/, "s.version = \"#{version}\"")
+        s.print line
+      end
+    end
+  end
+end
+
 desc "Publish to RubyForge"
 task( :publish => [ :package, :rdoc_publish ] ) do
   `rubyforge login`
