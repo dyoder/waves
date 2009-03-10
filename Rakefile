@@ -74,6 +74,10 @@ task "stable:gemspec" => :gemspec do
 end
 
 desc "create the gemspec for waves-edge"
+# Suggested usage:
+# create a tracking branch for waves/edge
+# after generating gemspec and committing, do
+# git push edge_remote edge_track:master
 task "edge:gemspec" => :gemspec do
   version = Time.now.strftime('%Y.%m.%d.%H.%M')
   File.open("waves.gemspec", "r") do |w|
