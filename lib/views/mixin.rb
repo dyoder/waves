@@ -2,7 +2,7 @@ module Waves
 
   module Views
 
-    class NoTemplateError < Exception # :nodoc:
+    class NoTemplateError < StandardError # :nodoc:
     end
 
     def self.renderers ; @renderers ||= [] ; end
