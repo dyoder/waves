@@ -18,11 +18,11 @@ module Waves
     class << self ; private :new, :allocate ; end
     private :dup, :clone
 
-    # returns the PID of the new process
-    def start
-      # Start the rack application built throughout configuration, Look in configuration.rb
-      # for checking how Rack::Builder is used.
-      config.application.run ::Waves::Dispatchers::Default.new
+    # Start up, daemonizing if so requested.
+    #
+    # When daemonized, returns the new PID.
+    #
+    def start()
       pid = daemonize if options[ :daemon ]
       return pid if pid
       # from here on in, we're in the daemon
