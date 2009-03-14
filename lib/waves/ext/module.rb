@@ -10,9 +10,9 @@ module Waves
       # you cannot do const_get, because that will also attempt to deref the cname
       # at global scope. So it is more efficient to just use eval.
       def []( cname ) ; eval( "self::#{cname.to_s.camel_case}" ) ; end
-      
+
     end
-  end  
+  end
 end
 
 class Module # :nodoc:

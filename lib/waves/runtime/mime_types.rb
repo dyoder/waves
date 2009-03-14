@@ -19,7 +19,7 @@ module Waves
     end
 
   end
-  
+
   MIME_TYPES = {
     ".skd"=>"application/x-koan",
     ".el"=>"text/x-script.elisp",
@@ -530,7 +530,7 @@ module Waves
     ".omc"=>"application/x-omc",
     ".mif"=>"application/x-mif"
   }
-  
-  
+
+
 end
 

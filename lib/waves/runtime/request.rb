@@ -13,14 +13,19 @@ module Waves
 
     # Create a new request. Takes a env parameter representing the request passed in from Rack.
     # You shouldn't need to call this directly.
-    def initialize( env )
+    #
+    def initialize(env)
       @traits = Class.new { include Attributes }.new( :waves => {} )
-      @request = Rack::Request.new( env ).freeze
-      @response = Waves::Response.new( self )
-      @session = Waves::Session.new( self )
+      @request = Rack::Request.new(env).freeze
+      @response = Waves::Response.new self
+      @session = Waves::Session.new self
     end
 
-    def rack_request; @request; end
+    # Rack request object.
+    #
+    def rack_request()
+      @request
+    end
 
     # Methods delegated directly to rack
     %w( url scheme host port body query_string content_type media_type content_length referer ).each do |m|
