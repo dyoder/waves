@@ -5,8 +5,8 @@ module Waves
 
   module MimeTypes
 
-    def self.[]( path )
-      mapping[ File.extname( path ) ]
+    def self.[](path)
+      mapping[path]
     end
 
     # TODO: This does not seem to be working.

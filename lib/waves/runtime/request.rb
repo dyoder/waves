@@ -134,13 +134,21 @@ module Waves
     ## def accept ; @accept ||= Accept.parse(@request.env['HTTP_ACCEPT']).unshift( Waves.config.mime_types[ path ] ).compact.uniq ; end
     ## def accept ; @accept ||= Accept.parse( Waves.config.mime_types[ path.downcase ] || 'text/html' ) ; end
 
-    # parsing accept header based on rfc2616 - A-BNF in section 14.1
-    def accept
+    # Parsed Accept header
+    #
+    # RFC 2616 section 14.1.
+    #
+    def accept()
       @accept ||= Accept.parse(@request.env['HTTP_ACCEPT'])
     end
 
-    #return extension mime-type
-    def ext ;  @ext ||=  Waves.config.mime_types[ path ] ; end
+    # File extension, without leading dot.
+    #
+    # Usable for MIME lookups too.
+    #
+    def ext()
+      @ext ||= File.extname(path)
+    end
 
     def accept_charset ; @charset ||= Accept.parse(@request.env['HTTP_ACCEPT_CHARSET']) ; end
     def accept_language ; @lang ||= Accept.parse(@request.env['HTTP_ACCEPT_LANGUAGE']) ; end
