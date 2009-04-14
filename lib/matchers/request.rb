@@ -3,14 +3,15 @@ module Waves
   module Matchers
 
     class Request < Base
-      
+
       def initialize( options )
         @uri = Matchers::URI.new( options )
         @constraints = {
           :content_type => Matchers::ContentType.new( options[ :content_type ] ),
           :accept => Matchers::Accept.new( options ),
           :query => Matchers::Query.new( options[:query] ),
-          :traits => Matchers::Traits.new( options[:traits] )
+          :traits => Matchers::Traits.new( options[:traits] ),
+          :ext => Matchers::Ext.new( options[:ext] )
         }
       end
 
@@ -19,9 +20,9 @@ module Waves
           request.traits.waves.captured = captured
         end
       end
-          
+
     end
-    
+
   end
-  
+
 end

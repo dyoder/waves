@@ -3,11 +3,11 @@ module Waves
   module Matchers
 
     class Base
-      
+
       attr_accessor :constraints
-      
+
       def []( *args ) ; call( *args ) ; end
-      
+
       # used to provide consisting matching logic across all matchers
       def test( request )
         constraints.all? do | key, val |
@@ -22,9 +22,9 @@ module Waves
           end
         end
       end
-      
+
     end
-    
+
   end
-  
+
 end
