@@ -26,7 +26,9 @@ module Waves
     def []=(key, val)
       @data[key] = val
     end
-
+    
+    # invalidate the whole session
+    def clear ; @data.clear ; end
 
   end
 
